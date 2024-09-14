@@ -42,11 +42,11 @@
                     window.location.href;
                 const parsedUrl = new URL(window.location);
                 document.getElementById("title").textContent =
-                    parsedUrl.searchParams.get("title");
-                document.getElementById("text").textContent =
-                    parsedUrl.searchParams.get("text");
-                document.getElementById("url").textContent =
-                    parsedUrl.searchParams.get("url");
+                    parsedUrl.searchParams.get("filename");
+                // document.getElementById("text").textContent =
+                //     parsedUrl.searchParams.get("text");
+                // document.getElementById("url").textContent =
+                //     parsedUrl.searchParams.get("url");
             });
         </script>
     </body>
