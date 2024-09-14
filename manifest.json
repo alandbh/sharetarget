@@ -1,12 +1,26 @@
 {
-    "short_name": "Share Alan",
-    "name": "Share Target Alan",
+    "short_name": "Share Alan 1",
+    "name": "Share Target Alan 1",
+    "id": "/?id=1",
     "share_target": {
         "action": "target.html",
+        "method": "POST",
+        "enctype": "multipart/form-data",
         "params": {
-            "title": "title",
-            "text": "text",
-            "url": "url"
+            "title": "name",
+            "text": "description",
+            "url": "link",
+            "files": [
+                {
+                    "name": "file",
+                    "accept": [
+                        "image/*",
+                        "video/*",
+                        "audio/*",
+                        "application/pdf"
+                    ]
+                }
+            ]
         }
     },
     "description": "Web Share Target Alan",
@@ -23,7 +37,7 @@
         }
     ],
     "start_url": "/",
-    "background_color": "#f3e5f5",
+    "background_color": "#ff0000",
     "display": "standalone",
     "scope": "/",
     "theme_color": "#4a148c"
