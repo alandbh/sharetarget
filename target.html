@@ -11,7 +11,7 @@
 
         <!-- import the webpage's javascript file -->
         <!-- <script src="/target.js" defer></script> -->
-        <!-- <script src="/common.js" defer></script> -->
+        <script src="/common.js" defer></script>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#4a148c" />
     </head>
@@ -39,17 +39,17 @@
         <img id="receivedImage" alt="Imagem recebida" />
 
         <script>
-            window.addEventListener("DOMContentLoaded", () => {
-                document.getElementById("href").textContent =
-                    window.location.href;
-                const parsedUrl = new URL(window.location);
-                document.getElementById("title").textContent =
-                    parsedUrl.searchParams.get("filename");
-                // document.getElementById("text").textContent =
-                //     parsedUrl.searchParams.get("text");
-                // document.getElementById("url").textContent =
-                //     parsedUrl.searchParams.get("url");
-            });
+            // window.addEventListener("DOMContentLoaded", () => {
+            //     document.getElementById("href").textContent =
+            //         window.location.href;
+            //     const parsedUrl = new URL(window.location);
+            //     document.getElementById("title").textContent =
+            //         parsedUrl.searchParams.get("filename");
+            //     // document.getElementById("text").textContent =
+            //     //     parsedUrl.searchParams.get("text");
+            //     // document.getElementById("url").textContent =
+            //     //     parsedUrl.searchParams.get("url");
+            // });
 
             if ("serviceWorker" in navigator) {
                 navigator.serviceWorker.onmessage = async (event) => {

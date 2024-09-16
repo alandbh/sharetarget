@@ -118,7 +118,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
     if (
         event.request.method === "POST" &&
-        event.request.url.endsWith("share.html")
+        event.request.url.endsWith("/share.html")
     ) {
         event.respondWith(handleShare(event.request));
     }
@@ -129,12 +129,25 @@ async function handleShare(request) {
     const file = formData.get("image");
 
     if (file && file.type.startsWith("image/")) {
-        const imageUrl = URL.createObjectURL(file);
-        return Response.redirect(
-            `/show.html?imageUrl=${encodeURIComponent(imageUrl)}`,
-            303
-        );
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        return new Promise((resolve) => {
+            reader.onloadend = () => {
+                const imageDataUrl = reader.result;
+
+                // Armazena a imagem no sessionStorage através do Client API
+                self.clients.matchAll().then((clients) => {
+                    clients.forEach((client) => {
+                        client.postMessage({ imageDataUrl });
+                    });
+                });
+
+                // Redireciona para a página de exibição sem parâmetros de URL
+                resolve(Response.redirect("/show.html", 303));
+            };
+        });
     }
 
-    return Response.redirect("/error", 303);
+    return Response.redirect("/error.html", 303);
 }

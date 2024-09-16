@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Web Share Target Alan</title>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <!-- import the webpage's stylesheet -->
-        <link rel="stylesheet" href="/style.css" />
-
-        <!-- import the webpage's javascript file -->
-        <!-- <script src="/target.js" defer></script> -->
-        <script src="/common.js" defer></script>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#4a148c" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Imagem Compartilhada</title>
     </head>
     <body>
-        <h1>Show Page</h1>
+        <h1>Imagem Compartilhada</h1>
+        <div id="image-container"></div>
 
         <script>
+            // Função para recuperar e exibir a imagem armazenada no sessionStorage
             window.addEventListener("DOMContentLoaded", () => {
-                const urlParams = new URLSearchParams(window.location.search);
-                const imageUrl = urlParams.get("imageUrl");
+                const imageDataUrl = sessionStorage.getItem("sharedImage");
 
-                if (imageUrl) {
+                if (imageDataUrl) {
                     const imgElement = document.createElement("img");
-                    imgElement.src = imageUrl;
-                    document.body.appendChild(imgElement);
+                    imgElement.src = imageDataUrl;
+                    document
+                        .getElementById("image-container")
+                        .appendChild(imgElement);
+                } else {
+                    document.body.innerHTML =
+                        "<p>Nenhuma imagem foi compartilhada.</p>";
+                }
+            });
+
+            // Recebe a mensagem do service worker
+            navigator.serviceWorker.addEventListener("message", (event) => {
+                const { imageDataUrl } = event.data;
+                if (imageDataUrl) {
+                    sessionStorage.setItem("sharedImage", imageDataUrl);
                 }
             });
         </script>
