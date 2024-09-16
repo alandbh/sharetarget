@@ -10,11 +10,13 @@
         <div id="image-container"></div>
 
         <script>
-            // Função para recuperar e exibir a imagem armazenada no sessionStorage
-            window.addEventListener("DOMContentLoaded", () => {
-                const imageDataUrl = sessionStorage.getItem("sharedImage");
+            // Função para recuperar a imagem armazenada no Cache API
+            async function loadImageFromCache() {
+                const cache = await caches.open("pwa-image-cache-v1");
+                const cachedResponse = await cache.match("/cached-image");
 
-                if (imageDataUrl) {
+                if (cachedResponse) {
+                    const imageDataUrl = await cachedResponse.text();
                     const imgElement = document.createElement("img");
                     imgElement.src = imageDataUrl;
                     document
@@ -24,15 +26,9 @@
                     document.body.innerHTML =
                         "<p>Nenhuma imagem foi compartilhada.</p>";
                 }
-            });
+            }
 
-            // Recebe a mensagem do service worker
-            navigator.serviceWorker.addEventListener("message", (event) => {
-                const { imageDataUrl } = event.data;
-                if (imageDataUrl) {
-                    sessionStorage.setItem("sharedImage", imageDataUrl);
-                }
-            });
+            window.addEventListener("DOMContentLoaded", loadImageFromCache);
         </script>
     </body>
 </html>
