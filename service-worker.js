@@ -31,6 +31,7 @@ self.addEventListener("fetch", async function (event) {
             (async () => {
                 const formData = await event.request.formData();
                 const file = formData.get("file");
+                const filename = file.name.replaceAll(" ", "_");
 
                 if (file) {
                     // Envia o arquivo para a página Target
@@ -51,10 +52,12 @@ self.addEventListener("fetch", async function (event) {
                 }
 
                 // Retorna uma resposta padrão
-                return new Response(
-                    JSON.stringify({ status: "file received" }),
-                    { headers: { "Content-Type": "application/json" } }
-                );
+                // return new Response(
+                //     JSON.stringify({ status: "file received" }),
+                //     { headers: { "Content-Type": "application/json" } }
+                // );
+                const responseUrl = "/target.html?filename=" + filename;
+                return Response.redirect(responseUrl, 303);
 
                 // const fileReader = new FileReader();
                 // fileReader.readAsDataURL(file);
