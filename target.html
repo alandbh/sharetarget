@@ -81,6 +81,15 @@
                     imgElement.src = imageUrl;
                     document.body.appendChild(imgElement);
                 }
+
+                const imageUrlStorage = localStorage.getItem("imageUrl");
+
+                if (imageUrlStorage) {
+                    document.getElementById("receivedImage").src =
+                        imageUrlStorage;
+                    document.getElementById("url").textContent =
+                        imageUrlStorage;
+                }
             });
         </script>
     </body>
