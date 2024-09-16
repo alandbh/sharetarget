@@ -152,39 +152,65 @@ self.addEventListener("activate", (event) => {
 //     }
 // });
 
+// self.addEventListener("fetch", (event) => {
+//     if (
+//         event.request.method === "POST" &&
+//         event.request.url.endsWith("/share.html")
+//     ) {
+//         event.respondWith(handleShare(event.request));
+//     }
+// });
+
+// async function handleShare(request) {
+//     const formData = await request.formData();
+//     const file = formData.get("image");
+
+//     if (file && file.type.startsWith("image/")) {
+//         const reader = new FileReader();
+//         reader.readAsDataURL(file);
+
+//         return new Promise((resolve) => {
+//             reader.onloadend = () => {
+//                 const imageDataUrl = reader.result;
+
+//                 // Armazena a imagem no sessionStorage através do Client API
+//                 self.clients.matchAll().then((clients) => {
+//                     clients.forEach((client) => {
+//                         client.postMessage({ imageDataUrl });
+//                     });
+//                 });
+
+//                 // Redireciona para a página de exibição sem parâmetros de URL
+//                 resolve(Response.redirect("/show.html", 303));
+//             };
+//         });
+//     }
+
+//     return Response.redirect("/error.html", 303);
+// }
+
 self.addEventListener("fetch", (event) => {
     if (
         event.request.method === "POST" &&
-        event.request.url.endsWith("/share.html")
+        event.request.url.endsWith("share.html")
     ) {
-        event.respondWith(handleShare(event.request));
+        event.respondWith(
+            fetch(event.request)
+                .then((response) => response.blob())
+                .then((blob) => {
+                    // Salvar a imagem em um local temporário ou enviar para o backend
+
+                    // Salvar imagem no IndexedDB
+                    const dbPromise = idb.open("myDatabase", 1);
+                    dbPromise.then((db) => {
+                        const tx = db.transaction("images", "readwrite");
+                        const store = tx.objectStore("images");
+                        store.put(blob, imageId);
+                        return tx.complete;
+                    });
+                    // ...
+                    return new Response("Imagem recebida com sucesso");
+                })
+        );
     }
 });
-
-async function handleShare(request) {
-    const formData = await request.formData();
-    const file = formData.get("image");
-
-    if (file && file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-
-        return new Promise((resolve) => {
-            reader.onloadend = () => {
-                const imageDataUrl = reader.result;
-
-                // Armazena a imagem no sessionStorage através do Client API
-                self.clients.matchAll().then((clients) => {
-                    clients.forEach((client) => {
-                        client.postMessage({ imageDataUrl });
-                    });
-                });
-
-                // Redireciona para a página de exibição sem parâmetros de URL
-                resolve(Response.redirect("/show.html", 303));
-            };
-        });
-    }
-
-    return Response.redirect("/error.html", 303);
-}
