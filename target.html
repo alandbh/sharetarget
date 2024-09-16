@@ -59,6 +59,7 @@
                         const imageUrl = URL.createObjectURL(blob);
 
                         document.getElementById("receivedImage").src = imageUrl;
+                        document.getElementById("url").textContent = imageUrl;
                     }
                 };
             }
