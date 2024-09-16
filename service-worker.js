@@ -228,7 +228,10 @@ self.addEventListener("fetch", (event) => {
 
 async function handleShare(request) {
     const formData = await request.formData();
-    const file = formData.get("image");
+    const file = formData.get("file");
+
+    console.log("filetype", file);
+    console.log("filetype", file.type);
 
     if (file && file.type.startsWith("image/")) {
         const reader = new FileReader();
