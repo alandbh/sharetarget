@@ -1,7 +1,7 @@
 {
-    "short_name": "Share Alan 5",
-    "name": "Share Target Alan 5",
-    "id": "/?id=5",
+    "short_name": "Share Alan 6",
+    "name": "Share Target Alan 6",
+    "id": "/?id=6",
     "share_target": {
         "action": "/",
         "method": "POST",

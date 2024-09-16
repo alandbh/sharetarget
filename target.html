@@ -58,11 +58,19 @@
 
                         const imageUrl = URL.createObjectURL(blob);
 
-                        document.getElementById("receivedImage").src = imageUrl;
-                        document.getElementById("url").textContent = imageUrl;
+                        localStorage.setItem("imageUrl", imageUrl);
                     }
                 };
             }
+
+            window.addEventListener("load", () => {
+                const imageUrl = localStorage.getItem("imageUrl");
+
+                if (imageUrl) {
+                    document.getElementById("receivedImage").src = imageUrl;
+                    document.getElementById("url").textContent = imageUrl;
+                }
+            });
         </script>
     </body>
 </html>
