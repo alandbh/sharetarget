@@ -77,40 +77,64 @@ self.addEventListener("activate", (event) => {
 // });
 
 // service-worker.js
+// self.addEventListener("fetch", (event) => {
+//     if (event.request.method === "POST") {
+//         console.log("possstt");
+//         event.respondWith(
+//             (async () => {
+//                 const formData = await event.request.formData();
+//                 const file = formData.get("file");
+//                 const imageUrl = URL.createObjectURL(file);
+
+//                 if (file) {
+//                     // Envia o arquivo de imagem para a página
+//                     self.clients.matchAll().then((clients) => {
+//                         clients.forEach((client) => {
+//                             if (client.url.endsWith("target.html")) {
+//                                 client.postMessage({
+//                                     type: "file",
+//                                     file: {
+//                                         name: file.name,
+//                                         type: file.type,
+//                                         blob: file,
+//                                     },
+//                                 });
+//                             }
+//                         });
+//                     });
+//                 }
+
+//                 // Redireciona para a página target.html
+//                 // return Response.redirect("/target.html", 303); // 303: See Other
+//                 return Response.redirect(
+//                     `/target.html?imageUrl=${encodeURIComponent(imageUrl)}`,
+//                     303
+//                 );
+//             })()
+//         );
+//     }
+// });
+
 self.addEventListener("fetch", (event) => {
-    if (event.request.method === "POST") {
-        console.log("possstt");
-        event.respondWith(
-            (async () => {
-                const formData = await event.request.formData();
-                const file = formData.get("file");
-                const imageUrl = URL.createObjectURL(file);
-
-                if (file) {
-                    // Envia o arquivo de imagem para a página
-                    self.clients.matchAll().then((clients) => {
-                        clients.forEach((client) => {
-                            if (client.url.endsWith("target.html")) {
-                                client.postMessage({
-                                    type: "file",
-                                    file: {
-                                        name: file.name,
-                                        type: file.type,
-                                        blob: file,
-                                    },
-                                });
-                            }
-                        });
-                    });
-                }
-
-                // Redireciona para a página target.html
-                // return Response.redirect("/target.html", 303); // 303: See Other
-                return Response.redirect(
-                    `/target.html?imageUrl=${encodeURIComponent(imageUrl)}`,
-                    303
-                );
-            })()
-        );
+    if (
+        event.request.method === "POST" &&
+        event.request.url.endsWith("share.html")
+    ) {
+        event.respondWith(handleShare(event.request));
     }
 });
+
+async function handleShare(request) {
+    const formData = await request.formData();
+    const file = formData.get("image");
+
+    if (file && file.type.startsWith("image/")) {
+        const imageUrl = URL.createObjectURL(file);
+        return Response.redirect(
+            `/show.html?imageUrl=${encodeURIComponent(imageUrl)}`,
+            303
+        );
+    }
+
+    return Response.redirect("/error", 303);
+}
