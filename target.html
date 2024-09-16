@@ -63,12 +63,23 @@
                 };
             }
 
-            window.addEventListener("load", () => {
-                const imageUrl = localStorage.getItem("imageUrl");
+            // window.addEventListener("load", () => {
+            //     const imageUrl = localStorage.getItem("imageUrl");
+
+            //     if (imageUrl) {
+            //         document.getElementById("receivedImage").src = imageUrl;
+            //         document.getElementById("url").textContent = imageUrl;
+            //     }
+            // });
+
+            window.addEventListener("DOMContentLoaded", () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const imageUrl = urlParams.get("imageUrl");
 
                 if (imageUrl) {
-                    document.getElementById("receivedImage").src = imageUrl;
-                    document.getElementById("url").textContent = imageUrl;
+                    const imgElement = document.createElement("img");
+                    imgElement.src = imageUrl;
+                    document.body.appendChild(imgElement);
                 }
             });
         </script>

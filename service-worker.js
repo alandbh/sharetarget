@@ -84,6 +84,7 @@ self.addEventListener("fetch", (event) => {
             (async () => {
                 const formData = await event.request.formData();
                 const file = formData.get("file");
+                const imageUrl = URL.createObjectURL(file);
 
                 if (file) {
                     // Envia o arquivo de imagem para a página
@@ -104,7 +105,11 @@ self.addEventListener("fetch", (event) => {
                 }
 
                 // Redireciona para a página target.html
-                return Response.redirect("/target.html", 303); // 303: See Other
+                // return Response.redirect("/target.html", 303); // 303: See Other
+                return Response.redirect(
+                    `/target.html?imageUrl=${encodeURIComponent(imageUrl)}`,
+                    303
+                );
             })()
         );
     }
