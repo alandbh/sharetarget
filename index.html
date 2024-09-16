@@ -51,5 +51,26 @@ navigator.share(shareOpts);
         </p>
 
         <div id="divResult"></div>
+        <p>
+            <input type="file" name="fileinput" id="fileinput" />
+        </p>
+        <p>
+            <button id="sendFile">SEND FILE</button>
+        </p>
+
+        <script>
+            const fileinput = document.querySelector("#fileinput");
+            const sendButton = document.querySelector("#sendFile");
+
+            sendButton.addEventListener("click", () => {
+                const formData = new FormData();
+                formData.append("file", fileinput.files[0]);
+
+                fetch("/", {
+                    method: "POST",
+                    body: formData,
+                });
+            });
+        </script>
     </body>
 </html>

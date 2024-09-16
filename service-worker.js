@@ -79,6 +79,7 @@ self.addEventListener("activate", (event) => {
 // service-worker.js
 self.addEventListener("fetch", (event) => {
     if (event.request.method === "POST") {
+        console.log("possstt");
         event.respondWith(
             (async () => {
                 const formData = await event.request.formData();
