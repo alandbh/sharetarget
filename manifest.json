@@ -1,9 +1,9 @@
 {
-    "short_name": "Share Alan 7",
-    "name": "Share Target Alan 7",
-    "id": "/?id=7",
+    "short_name": "Share Alan 8",
+    "name": "Share Target Alan 8",
+    "id": "/?id=8",
     "share_target": {
-        "action": "/",
+        "action": "/target.html",
         "method": "POST",
         "enctype": "multipart/form-data",
         "params": {
