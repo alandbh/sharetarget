@@ -24,14 +24,14 @@ self.addEventListener("install", (event) => {
 });
 
 // Responde às requisições da rede com o conteúdo do cache
-self.addEventListener("fetch", (event) => {
-    event.respondWith(
-        caches.match(event.request).then((response) => {
-            // Retorna o arquivo do cache, se disponível
-            return response || fetch(event.request);
-        })
-    );
-});
+// self.addEventListener("fetch", (event) => {
+//     event.respondWith(
+//         caches.match(event.request).then((response) => {
+//             // Retorna o arquivo do cache, se disponível
+//             return response || fetch(event.request);
+//         })
+//     );
+// });
 
 // Atualiza o cache sempre que necessário
 self.addEventListener("activate", (event) => {
