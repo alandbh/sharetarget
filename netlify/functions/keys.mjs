@@ -22,5 +22,5 @@ export default async (req, context) => {
         api: Netlify.env.get("API_KEY"),
     };
 
-    return new Response(keys);
+    return new Response(JSON.stringify(keys));
 };
