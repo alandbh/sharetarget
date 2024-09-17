@@ -7,4 +7,11 @@ export default async (req, context) => {
         window.API_KEY="${process.env.API_KEY}";\n
     `
     );
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify({
+            data,
+        }),
+    };
 };
