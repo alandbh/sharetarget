@@ -843,6 +843,10 @@ video {
   height: 100%;
 }
 
+.h-\[300px\] {
+  height: 300px;
+}
+
 .w-\[this-is\\\\\] {
   width: this-is\\;
 }
@@ -2767,6 +2771,10 @@ video {
 }
 
 @media not all and (min-width: 640px) {
+  .max-sm\:w-full {
+    width: 100%;
+  }
+
   .max-sm\:flex-col {
     flex-direction: column;
   }
