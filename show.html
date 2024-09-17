@@ -23,7 +23,7 @@
                 <div class="w-[200px] h-[300px]" id="image-container"></div>
             </div>
             <p
-                class="text-red-600 bg-red-50 p-5 border-l-4 border-red-400"
+                class="text-red-600 bg-red-50 p-5 border-l-4 border-red-400 hidden"
                 id="errorMessage"
             ></p>
 
@@ -105,6 +105,9 @@
                         .getElementById("image-container")
                         .appendChild(imgElement);
                 } else {
+                    document
+                        .querySelector("#errorMessage")
+                        .classList.remove("hidden");
                     document.querySelector("#errorMessage").textContent =
                         "Nenhuma imagem foi compartilhada.";
                 }
