@@ -1,49 +1,54 @@
-// const CACHE_NAME = "pwa-cache-v1";
-// const urlsToCache = [
-//     "/index.html",
-//     "/share.html",
-//     "/show.html",
-//     "/manifest.json",
-//     "/service-worker.js",
-//     // Outros arquivos como CSS, JS ou imagens
-// ];
+const FRONT_CACHE = "pwa-cache-v1";
+const urlsToCache = [
+    "/index.html",
+    "/share.html",
+    "/show.html",
+    "/error.html",
+    "/manifest.json",
+    "/service-worker.js",
+    "/js/common.js",
+    "/js/share.js",
+    "/js/ui.js",
+    "/js/upload.js",
+    // Outros arquivos como CSS, JS ou imagens
+];
 
-// // Instala o Service Worker e armazena os arquivos no cache
-// self.addEventListener("install", (event) => {
-//     event.waitUntil(
-//         caches.open(CACHE_NAME).then((cache) => {
-//             console.log("Arquivos em cache");
-//             return cache.addAll(urlsToCache);
-//         })
-//     );
-// });
+// Instala o Service Worker e armazena os arquivos no cache
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open(FRONT_CACHE).then((cache) => {
+            console.log("Arquivos em cache");
+            return cache.addAll(urlsToCache);
+        })
+    );
+});
 
 // Responde às requisições da rede com o conteúdo do cache
-// self.addEventListener("fetch", (event) => {
-//     event.respondWith(
-//         caches.match(event.request).then((response) => {
-//             // Retorna o arquivo do cache, se disponível
-//             return response || fetch(event.request);
-//         })
-//     );
-// });
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            // Retorna o arquivo do cache, se disponível
+            return response || fetch(event.request);
+        })
+    );
+});
 
 // Atualiza o cache sempre que necessário
-// self.addEventListener("activate", (event) => {
-//     const cacheWhitelist = [CACHE_NAME];
+self.addEventListener("activate", (event) => {
+    const cacheWhitelist = [FRONT_CACHE];
 
-//     event.waitUntil(
-//         caches.keys().then((cacheNames) => {
-//             return Promise.all(
-//                 cacheNames.map((cacheName) => {
-//                     if (cacheWhitelist.indexOf(cacheName) === -1) {
-//                         return caches.delete(cacheName);
-//                     }
-//                 })
-//             );
-//         })
-//     );
-// });
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+});
 
 // self.addEventListener("fetch", async function (event) {
 //     console.log("👷", "fetch", event);
