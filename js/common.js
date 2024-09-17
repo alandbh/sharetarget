@@ -18,4 +18,4 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
 }
 
-console.log("AMBIENTE", process.env.DATA);
+console.log("AMBIENTE", API_KEY);
