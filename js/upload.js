@@ -9,6 +9,7 @@ async function loadImageFromCache() {
         imgElement.classList.add("w-full", "h-full", "object-contain");
         imgElement.src = imageDataUrl;
         document.getElementById("image-container").appendChild(imgElement);
+        return imageDataUrl;
     } else {
         document.querySelector("#errorMessage").classList.remove("hidden");
         document.querySelector("#errorMessage").textContent =
@@ -31,17 +32,21 @@ window.addEventListener("DOMContentLoaded", loadImageFromCache);
 let CLIENT_ID;
 let API_KEY;
 
-fetch("/functions/keys").then((response) =>
-    response.json().then((data) => {
-        CLIENT_ID = data.client;
-        API_KEY = data.api;
+const options = { method: "GET" };
 
-        console.log({ api: API_KEY });
+fetch("https://sharetarget.netlify.app/.netlify/functions/keys", options)
+    .then((response) => response.json())
+    .then((response) => {
+        CLIENT_ID = response.client;
+        API_KEY = response.api;
+        console.log("Client: ", CLIENT_ID);
     })
-);
+    .catch((err) => console.error(err));
 
 const SCOPES = "https://www.googleapis.com/auth/drive.file";
-const FOLDER_ID = "YOUR_FOLDER_ID"; // Substitua pelo ID da pasta no Google Drive
+const FOLDER_ID = "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC"; // Substitua pelo ID da pasta no Google Drive
+
+let accessToken = "";
 
 function authenticate() {
     return gapi.auth2
@@ -71,3 +76,63 @@ function loadClient() {
             }
         );
 }
+
+// Função para fazer upload do arquivo para o Google Drive
+function uploadFile(imageDataUrl) {
+    const boundary = "foo_bar_baz";
+    const delimiter = `\r\n--${boundary}\r\n`;
+    const closeDelimiter = `\r\n--${boundary}--`;
+
+    const fileName = "compartilhamento-pwa.png"; // Nome do arquivo
+    const contentType = "image/png"; // Tipo do arquivo
+
+    const metadata = {
+        name: fileName,
+        mimeType: contentType,
+        parents: [FOLDER_ID], // ID da pasta onde será salvo o arquivo
+    };
+
+    const multipartRequestBody =
+        delimiter +
+        "Content-Type: application/json; charset=UTF-8\r\n\r\n" +
+        JSON.stringify(metadata) +
+        delimiter +
+        "Content-Type: " +
+        contentType +
+        "\r\n\r\n" +
+        imageDataUrl.split(",")[1] + // Parte de dados da URL base64
+        closeDelimiter;
+
+    const request = gapi.client.request({
+        path: "/upload/drive/v3/files?uploadType=multipart",
+        method: "POST",
+        headers: {
+            "Content-Type": `multipart/related; boundary=${boundary}`,
+        },
+        body: multipartRequestBody,
+    });
+
+    request.execute(function (file) {
+        console.log("Arquivo enviado ao Google Drive:", file);
+        alert("Arquivo enviado com sucesso ao Google Drive!");
+    });
+}
+
+// Autentica e envia a imagem ao Google Drive
+document.getElementById("send-to-drive").addEventListener("click", async () => {
+    const imageDataUrl = await loadImageFromCache();
+
+    if (!imageDataUrl) {
+        alert("Nenhuma imagem encontrada para enviar.");
+        return;
+    }
+
+    gapi.load("client:auth2", () => {
+        gapi.auth2.init({ client_id: CLIENT_ID });
+        authenticate().then(() => {
+            loadClient().then(() => {
+                uploadFile(imageDataUrl);
+            });
+        });
+    });
+});
