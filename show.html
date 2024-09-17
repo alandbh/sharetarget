@@ -21,11 +21,11 @@
             </div>
             <div class="flex justify-center">
                 <div class="w-[200px] h-[300px]" id="image-container">
-                    <!-- <img
-                        class="w-full h-full object-cover"
+                    <img
+                        class="w-full h-full object-contain"
                         src="/images/image.png"
                         alt=""
-                    /> -->
+                    />
                 </div>
             </div>
             <p
@@ -101,7 +101,11 @@
                 if (cachedResponse) {
                     const imageDataUrl = await cachedResponse.text();
                     const imgElement = document.createElement("img");
-                    imgElement.classList.add();
+                    imgElement.classList.add(
+                        "w-full",
+                        "h-full",
+                        "object-contain"
+                    );
                     imgElement.src = imageDataUrl;
                     document
                         .getElementById("image-container")
