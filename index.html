@@ -1,76 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Web Share</title>
+        <title>Up To Drive</title>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <!-- import the webpage's stylesheet -->
-        <link rel="stylesheet" href="/style.css" />
+        <!-- <link rel="stylesheet" href="/style.css" /> -->
+        <link rel="stylesheet" href="/style/output.css" />
 
         <!-- import the webpage's javascript file -->
-        <script src="/share.js" defer></script>
-        <script src="/common.js" defer></script>
+        <!-- <script src="/js/share.js" defer></script> -->
+        <script src="/js/common.js" defer></script>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#4a148c" />
+        <meta name="theme-color" content="#ff0000" />
     </head>
-    <body>
-        <h1>Web Share API ALAN</h1>
-        <p id="requireHTTPS" class="hidden">
-            <b>STOP!</b> This page <b>must</b> be served over HTTPS. Please
-            <a>reload this page via HTTPS</a>.
-        </p>
-
-        <p>
-            The Web Share API, allows sites to share links and text to other
-            apps via the system provided share picker.
-        </p>
-
-        <p id="notSupported">
-            <b>Sorry!</b> This browser doesn't support the Web Share API, which
-            required for this demo.
-        </p>
-
-        <pre>
-const shareOpts = {
-  title: 'Jabberwocky',
-  text: 'Check out this great poem about a Jabberwocky.',
-  url: 'https://en.wikipedia.org/wiki/Jabberwocky',
-};
-navigator.share(shareOpts);
-</pre
+    <body class="bg-slate-100 h-svh flex flex-col items-center p-5">
+        <div
+            class="rounded-md shadow bg-white min-w-[400px] max-w-2xl p-5 flex flex-col gap-10"
         >
+            <div class="flex gap-2 items-center justify-center">
+                <img
+                    src="/images/icons/icon-512x512.svg"
+                    width="60px"
+                    height="60px"
+                    alt="Up To Drive"
+                />
+                <h1 class="text-3xl font-bold">Up To Drive</h1>
+            </div>
+            <p class="text-xl text-slate-600">
+                Just a humble app to make evidence upload easier. 🙃
+            </p>
 
-        <p>
-            <button type="button" id="butShare" disabled>Share</button>
-        </p>
-
-        <p>
-            <a href="/target.html">TARGET</a>
-        </p>
-
-        <div id="divResult"></div>
-        <p>
-            <input type="file" name="fileinput" id="fileinput" />
-        </p>
-        <p>
-            <button id="sendFile">SEND FILE</button>
-        </p>
-
-        <script>
-            const fileinput = document.querySelector("#fileinput");
-            const sendButton = document.querySelector("#sendFile");
-
-            sendButton.addEventListener("click", () => {
-                const formData = new FormData();
-                formData.append("file", fileinput.files[0]);
-
-                fetch("/", {
-                    method: "POST",
-                    body: formData,
-                });
-            });
-        </script>
+            <div>
+                <label for="file-input" class="sr-only">Choose file</label>
+                <input
+                    type="file"
+                    name="file-input"
+                    id="file-input"
+                    class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4"
+                />
+            </div>
+        </div>
     </body>
 </html>

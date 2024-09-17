@@ -3,13 +3,96 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Imagem Compartilhada</title>
+        <title>Shared Image</title>
+        <link rel="stylesheet" href="/style/output.css" />
     </head>
-    <body>
-        <h1>Imagem Compartilhada</h1>
-        <div id="image-container"></div>
+    <body class="bg-slate-100 h-svh flex flex-col items-center p-5">
+        <div
+            class="rounded-md shadow bg-white md:min-w-[600px] max-w-3xl p-5 flex flex-col gap-10"
+        >
+            <div class="flex gap-2 items-center justify-center">
+                <img
+                    src="/images/icons/icon-512x512.svg"
+                    width="60px"
+                    height="60px"
+                    alt="Up To Drive"
+                />
+                <h1 class="text-3xl font-bold">Up To Drive</h1>
+            </div>
+            <div class="flex justify-center">
+                <div class="w-[200px] h-auto" id="image-container">
+                    <img
+                        class="w-full h-full object-cover"
+                        src="/images/image.png"
+                        alt=""
+                    />
+                </div>
+            </div>
+            <p
+                class="text-red-600 bg-red-50 p-5 border-l-4 border-red-400"
+                id="errorMessage"
+            ></p>
+
+            <div class="flex gap-5 justify-between max-sm:flex-col">
+                <div class="flex flex-col gap-2 flex-1">
+                    <label for="player" class="text-slate-500 font-bold"
+                        >Select a player</label
+                    >
+                    <select
+                        class="border border-slate-300 block h-10 px-4 rounded-sm"
+                        name="player"
+                        id="player"
+                    >
+                        <option value="null">...</option>
+                        <option value="magalu">Magalu</option>
+                        <option value="ponto">Ponto</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2 flex-1">
+                    <label for="journey" class="text-slate-500 font-bold"
+                        >Select a journey</label
+                    >
+                    <select
+                        class="border border-slate-300 block h-10 px-4 rounded-sm"
+                        name="journey"
+                        id="journey"
+                    >
+                        <option value="null">...</option>
+                        <option value="website">Website</option>
+                        <option value="app">App</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2 justify-end flex-1">
+                    <button
+                        class="bg-blue-500 text-white rounded h-10 px-5 font-bold"
+                        id="btnUpload"
+                    >
+                        UPLOAD
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <script>
+            const playerSelect = document.querySelector("#player");
+            const journeySelect = document.querySelector("#journey");
+            const uploadButton = document.querySelector("#btnUpload");
+
+            playerSelect.value = localStorage.getItem("player") || "null";
+            journeySelect.value = localStorage.getItem("journey") || "null";
+
+            playerSelect.addEventListener("change", () => {
+                localStorage.setItem("player", playerSelect.value);
+            });
+
+            journeySelect.addEventListener("change", () => {
+                localStorage.setItem("journey", journeySelect.value);
+            });
+
+            uploadButton.addEventListener("click", () => {
+                console.log("send file to Drive");
+            });
+
             // Função para recuperar a imagem armazenada no Cache API
             async function loadImageFromCache() {
                 const cache = await caches.open("pwa-image-cache-v1");
@@ -18,13 +101,14 @@
                 if (cachedResponse) {
                     const imageDataUrl = await cachedResponse.text();
                     const imgElement = document.createElement("img");
+                    imgElement.classList.add();
                     imgElement.src = imageDataUrl;
                     document
                         .getElementById("image-container")
                         .appendChild(imgElement);
                 } else {
-                    document.body.innerHTML =
-                        "<p>Nenhuma imagem foi compartilhada.</p>";
+                    document.querySelector("#errorMessage").textContent =
+                        "Nenhuma imagem foi compartilhada.";
                 }
             }
 
