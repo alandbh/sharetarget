@@ -27,6 +27,19 @@ window.addEventListener("DOMContentLoaded", loadImageFromCache);
 
 // const CLIENT_ID = "YOUR_CLIENT_ID"; // Substitua pelo seu Client ID
 // const API_KEY = "YOUR_API_KEY"; // Substitua pelo seu API Key
+
+let CLIENT_ID;
+let API_KEY;
+
+fetch("/functions/keys").then((response) =>
+    response.json().then((data) => {
+        CLIENT_ID = data.client;
+        API_KEY = data.api;
+
+        console.log({ api: API_KEY });
+    })
+);
+
 const SCOPES = "https://www.googleapis.com/auth/drive.file";
 const FOLDER_ID = "YOUR_FOLDER_ID"; // Substitua pelo ID da pasta no Google Drive
 
