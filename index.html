@@ -6,13 +6,16 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+        <script src="https://apis.google.com/js/api.js"></script>
+        <script src="https://accounts.google.com/gsi/client"></script>
+
         <!-- import the webpage's stylesheet -->
         <!-- <link rel="stylesheet" href="/style.css" /> -->
         <link rel="stylesheet" href="/style/output.css" />
 
         <!-- import the webpage's javascript file -->
         <!-- <script src="/js/share.js" defer></script> -->
-        <script src="/js/common.js" defer></script>
+        <script defer src="/js/common.js" defer></script>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ff0000" />
     </head>
@@ -34,6 +37,10 @@
             </p>
 
             <div>
+                <button id="signIn">Sign In</button>
+            </div>
+
+            <div>
                 <label for="file-input" class="sr-only">Choose file</label>
                 <input
                     type="file"
@@ -43,5 +50,6 @@
                 />
             </div>
         </div>
+        <script async></script>
     </body>
 </html>

@@ -43,8 +43,11 @@ fetch("https://sharetarget.netlify.app/.netlify/functions/keys", options)
     })
     .catch((err) => console.error(err));
 
-const SCOPES = "https://www.googleapis.com/auth/drive.file";
+const SCOPES = "https://www.googleapis.com/auth/drive";
 const FOLDER_ID = "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC"; // Substitua pelo ID da pasta no Google Drive
+
+const DISCOVERY_DOCS =
+    "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest";
 
 let accessToken = "";
 
@@ -65,16 +68,14 @@ function authenticate() {
 // Carrega a biblioteca de APIs do Google
 function loadClient() {
     gapi.client.setApiKey(API_KEY);
-    return gapi.client
-        .load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
-        .then(
-            function () {
-                console.log("Google Drive API carregada");
-            },
-            function (error) {
-                console.error("Erro ao carregar API", error);
-            }
-        );
+    return gapi.client.load(DISCOVERY_DOCS).then(
+        function () {
+            console.log("Google Drive API carregada");
+        },
+        function (error) {
+            console.error("Erro ao carregar API", error);
+        }
+    );
 }
 
 // Função para fazer upload do arquivo para o Google Drive
