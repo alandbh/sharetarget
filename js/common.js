@@ -20,9 +20,9 @@ if ("serviceWorker" in navigator) {
 let CLIENT_ID;
 let API_KEY;
 
-// const options = { method: "GET" };
-
-fetch("https://sharetarget.netlify.app/.netlify/functions/keys", options)
+fetch("https://sharetarget.netlify.app/.netlify/functions/keys", {
+    method: "GET",
+})
     .then((response) => response.json())
     .then((response) => {
         CLIENT_ID = response.client;
