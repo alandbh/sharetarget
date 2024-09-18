@@ -35,17 +35,75 @@
             <p class="text-xl text-slate-600">
                 Just a humble app to make evidence upload easier. 🙃
             </p>
-
             <div>
                 <label for="file-input" class="sr-only">Choose file</label>
                 <input
                     type="file"
                     name="file-input"
-                    id="file-input"
+                    id="fileInput"
                     class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4"
                 />
             </div>
+
+            <div>
+                <button
+                    id="btnSend"
+                    class="bg-blue-500 py-2 px-4 text-white font-bold"
+                    type="submit"
+                >
+                    Send
+                </button>
+            </div>
         </div>
-        <script async></script>
+        <script async>
+            const fileInput = document.querySelector("#fileInput");
+            const btnSend = document.querySelector("#btnSend");
+
+            btnSend.addEventListener("click", async () => {
+                console.log("FILE", fileInput.files[0]);
+
+                const formData = new FormData();
+                formData.append("file", fileInput.files[0]);
+
+                const options = {
+                    method: "POST",
+                    body: formData,
+                };
+
+                fetch("/upload", options);
+            });
+
+            // btnSend.addEventListener("click", async () => {
+            //     const file = fileInput.files[0];
+            //     const fileReader = new FileReader();
+            //     fileReader.onload = function (e) {
+            //         const blob = dataURLtoBlob(fileReader.result);
+            //         console.log("FILEEEE", blob);
+            //     };
+
+            //     return;
+            //     // Converte a data URL para um blob
+            //     const blob = await fileInput.files[0].blob();
+
+            //     const formData = new FormData();
+            //     formData.append("image", blob, "image.png");
+
+            //     // Envia o arquivo para o backend (Node.js)
+            //     fetch("http://localhost:4000/uploads", {
+            //         method: "POST",
+            //         body: formData,
+            //     })
+            //         .then((response) => response.text())
+            //         .then((result) => {
+            //             alert(result);
+            //         })
+            //         .catch((error) => {
+            //             console.error("Erro ao fazer upload:", error);
+            //             alert("Erro ao enviar o arquivo.");
+            //         });
+
+            //     // fetch("http://localhost:4000/uploads", { method: "POST" });
+            // });
+        </script>
     </body>
 </html>
