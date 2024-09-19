@@ -3,3 +3,4 @@ uploads/
 keys.js
 .env
 .DS_Store
+server/
