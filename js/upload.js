@@ -17,9 +17,11 @@ async function loadImageFromCache() {
         // Enviar a imagem para o backend
         const contentType = imageDataUrl.split(";")[0].split(":")[1]; // extrai o tipo de conteúdo da base64
         const blob = base64ToBlob(imageDataUrl, contentType);
+        const extension = getFileExtension(contentType); // Obter a extensão correta
         // const formData = new FormData();
         formData.append("file", blob); // Nome do arquivo pode ser alterado
         formData.append("customName", "pwa-image");
+        formData.append("extension", extension);
 
         // return imageDataUrl;
     } else {
@@ -47,15 +49,31 @@ function base64ToBlob(base64, contentType = "", sliceSize = 512) {
     return new Blob(byteArrays, { type: contentType });
 }
 
+// Função para mapear contentType para extensão de arquivo
+function getFileExtension(contentType) {
+    switch (contentType) {
+        case "image/jpeg":
+            return ".jpg";
+        case "image/png":
+            return ".png";
+        case "image/webp":
+            return ".webp";
+        case "image/gif":
+            return ".gif";
+        default:
+            return ""; // Caso não seja um tipo conhecido, pode retornar uma string vazia
+    }
+}
+
 async function sendToBackend() {
+    const endpoint = window.location.host.includes("netlify")
+        ? "https://uptodrive-backend.onrender.com/upload"
+        : "http://localhost:4000/upload";
     try {
-        const response = await fetch(
-            "https://uptodrive-backend.onrender.com/upload",
-            {
-                method: "POST",
-                body: formData,
-            }
-        );
+        const response = await fetch(endpoint, {
+            method: "POST",
+            body: formData,
+        });
 
         if (response.ok) {
             console.log("Imagem enviada com sucesso!");

@@ -35,7 +35,3 @@ playerSelect.addEventListener("change", () => {
 journeySelect.addEventListener("change", () => {
     localStorage.setItem("journey", journeySelect.value);
 });
-
-uploadButton.addEventListener("click", () => {
-    console.log("send file to Drive");
-});
