@@ -1,5 +1,4 @@
 // Função para recuperar a imagem armazenada no Cache API
-const formData = new FormData();
 
 async function loadImageFromCache() {
     const cache = await caches.open("pwa-image-cache-v1");
@@ -21,10 +20,12 @@ async function loadImageFromCache() {
 
         console.log({ extension });
 
-        // const formData = new FormData();
+        const formData = new FormData();
         formData.append("file", blob); // Nome do arquivo pode ser alterado
         formData.append("customName", "pwa-image");
         formData.append("extension", extension);
+
+        sendToBackend(formData);
 
         // return imageDataUrl;
     } else {
@@ -68,36 +69,34 @@ function getFileExtension(contentType) {
     }
 }
 
-async function sendToBackend() {
+async function sendToBackend(formData) {
     const endpoint = window.location.host.includes("netlify")
         ? "https://uptodrive-backend.onrender.com/upload"
         : "http://localhost:4000/upload";
-    try {
-        const response = await fetch(endpoint, {
-            method: "POST",
-            body: formData,
-        });
 
-        if (response.ok) {
-            console.log("Imagem enviada com sucesso!");
+    const sendToDrive2 = document.querySelector("#sendToDrive2");
+    sendToDrive2.addEventListener("click", async () => {
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                console.log("Imagem enviada com sucesso!");
+                document.getElementById("uploadStatus").textContent =
+                    "Upload realizado com sucesso!";
+            } else {
+                console.error("Erro no upload:", response.statusText);
+                document.getElementById("uploadStatus").textContent =
+                    "Erro ao enviar a imagem.";
+            }
+        } catch (error) {
+            console.error("Erro ao enviar a imagem:", error);
             document.getElementById("uploadStatus").textContent =
-                "Upload realizado com sucesso!";
-        } else {
-            console.error("Erro no upload:", response.statusText);
-            document.getElementById("uploadStatus").textContent =
-                "Erro ao enviar a imagem.";
+                "Falha na conexão.";
         }
-    } catch (error) {
-        console.error("Erro ao enviar a imagem:", error);
-        document.getElementById("uploadStatus").textContent =
-            "Falha na conexão.";
-    }
+    });
 }
 
 window.addEventListener("DOMContentLoaded", loadImageFromCache);
-window.addEventListener("DOMContentLoaded", () => {
-    const sendToDrive2 = document.querySelector("#sendToDrive2");
-    sendToDrive2.addEventListener("click", () => {
-        sendToBackend();
-    });
-});
