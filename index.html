@@ -48,67 +48,117 @@
             <div>
                 <button
                     id="btnSend"
-                    class="bg-blue-500 py-2 px-4 text-white font-bold"
+                    class="bg-blue-500 rounded py-2 px-5 text-white font-bold disabled:bg-slate-400"
                     type="submit"
                 >
-                    Send
+                    Send to Drive
                 </button>
             </div>
         </div>
         <script async>
-            const fileInput = document.querySelector("#fileInput");
-            const btnSend = document.querySelector("#btnSend");
+            document.addEventListener("DOMContentLoaded", () => {
+                const fileInput = document.querySelector("#fileInput");
+                const btnSend = document.querySelector("#btnSend");
+                const toaster = document.querySelector("#toaster");
 
-            btnSend.addEventListener("click", async () => {
-                console.log("FILE", fileInput.files[0]);
+                btnSend.addEventListener("click", async () => {
+                    console.log("FILE", fileInput.files[0]);
 
-                const formData = new FormData();
-                formData.append("file", fileInput.files[0]);
-                formData.append("customName", "custon-name-alan");
+                    if (fileInput.files.length > 0) {
+                        btnSend.disabled = true;
+                        btnSend.innerText = "Uploading...";
+                    }
 
-                const options = {
-                    method: "POST",
-                    body: formData,
+                    const formData = new FormData();
+                    formData.append("file", fileInput.files[0]);
+                    formData.append("customName", "custon-name-alan");
+
+                    const options = {
+                        method: "POST",
+                        body: formData,
+                    };
+
+                    fetch(
+                        "https://uptodrive-backend.onrender.com/upload",
+                        options
+                    )
+                        .then((response) => response.json())
+                        .then((response) => {
+                            console.log(response);
+                            showToaster();
+                            btnSend.disabled = false;
+                            btnSend.innerText = "Send To Drive";
+                        })
+                        .catch((error) => {
+                            showToaster("fail");
+                        });
+                });
+
+                const toasterClasses = {
+                    base: "  ",
+                    success: " border-green-400 bg-green-50 ",
+                    fail: " border-red-400 bg-red-50 ",
                 };
 
-                fetch("https://uptodrive-backend.onrender.com/upload", options)
-                    .then((response) => response.json())
-                    .then((response) => {
-                        console.log(response);
-                    });
+                function showToaster(status) {
+                    toaster.style.bottom = "20vh";
+                    if (status == "fail") {
+                        toaster.style.border = "1px solid red";
+                        toaster.style.background = "#ff777711";
+                        toaster.innerHTML = `<span>👎</span> Error on sending file.`;
+                    } else {
+                        toaster.style.border = "1px solid green";
+                        toaster.style.background = "#77ff7744";
+                        toaster.innerHTML = `<span>🙌</span> File has been sent successfuly!`;
+                    }
+
+                    setTimeout(() => {
+                        hideToaster();
+                    }, 5000);
+                }
+
+                function hideToaster() {
+                    toaster.style.bottom = "-20vh";
+                }
+
+                // btnSend.addEventListener("click", async () => {
+                //     const file = fileInput.files[0];
+                //     const fileReader = new FileReader();
+                //     fileReader.onload = function (e) {
+                //         const blob = dataURLtoBlob(fileReader.result);
+                //         console.log("FILEEEE", blob);
+                //     };
+
+                //     return;
+                //     // Converte a data URL para um blob
+                //     const blob = await fileInput.files[0].blob();
+
+                //     const formData = new FormData();
+                //     formData.append("image", blob, "image.png");
+
+                //     // Envia o arquivo para o backend (Node.js)
+                //     fetch("http://localhost:4000/uploads", {
+                //         method: "POST",
+                //         body: formData,
+                //     })
+                //         .then((response) => response.text())
+                //         .then((result) => {
+                //             alert(result);
+                //         })
+                //         .catch((error) => {
+                //             console.error("Erro ao fazer upload:", error);
+                //             alert("Erro ao enviar o arquivo.");
+                //         });
+
+                //     // fetch("http://localhost:4000/uploads", { method: "POST" });
+                // });
             });
-
-            // btnSend.addEventListener("click", async () => {
-            //     const file = fileInput.files[0];
-            //     const fileReader = new FileReader();
-            //     fileReader.onload = function (e) {
-            //         const blob = dataURLtoBlob(fileReader.result);
-            //         console.log("FILEEEE", blob);
-            //     };
-
-            //     return;
-            //     // Converte a data URL para um blob
-            //     const blob = await fileInput.files[0].blob();
-
-            //     const formData = new FormData();
-            //     formData.append("image", blob, "image.png");
-
-            //     // Envia o arquivo para o backend (Node.js)
-            //     fetch("http://localhost:4000/uploads", {
-            //         method: "POST",
-            //         body: formData,
-            //     })
-            //         .then((response) => response.text())
-            //         .then((result) => {
-            //             alert(result);
-            //         })
-            //         .catch((error) => {
-            //             console.error("Erro ao fazer upload:", error);
-            //             alert("Erro ao enviar o arquivo.");
-            //         });
-
-            //     // fetch("http://localhost:4000/uploads", { method: "POST" });
-            // });
         </script>
+        <div
+            id="toaster"
+            class="bottom-[-60px] border h-12 px-5 text-md font-bold flex gap-5 items-center min-w-[360] fixed transition-all"
+        >
+            <span>🙌</span> Arquivo enviado com sucesso!
+        </div>
     </body>
 </html>
