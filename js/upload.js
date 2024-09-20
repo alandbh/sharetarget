@@ -18,6 +18,9 @@ async function loadImageFromCache() {
         const contentType = imageDataUrl.split(";")[0].split(":")[1]; // extrai o tipo de conteúdo da base64
         const blob = base64ToBlob(imageDataUrl, contentType);
         const extension = getFileExtension(contentType); // Obter a extensão correta
+
+        console.log({ extension });
+
         // const formData = new FormData();
         formData.append("file", blob); // Nome do arquivo pode ser alterado
         formData.append("customName", "pwa-image");
@@ -53,13 +56,13 @@ function base64ToBlob(base64, contentType = "", sliceSize = 512) {
 function getFileExtension(contentType) {
     switch (contentType) {
         case "image/jpeg":
-            return ".jpg";
+            return "jpg";
         case "image/png":
-            return ".png";
+            return "png";
         case "image/webp":
-            return ".webp";
+            return "webp";
         case "image/gif":
-            return ".gif";
+            return "gif";
         default:
             return ""; // Caso não seja um tipo conhecido, pode retornar uma string vazia
     }
