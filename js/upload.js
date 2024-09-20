@@ -18,7 +18,8 @@ async function loadImageFromCache() {
         const contentType = imageDataUrl.split(";")[0].split(":")[1]; // extrai o tipo de conteúdo da base64
         const blob = base64ToBlob(imageDataUrl, contentType);
         // const formData = new FormData();
-        formData.append("file", blob, "shared-image.png"); // Nome do arquivo pode ser alterado
+        formData.append("file", blob); // Nome do arquivo pode ser alterado
+        formData.append("customName", "pwa-image");
 
         // return imageDataUrl;
     } else {
