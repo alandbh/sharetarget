@@ -1,9 +1,11 @@
 const playerSelect = document.querySelector("#player");
 const journeySelect = document.querySelector("#journey");
+// const journeySelect = document.createElement("select");
 const copyNameButton = document.querySelector("#copyNameButton");
 const iconCopy = document.querySelector("#iconCopy");
 const iconCheck = document.querySelector("#iconCheck");
 const fileInput = document.querySelector("#fileInput");
+const filename = document.querySelector("#filename");
 const btnSend = document.querySelector("#btnSend");
 const toaster = document.querySelector("#toaster");
 
@@ -27,14 +29,6 @@ copyNameButton.addEventListener("click", () => {
     }, 4000);
 });
 
-playerSelect.addEventListener("change", () => {
-    localStorage.setItem("player", playerSelect.value);
-});
-
-journeySelect.addEventListener("change", () => {
-    localStorage.setItem("journey", journeySelect.value);
-});
-
 btnSend.addEventListener("click", async () => {
     console.log("FILE", fileInput.files[0]);
 
@@ -43,10 +37,12 @@ btnSend.addEventListener("click", async () => {
         btnSend.innerText = "Uploading...";
     }
 
+    const customName = await getCustonName();
+
     const formData = new FormData();
     formData.append("file", fileInput.files[0]);
-    formData.append("customName", "custon-name-alan");
-    formData.append("folder", window.parentFolder);
+    formData.append("customName", customName);
+    formData.append("folder", localStorage.getItem("journey"));
 
     const options = {
         method: "POST",
@@ -60,6 +56,8 @@ btnSend.addEventListener("click", async () => {
             showToaster();
             btnSend.disabled = false;
             btnSend.innerText = "Send To Drive";
+            fileInput.value = "";
+            filename.value = customName;
         })
         .catch((error) => {
             showToaster("fail");
@@ -87,40 +85,119 @@ function hideToaster() {
     toaster.style.bottom = "-20vh";
 }
 
+function getPlayerName() {
+    if (localStorage.getItem("player")) {
+        return window.players.find(
+            (player) => player.id === localStorage.getItem("player")
+        ).name;
+    }
+
+    return "player";
+}
+function getJourneyName() {
+    if (localStorage.getItem("journey")) {
+        const currentPlayerSubfolders = window.players.find(
+            (player) => player.id === localStorage.getItem("player")
+        ).subfolders;
+
+        return currentPlayerSubfolders.find(
+            (subfolder) => subfolder.id === localStorage.getItem("journey")
+        ).name;
+    }
+
+    return "journey";
+}
+
+async function getFilesList() {
+    const response = await fetch(
+        // apiUrl + "/files?folder=" + parentFolder,
+        apiUrl + "/files?folder=" + localStorage.getItem("journey"),
+        { method: "GET" }
+    );
+
+    const files = await response.json();
+
+    return files;
+}
+
+async function getCustonName() {
+    const filesList = await getFilesList();
+    return (
+        getPlayerName() +
+        "-" +
+        getJourneyName() +
+        "-" +
+        Number(filesList.length + 1)
+    );
+}
+
 /**
  *
  * Populate the player selection
  */
 
-// const players = localStorage.getItem("folders")
-//     ? JSON.parse(localStorage.getItem("folders"))
-//     : [];
-
-// players.map((player) => {
-//     const opt = document.createElement("option");
-//     opt.value = player.id;
-//     opt.innerHTML = player.name;
-//     playerSelect.appendChild(opt);
-
-//     playerSelect.value = localStorage.getItem("player") || "null";
-//     journeySelect.value = localStorage.getItem("journey") || "null";
-// });
-
-playerSelect.addEventListener("change", (event) => {
-    console.log(event.target.value);
-
-    const selectedPlayer = players.find(
-        (player) => player.id === event.target.value
-    );
-
-    populateJourneySelect(selectedPlayer.subfolders);
+journeySelect.addEventListener("change", () => {
+    localStorage.setItem("journey", journeySelect.value);
 });
 
-function populateJourneySelect(subfolders) {
+window.players = localStorage.getItem("folders")
+    ? JSON.parse(localStorage.getItem("folders"))
+    : [];
+
+if (localStorage.getItem("player")) {
+    const selectedPlayer = getPlayerObj(
+        players,
+        localStorage.getItem("player")
+    );
+
+    populateJourneySelect(selectedPlayer);
+}
+
+if (localStorage.getItem("journey") && localStorage.getItem("player")) {
+    journeySelect.value = localStorage.getItem("journey");
+}
+
+players.map((player) => {
+    const opt = document.createElement("option");
+    opt.value = player.id;
+    opt.innerHTML = player.name;
+    playerSelect.appendChild(opt);
+
+    playerSelect.value = localStorage.getItem("player") || "null";
+});
+
+playerSelect.addEventListener("change", (event) => {
+    localStorage.setItem("player", playerSelect.value);
+    console.log(event.target.value);
+
+    const selectedPlayer = getPlayerObj(players, event.target.value);
+
+    localStorage.removeItem("journey");
+    populateJourneySelect(selectedPlayer);
+});
+
+function populateJourneySelect(selectedPlayer) {
+    clearJourney();
+    const subfolders = selectedPlayer.subfolders;
     subfolders.map((folder) => {
         const opt = document.createElement("option");
         opt.value = folder.id;
         opt.innerHTML = folder.name;
         journeySelect.appendChild(opt);
     });
+    journeySelect.value = localStorage.getItem("journey") || "null";
+}
+
+function clearJourney() {
+    journeySelect.length = 0;
+    const defaultOpt = document.createElement("option");
+    defaultOpt.value = null;
+    defaultOpt.innerHTML = "...";
+    journeySelect.appendChild(defaultOpt);
+}
+
+function getPlayerObj(players, id) {
+    const selectedPlayer = players.find((player) => player.id === id);
+
+    return selectedPlayer;
 }
