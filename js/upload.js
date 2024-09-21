@@ -1,3 +1,33 @@
+const players = [
+    {
+        name: "Magalu",
+        slug: "magalu",
+    },
+    {
+        name: "Casas Bahia",
+        slug: "casas-bahia",
+    },
+    {
+        name: "Beleza na Web",
+        slug: "beleza",
+    },
+    {
+        name: "Mercado Livre",
+        slug: "mercado-livre",
+    },
+];
+
+const journeys = [
+    {
+        name: "Site Mobile",
+        slug: "site-mobile",
+    },
+    {
+        name: "App",
+        slug: "app",
+    },
+];
+
 // Função para recuperar a imagem armazenada no Cache API
 
 async function loadImageFromCache() {
@@ -24,6 +54,7 @@ async function loadImageFromCache() {
         formData.append("file", blob); // Nome do arquivo pode ser alterado
         formData.append("customName", "pwa-image");
         formData.append("extension", extension);
+        formData.append("folder", "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC");
 
         sendToBackend(formData);
 
