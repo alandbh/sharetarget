@@ -41,5 +41,27 @@ async function getInitialData() {
         const folders = await response.json();
 
         localStorage.setItem("folders", JSON.stringify(folders));
+
+        window.players = localStorage.getItem("folders")
+            ? JSON.parse(localStorage.getItem("folders"))
+            : [];
+
+        players.map((player) => {
+            const opt = document.createElement("option");
+            opt.value = player.id;
+            opt.innerHTML = player.name;
+            playerSelect.appendChild(opt);
+
+            playerSelect.value = localStorage.getItem("player") || "null";
+        });
+
+        players[0].subfolders.map((subfolder) => {
+            const opt = document.createElement("option");
+            opt.value = subfolder.id;
+            opt.innerHTML = subfolder.name;
+            journeySelect.appendChild(opt);
+
+            journeySelect.value = localStorage.getItem("journey") || "null";
+        });
     }
 }

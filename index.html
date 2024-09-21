@@ -41,6 +41,91 @@
                     class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4"
                 />
             </div>
+            <div class="flex gap-1 flex-col">
+                <label for="filename">File name</label>
+                <div class="flex gap-5">
+                    <div
+                        class="bg-slate-100 h-10 text-center flex items-center justify-center flex-1"
+                    >
+                        <input
+                            type="text"
+                            disabled
+                            id="filename"
+                            value="🤷🏻‍♂️"
+                            class="font-mono text-center"
+                        />
+                    </div>
+                    <button
+                        id="copyNameButton"
+                        class="border size-10 flex items-center justify-center rounded text-slate-500"
+                    >
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            id="iconCopy"
+                        >
+                            <path
+                                d="M20.25 2.625H8.25C7.95163 2.625 7.66548 2.74353 7.4545 2.9545C7.24353 3.16548 7.125 3.45163 7.125 3.75V7.125H3.75C3.45163 7.125 3.16548 7.24353 2.9545 7.4545C2.74353 7.66548 2.625 7.95163 2.625 8.25V20.25C2.625 20.5484 2.74353 20.8345 2.9545 21.0455C3.16548 21.2565 3.45163 21.375 3.75 21.375H15.75C16.0484 21.375 16.3345 21.2565 16.5455 21.0455C16.7565 20.8345 16.875 20.5484 16.875 20.25V16.875H20.25C20.5484 16.875 20.8345 16.7565 21.0455 16.5455C21.2565 16.3345 21.375 16.0484 21.375 15.75V3.75C21.375 3.45163 21.2565 3.16548 21.0455 2.9545C20.8345 2.74353 20.5484 2.625 20.25 2.625ZM14.625 19.125H4.875V9.375H14.625V19.125ZM19.125 14.625H16.875V8.25C16.875 7.95163 16.7565 7.66548 16.5455 7.4545C16.3345 7.24353 16.0484 7.125 15.75 7.125H9.375V4.875H19.125V14.625Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="hidden"
+                            id="iconCheck"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M21.546 5.11155C21.8272 5.39285 21.9852 5.77431 21.9852 6.17205C21.9852 6.5698 21.8272 6.95126 21.546 7.23255L10.303 18.4756C10.1544 18.6242 9.97805 18.7421 9.7839 18.8225C9.58976 18.9029 9.38167 18.9443 9.17153 18.9443C8.96138 18.9443 8.75329 18.9029 8.55915 18.8225C8.365 18.7421 8.1886 18.6242 8.04003 18.4756L2.45403 12.8906C2.31076 12.7522 2.19649 12.5867 2.11787 12.4037C2.03926 12.2207 1.99788 12.0238 1.99615 11.8247C1.99442 11.6255 2.03237 11.428 2.10779 11.2436C2.18322 11.0593 2.29459 10.8918 2.43543 10.751C2.57627 10.6101 2.74375 10.4987 2.92809 10.4233C3.11244 10.3479 3.30996 10.3099 3.50913 10.3117C3.7083 10.3134 3.90513 10.3548 4.08813 10.4334C4.27114 10.512 4.43666 10.6263 4.57503 10.7696L9.17103 15.3656L19.424 5.11155C19.5633 4.97216 19.7287 4.86159 19.9108 4.78615C20.0928 4.71071 20.288 4.67188 20.485 4.67188C20.6821 4.67188 20.8772 4.71071 21.0593 4.78615C21.2413 4.86159 21.4067 4.97216 21.546 5.11155Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <p
+                class="text-red-600 bg-red-50 p-5 border-l-4 border-red-400 hidden"
+                id="errorMessage"
+            ></p>
+
+            <div class="flex gap-5 justify-between max-sm:flex-col">
+                <div class="flex flex-col gap-2 flex-1">
+                    <label for="player" class="text-slate-500 font-bold"
+                        >Select a player</label
+                    >
+                    <select
+                        class="border border-slate-300 block h-10 px-4 rounded-sm"
+                        name="player"
+                        id="player"
+                    >
+                        <option value="null">...</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2 flex-1">
+                    <label for="journey" class="text-slate-500 font-bold"
+                        >Select a journey</label
+                    >
+                    <select
+                        class="border border-slate-300 block h-10 px-4 rounded-sm"
+                        name="journey"
+                        id="journey"
+                    >
+                        <option value="null">...</option>
+                    </select>
+                </div>
+
+                <div id="uploadStatus"></div>
+            </div>
 
             <div>
                 <button
@@ -54,99 +139,53 @@
         </div>
         <script async>
             document.addEventListener("DOMContentLoaded", () => {
-                const fileInput = document.querySelector("#fileInput");
-                const btnSend = document.querySelector("#btnSend");
-                const toaster = document.querySelector("#toaster");
-
-                btnSend.addEventListener("click", async () => {
-                    console.log("FILE", fileInput.files[0]);
-
-                    if (fileInput.files.length > 0) {
-                        btnSend.disabled = true;
-                        btnSend.innerText = "Uploading...";
-                    }
-
-                    const formData = new FormData();
-                    formData.append("file", fileInput.files[0]);
-                    formData.append("customName", "custon-name-alan");
-                    formData.append("folder", window.parentFolder);
-
-                    const options = {
-                        method: "POST",
-                        body: formData,
-                    };
-
-                    fetch(window.apiUrl + "/upload", options)
-                        .then((response) => response.json())
-                        .then((response) => {
-                            console.log(response);
-                            showToaster();
-                            btnSend.disabled = false;
-                            btnSend.innerText = "Send To Drive";
-                        })
-                        .catch((error) => {
-                            showToaster("fail");
-                        });
-                });
-
-                const toasterClasses = {
-                    base: "  ",
-                    success: " border-green-400 bg-green-50 ",
-                    fail: " border-red-400 bg-red-50 ",
-                };
-
-                function showToaster(status) {
-                    toaster.style.bottom = "20vh";
-                    if (status == "fail") {
-                        toaster.style.border = "1px solid red";
-                        toaster.style.background = "#ff777711";
-                        toaster.innerHTML = `<span>👎</span> Error on sending file.`;
-                    } else {
-                        toaster.style.border = "1px solid green";
-                        toaster.style.background = "#77ff7744";
-                        toaster.innerHTML = `<span>🙌</span> File has been sent successfuly!`;
-                    }
-
-                    setTimeout(() => {
-                        hideToaster();
-                    }, 5000);
-                }
-
-                function hideToaster() {
-                    toaster.style.bottom = "-20vh";
-                }
-
+                // const fileInput = document.querySelector("#fileInput");
+                // const btnSend = document.querySelector("#btnSend");
+                // const toaster = document.querySelector("#toaster");
                 // btnSend.addEventListener("click", async () => {
-                //     const file = fileInput.files[0];
-                //     const fileReader = new FileReader();
-                //     fileReader.onload = function (e) {
-                //         const blob = dataURLtoBlob(fileReader.result);
-                //         console.log("FILEEEE", blob);
-                //     };
-
-                //     return;
-                //     // Converte a data URL para um blob
-                //     const blob = await fileInput.files[0].blob();
-
+                //     console.log("FILE", fileInput.files[0]);
+                //     if (fileInput.files.length > 0) {
+                //         btnSend.disabled = true;
+                //         btnSend.innerText = "Uploading...";
+                //     }
                 //     const formData = new FormData();
-                //     formData.append("image", blob, "image.png");
-
-                //     // Envia o arquivo para o backend (Node.js)
-                //     fetch("http://localhost:4000/uploads", {
+                //     formData.append("file", fileInput.files[0]);
+                //     formData.append("customName", "custon-name-alan");
+                //     formData.append("folder", window.parentFolder);
+                //     const options = {
                 //         method: "POST",
                 //         body: formData,
-                //     })
-                //         .then((response) => response.text())
-                //         .then((result) => {
-                //             alert(result);
+                //     };
+                //     fetch(window.apiUrl + "/upload", options)
+                //         .then((response) => response.json())
+                //         .then((response) => {
+                //             console.log(response);
+                //             showToaster();
+                //             btnSend.disabled = false;
+                //             btnSend.innerText = "Send To Drive";
                 //         })
                 //         .catch((error) => {
-                //             console.error("Erro ao fazer upload:", error);
-                //             alert("Erro ao enviar o arquivo.");
+                //             showToaster("fail");
                 //         });
-
-                //     // fetch("http://localhost:4000/uploads", { method: "POST" });
                 // });
+                // function showToaster(status) {
+                //     toaster.style.bottom = "20vh";
+                //     if (status == "fail") {
+                //         toaster.style.border = "1px solid red";
+                //         toaster.style.background = "#ff777711";
+                //         toaster.innerHTML = `<span>👎</span> Error on sending file.`;
+                //     } else {
+                //         toaster.style.border = "1px solid green";
+                //         toaster.style.background = "#77ff7744";
+                //         toaster.innerHTML = `<span>🙌</span> File has been sent successfuly!`;
+                //     }
+                //     setTimeout(() => {
+                //         hideToaster();
+                //     }, 5000);
+                // }
+                // function hideToaster() {
+                //     toaster.style.bottom = "-20vh";
+                // }
             });
         </script>
         <div
@@ -155,5 +194,7 @@
         >
             <span>🙌</span> Arquivo enviado com sucesso!
         </div>
+
+        <script src="/js/ui.js"></script>
     </body>
 </html>
