@@ -1,52 +1,33 @@
-const players = [
-    {
-        name: "Magalu",
-        slug: "magalu",
-    },
-    {
-        name: "Casas Bahia",
-        slug: "casas-bahia",
-    },
-    {
-        name: "Beleza na Web",
-        slug: "beleza",
-    },
-    {
-        name: "Mercado Livre",
-        slug: "mercado-livre",
-    },
-];
-
-const journeys = [
-    {
-        name: "Site Mobile",
-        slug: "site-mobile",
-    },
-    {
-        name: "App",
-        slug: "app",
-    },
-];
-
-// Função para recuperar a imagem armazenada no Cache API
+// Function for retrieving image stored in Cache API
 
 async function loadImageFromCache() {
     const cache = await caches.open("pwa-image-cache-v1");
-    const cachedResponse = await cache.match("/cached-image");
+    const cachedResponse = await cache.match("/cached-file");
 
     if (cachedResponse) {
         const imageDataUrl = await cachedResponse.text();
+        const contentType = imageDataUrl.split(";")[0].split(":")[1]; // gets the content type from base64
 
-        // Exibir a imagem
-        const imgElement = document.createElement("img");
-        imgElement.classList.add("w-full", "h-full", "object-contain");
-        imgElement.src = imageDataUrl;
-        document.getElementById("image-container").appendChild(imgElement);
+        if (contentType.includes("image")) {
+            // Show the image
+            const imgElement = document.createElement("img");
+            imgElement.classList.add("w-full", "h-full", "object-contain");
+            imgElement.src = imageDataUrl;
+            document.getElementById("image-container").appendChild(imgElement);
+        } else if (contentType.includes("video")) {
+            // show the video
+            const videoElement = document.createElement("video");
+            videoElement.classList.add("w-full", "h-full", "object-contain");
+            videoElement.src = imageDataUrl;
+            document
+                .getElementById("image-container")
+                .appendChild(videoElement);
+        }
 
-        // Enviar a imagem para o backend
-        const contentType = imageDataUrl.split(";")[0].split(":")[1]; // extrai o tipo de conteúdo da base64
+        // Sento image to the backend
+
         const blob = base64ToBlob(imageDataUrl, contentType);
-        const extension = getFileExtension(contentType); // Obter a extensão correta
+        const extension = getFileExtension(contentType); // gets the file extension
 
         console.log({ extension });
 
@@ -84,9 +65,9 @@ function base64ToBlob(base64, contentType = "", sliceSize = 512) {
     return new Blob(byteArrays, { type: contentType });
 }
 
-// Função para mapear contentType para extensão de arquivo
 function getFileExtension(contentType) {
     switch (contentType) {
+        // Image typrd
         case "image/jpeg":
             return "jpg";
         case "image/png":
@@ -95,8 +76,19 @@ function getFileExtension(contentType) {
             return "webp";
         case "image/gif":
             return "gif";
+
+        // Veideo types
+        case "video/mp4":
+            return "mp4";
+        case "video/webm":
+            return "webm";
+        case "video/ogg":
+            return "ogv";
+        case "video/quicktime":
+            return "mov";
+
         default:
-            return ""; // Caso não seja um tipo conhecido, pode retornar uma string vazia
+            return "";
     }
 }
 

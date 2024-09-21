@@ -238,7 +238,10 @@ async function handleShare(request) {
     console.log("filetype", file);
     console.log("filetype", file.type);
 
-    if (file && file.type.startsWith("image/")) {
+    if (
+        file &&
+        (file.type.startsWith("image/") || file.type.startsWith("video/"))
+    ) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
 
@@ -246,7 +249,7 @@ async function handleShare(request) {
             reader.onloadend = () => {
                 const imageDataUrl = reader.result;
 
-                // Armazena a imagem no cache
+                // Stores the file in cache
                 caches.open(CACHE_NAME).then((cache) => {
                     const response = new Response(imageDataUrl, {
                         headers: { "Content-Type": file.type },
@@ -254,7 +257,7 @@ async function handleShare(request) {
                     cache.put("/cached-image", response);
                 });
 
-                // Redireciona para a página de exibição
+                // Redirects to the preview page
                 resolve(Response.redirect("/show.html", 303));
             };
         });
