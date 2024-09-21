@@ -29,9 +29,14 @@
                 />
                 <h1 class="text-3xl font-bold">Up To Drive</h1>
             </div>
-            <p class="text-xl text-slate-600">
-                Just a humble app to make evidence upload easier. 🙃
-            </p>
+            <div class="text-center flex flex-col gap-5">
+                <p class="text-xl text-slate-600">
+                    Just a humble app to make evidence upload easier. 🙃
+                </p>
+                <p class="text-md text-slate-600">
+                    No needed to worry about naming conventions. 🙌
+                </p>
+            </div>
             <div>
                 <label for="file-input" class="sr-only">Choose file</label>
                 <input
@@ -41,19 +46,70 @@
                     class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4"
                 />
             </div>
-            <div class="flex gap-1 flex-col">
-                <label for="filename">File name</label>
+
+            <p
+                class="text-red-600 bg-red-50 p-5 border-l-4 border-red-400 hidden"
+                id="errorMessage"
+            ></p>
+
+            <div class="flex gap-5 justify-between max-sm:flex-col">
+                <div class="flex flex-col gap-2 flex-1">
+                    <label for="player" class="text-slate-500 font-bold"
+                        >Select a player</label
+                    >
+                    <select
+                        class="border border-slate-300 block h-10 px-4 rounded-sm"
+                        name="player"
+                        id="player"
+                    >
+                        <option value="null">...</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2 flex-1">
+                    <label for="journey" class="text-slate-500 font-bold"
+                        >Select a journey</label
+                    >
+                    <!-- <div id="selectContainer"></div> -->
+                    <select
+                        class="border border-slate-300 block h-10 px-4 rounded-sm"
+                        name="journey"
+                        id="journey"
+                    >
+                        <option value="null">...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div
+                style="height: 0; overflow: hidden; transition: 0.4s"
+                class="flex gap-1 flex-col"
+                id="filenameContainer"
+            >
+                <label class="text-slate-500 mb-2" for="filename"
+                    ><div class="font-bold">What about copy the file name?</div>
+                    <div class="text-sm">
+                        ...and paste it into Collector, of course.
+                    </div>
+                </label>
                 <div class="flex gap-5">
                     <div
-                        class="bg-slate-100 h-10 text-center flex items-center justify-center flex-1"
+                        class="bg-slate-100 h-10 text-center flex flex-col items-center justify-center flex-1 relative"
                     >
                         <input
                             type="text"
                             disabled
                             id="filename"
                             value="🤷🏻‍♂️"
-                            class="font-mono text-center"
+                            class="font-mono text-sm text-center w-full"
                         />
+
+                        <div
+                            style="opacity: 0; transition: 0.4s"
+                            class="h-10 bg-green-500 text-white flex items-center justify-center w-full absolute"
+                            id="copyedMessage"
+                        >
+                            Copied!
+                        </div>
                     </div>
                     <button
                         id="copyNameButton"
@@ -93,48 +149,24 @@
                 </div>
             </div>
 
-            <p
-                class="text-red-600 bg-red-50 p-5 border-l-4 border-red-400 hidden"
-                id="errorMessage"
-            ></p>
-
-            <div class="flex gap-5 justify-between max-sm:flex-col">
-                <div class="flex flex-col gap-2 flex-1">
-                    <label for="player" class="text-slate-500 font-bold"
-                        >Select a player</label
-                    >
-                    <select
-                        class="border border-slate-300 block h-10 px-4 rounded-sm"
-                        name="player"
-                        id="player"
-                    >
-                        <option value="null">...</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-2 flex-1">
-                    <label for="journey" class="text-slate-500 font-bold"
-                        >Select a journey</label
-                    >
-                    <!-- <div id="selectContainer"></div> -->
-                    <select
-                        class="border border-slate-300 block h-10 px-4 rounded-sm"
-                        name="journey"
-                        id="journey"
-                    >
-                        <option value="null">...</option>
-                    </select>
-                </div>
-
-                <div id="uploadStatus"></div>
-            </div>
-
             <div>
+                <div id="uploadStatus"></div>
                 <button
                     id="btnSend"
                     class="bg-blue-500 rounded py-2 px-5 text-white font-bold disabled:bg-slate-400"
                     type="submit"
+                    disabled
                 >
                     Send to Drive
+                </button>
+            </div>
+            <div class="hidden">
+                <button
+                    id="btnSendPreview"
+                    class="bg-blue-500 rounded py-2 px-5 text-white font-bold disabled:bg-slate-400"
+                    type="submit"
+                >
+                    Send to Preview
                 </button>
             </div>
         </div>

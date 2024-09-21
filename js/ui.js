@@ -3,10 +3,12 @@ const journeySelect = document.querySelector("#journey");
 // const journeySelect = document.createElement("select");
 const copyNameButton = document.querySelector("#copyNameButton");
 const iconCopy = document.querySelector("#iconCopy");
+const copyedMessage = document.querySelector("#copyedMessage");
 const iconCheck = document.querySelector("#iconCheck");
 const fileInput = document.querySelector("#fileInput");
 const filename = document.querySelector("#filename");
 const btnSend = document.querySelector("#btnSend");
+const btnSendPreview = document.querySelector("#btnSendPreview");
 const toaster = document.querySelector("#toaster");
 
 copyNameButton.addEventListener("click", () => {
@@ -20,13 +22,34 @@ copyNameButton.addEventListener("click", () => {
     iconCheck.classList.remove("hidden");
     copyNameButton.classList.remove("text-slate-500");
     copyNameButton.classList.add("bg-green-500", "text-white");
+    copyedMessage.style.opacity = 1;
 
     setTimeout(() => {
         iconCopy.classList.remove("hidden");
         iconCheck.classList.add("hidden");
         copyNameButton.classList.add("text-slate-500");
         copyNameButton.classList.remove("bg-green-500", "text-white");
+        copyedMessage.style.opacity = 0;
     }, 4000);
+});
+
+/**
+ *
+ * Only for Development purposes
+ * --------------------------------
+ * */
+
+btnSendPreview.addEventListener("click", async () => {
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    const options = {
+        method: "POST",
+        body: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+    };
+
+    fetch("http://localhost:3003/share.html", options);
 });
 
 btnSend.addEventListener("click", async () => {
@@ -54,15 +77,34 @@ btnSend.addEventListener("click", async () => {
         .then((response) => {
             console.log(response);
             showToaster();
-            btnSend.disabled = false;
+            // btnSend.disabled = false;
             btnSend.innerText = "Send To Drive";
             fileInput.value = "";
             filename.value = customName;
+            filenameContainer.style.height = "100px";
+            enableSendButton();
         })
         .catch((error) => {
             showToaster("fail");
         });
 });
+
+function enableSendButton() {
+    btnSend.disabled = true;
+    const validInputFile = Boolean(fileInput.value);
+    const validPlayer = Boolean(
+        localStorage.player && localStorage.player !== "null"
+    );
+    const validJourney = Boolean(
+        localStorage.journey && localStorage.journey !== "null"
+    );
+
+    if (validInputFile && validPlayer && validJourney) {
+        btnSend.disabled = false;
+    }
+
+    return validInputFile && validPlayer && validJourney;
+}
 
 function showToaster(status) {
     toaster.style.bottom = "20vh";
@@ -201,3 +243,11 @@ function getPlayerObj(players, id) {
 
     return selectedPlayer;
 }
+
+[fileInput, playerSelect, journeySelect].map((field) => {
+    field.addEventListener("change", () => {
+        setTimeout(() => {
+            enableSendButton();
+        }, 100);
+    });
+});
