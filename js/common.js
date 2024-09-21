@@ -4,120 +4,36 @@
  * Installability requires a service worker with a fetch event handler, and
  * if the page isn't served over HTTPS, the service worker won't load.
  */
-if (window.location.protocol === "http:") {
-    const requireHTTPS = document.getElementById("requireHTTPS");
-    const link = requireHTTPS.querySelector("a");
-    link.href = window.location.href.replace("http://", "https://");
-    requireHTTPS.classList.remove("hidden");
-    window.location.href = "https:" + window.location.href.substring(5);
-}
+// if (window.location.protocol === "http:") {
+//     const requireHTTPS = document.getElementById("requireHTTPS");
+//     window.location.href = "https:" + window.location.href.substring(5);
+// }
 
 /* Only register a service worker if it's supported */
 if ("serviceWorker" in navigator) {
     console.log("👍", "navigator.serviceWorker is supported");
     navigator.serviceWorker.register("/service-worker.js");
 }
-// let CLIENT_ID;
-// let API_KEY;
 
-// fetch("https://sharetarget.netlify.app/.netlify/functions/keys", {
-//     method: "GET",
-// })
-//     .then((response) => response.json())
-//     .then((response) => {
-//         CLIENT_ID = response.client;
-//         API_KEY = response.api;
-//         console.log("Client: ", CLIENT_ID);
-//         handleClientLoad();
-//     })
-//     .catch((err) => console.error(err));
+window.addEventListener("DOMContentLoaded", getInitialData);
 
-// var DISCOVERY_DOCS = [
-//     "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
-// ];
-// var SCOPES = "https://www.googleapis.com/auth/drive";
-// var signinButton = document.querySelector("#signIn");
-// let tokenClient = { callback: null };
-// let gapiInited = false;
-// let gisInited = false;
+async function getInitialData() {
+    const endpoint = window.location.host.includes("netlify")
+        ? "https://uptodrive-backend.onrender.com"
+        : "http://localhost:4000";
 
-// // console.log("asasasa", gapi);
+    const localFolders = JSON.parse(localStorage.getItem("folders"));
+    console.log({ localFolders });
 
-// // window.onload = handleClientLoad;
+    if (!localFolders || localFolders.length === 0) {
+        console.log("fetchingggggg");
+        const response = await fetch(
+            endpoint + "/folders?folder=1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC",
+            { method: "GET" }
+        );
 
-// function handleClientLoad() {
-//     gapi.load("client:auth2", () => {
-//         gapi.auth2.init({ clientId: CLIENT_ID });
-//     });
-// }
+        const folders = await response.json();
 
-// // function initClient() {
-// //     gapi.client
-// //         .init({
-// //             apiKey: API_KEY,
-// //             clientId: CLIENT_ID,
-// //             discoveryDocs: DISCOVERY_DOCS,
-// //             scope: SCOPES,
-// //         })
-// //         .then(
-// //             () => {
-// //                 gapi.auth2
-// //                     .getAuthInstance()
-// //                     .isSignedIn.listen(updateSignInStatus);
-
-// //                 // check initial signin state
-// //                 updateSignInStatus(
-// //                     gapi.auth2.getAuthInstance().isSignedIn.get()
-// //                 );
-// //                 signinButton.onclick = handleSignIn;
-// //             },
-// //             (err) => {
-// //                 console.error("error", err);
-// //             }
-// //         );
-// // }
-
-// function updateSignInStatus(isSignedIn) {
-//     if (isSignedIn) {
-//         signinButton.disable = true;
-//     } else {
-//         signinButton.disable = false;
-//     }
-// }
-
-// signinButton.onclick = () => authenticate();
-// function authenticate() {
-//     return gapi.auth2
-//         .getAuthInstance()
-//         .signIn({ scope: SCOPES })
-//         .then(
-//             function () {
-//                 console.log("Usuário autenticado");
-//             },
-//             function (error) {
-//                 console.error("Erro na autenticação", error);
-//             }
-//         );
-// }
-
-// // Carrega a biblioteca de APIs do Google
-// function loadClient() {
-//     gapi.client.setApiKey(API_KEY);
-//     return gapi.client.load(DISCOVERY_DOCS).then(
-//         function () {
-//             console.log("Google Drive API carregada");
-//         },
-//         function (error) {
-//             console.error("Erro ao carregar API", error);
-//         }
-//     );
-// }
-
-// function handleSignIn() {
-//     // gapi.auth2.getAuthInstance().signIn();
-//     authenticate().then(() => {
-//         loadClient();
-//     });
-// }
-
-// console.log("AMBIENTE", API_KEY);
+        localStorage.setItem("folders", JSON.stringify(folders));
+    }
+}
