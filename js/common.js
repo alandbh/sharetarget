@@ -15,12 +15,18 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
 }
 
+window.parentFolder = "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC";
+
+window.apiUrl = window.location.host.includes("netlify")
+    ? "https://uptodrive-backend.onrender.com"
+    : "http://localhost:4000";
+
 window.addEventListener("DOMContentLoaded", getInitialData);
 
 async function getInitialData() {
-    const endpoint = window.location.host.includes("netlify")
-        ? "https://uptodrive-backend.onrender.com"
-        : "http://localhost:4000";
+    // const endpoint = window.location.host.includes("netlify")
+    //     ? "https://uptodrive-backend.onrender.com"
+    //     : "http://localhost:4000";
 
     const localFolders = JSON.parse(localStorage.getItem("folders"));
     console.log({ localFolders });
@@ -28,7 +34,7 @@ async function getInitialData() {
     if (!localFolders || localFolders.length === 0) {
         console.log("fetchingggggg");
         const response = await fetch(
-            endpoint + "/folders?folder=1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC",
+            apiUrl + "/folders?folder=" + parentFolder,
             { method: "GET" }
         );
 

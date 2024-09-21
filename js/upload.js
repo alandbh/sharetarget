@@ -54,7 +54,7 @@ async function loadImageFromCache() {
         formData.append("file", blob); // Nome do arquivo pode ser alterado
         formData.append("customName", "pwa-image");
         formData.append("extension", extension);
-        formData.append("folder", "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC");
+        formData.append("folder", window.parentFolder);
 
         sendToBackend(formData);
 
@@ -101,14 +101,10 @@ function getFileExtension(contentType) {
 }
 
 async function sendToBackend(formData) {
-    const endpoint = window.location.host.includes("netlify")
-        ? "https://uptodrive-backend.onrender.com/upload"
-        : "http://localhost:4000/upload";
-
     const sendToDrive2 = document.querySelector("#sendToDrive2");
     sendToDrive2.addEventListener("click", async () => {
         try {
-            const response = await fetch(endpoint, {
+            const response = await fetch(window.apiUrl, {
                 method: "POST",
                 body: formData,
             });
