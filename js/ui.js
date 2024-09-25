@@ -11,6 +11,8 @@ const btnSend = document.querySelector("#btnSend");
 // const btnSendPreview = document.querySelector("#btnSendPreview");
 const toaster = document.querySelector("#toaster");
 
+const isShowPage = window.location.pathname.endsWith("show.html");
+
 copyNameButton.addEventListener("click", () => {
     const filenameContainer = document.querySelector("#filename");
 
@@ -243,11 +245,20 @@ function getPlayerObj(players, id) {
 
     return selectedPlayer;
 }
-
-[fileInput, playerSelect, journeySelect].map((field) => {
-    field.addEventListener("change", () => {
-        setTimeout(() => {
-            enableSendButton();
-        }, 100);
+if (isShowPage) {
+    [playerSelect, journeySelect].map((field) => {
+        field.addEventListener("change", () => {
+            setTimeout(() => {
+                enableSendButton();
+            }, 100);
+        });
     });
-});
+} else {
+    [fileInput, playerSelect, journeySelect].map((field) => {
+        field.addEventListener("change", () => {
+            setTimeout(() => {
+                enableSendButton();
+            }, 100);
+        });
+    });
+}
