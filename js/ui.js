@@ -252,8 +252,8 @@ function getPlayerObj(players, id) {
     return selectedPlayer;
 }
 if (isShowPage) {
+    const btnSend2 = document.querySelector("#btnSend2");
     [playerSelect, journeySelect].map((field) => {
-        const btnSend2 = document.querySelector("#btnSend2");
         field.addEventListener("change", () => {
             setTimeout(() => {
                 enableSendButton(btnSend2);
