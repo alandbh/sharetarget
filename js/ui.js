@@ -8,7 +8,7 @@ const iconCheck = document.querySelector("#iconCheck");
 const fileInput = document.querySelector("#fileInput");
 const filename = document.querySelector("#filename");
 const btnSend = document.querySelector("#btnSend");
-const btnSendPreview = document.querySelector("#btnSendPreview");
+// const btnSendPreview = document.querySelector("#btnSendPreview");
 const toaster = document.querySelector("#toaster");
 
 copyNameButton.addEventListener("click", () => {
@@ -39,18 +39,18 @@ copyNameButton.addEventListener("click", () => {
  * --------------------------------
  * */
 
-btnSendPreview.addEventListener("click", async () => {
-    const formData = new FormData();
-    formData.append("file", fileInput.files[0]);
+// btnSendPreview.addEventListener("click", async () => {
+//     const formData = new FormData();
+//     formData.append("file", fileInput.files[0]);
 
-    const options = {
-        method: "POST",
-        body: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-    };
+//     const options = {
+//         method: "POST",
+//         body: formData,
+//         headers: { "Content-Type": "multipart/form-data" },
+//     };
 
-    fetch("http://localhost:3003/share.html", options);
-});
+//     fetch("http://localhost:3003/share.html", options);
+// });
 
 btnSend.addEventListener("click", async () => {
     console.log("FILE", fileInput.files[0]);
