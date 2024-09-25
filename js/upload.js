@@ -93,10 +93,10 @@ function getFileExtension(contentType) {
 }
 
 async function sendToBackend(formData) {
-    // const btnSend = btnSend || document.querySelector("#btnSend");
-    btnSend.addEventListener("click", async () => {
-        btnSend.disabled = true;
-        btnSend.innerText = "Uploading...";
+    const btnSend2 = document.querySelector("#btnSend2");
+    btnSend2.addEventListener("click", async () => {
+        btnSend2.disabled = true;
+        btnSend2.innerText = "Uploading...";
 
         const customName = await getCustonName();
 
@@ -114,7 +114,7 @@ async function sendToBackend(formData) {
                 showToaster();
                 // document.getElementById("uploadStatus").textContent =
                 //     "Upload realizado com sucesso!";
-                btnSend.innerText = "Send To Drive";
+                btnSend2.innerText = "Send To Drive";
                 filename.value = customName;
                 filenameContainer.style.height = "100px";
                 enableSendButton();
