@@ -33,9 +33,9 @@ async function loadImageFromCache() {
 
         const formData = new FormData();
         formData.append("file", blob); // Nome do arquivo pode ser alterado
-        formData.append("customName", "pwa-image");
-        formData.append("extension", extension);
-        formData.append("folder", window.parentFolder);
+        // formData.append("customName", "pwa-image");
+        // formData.append("extension", extension);
+        // formData.append("folder", window.parentFolder);
 
         sendToBackend(formData);
 
@@ -93,8 +93,16 @@ function getFileExtension(contentType) {
 }
 
 async function sendToBackend(formData) {
-    const sendToDrive2 = document.querySelector("#sendToDrive2");
-    sendToDrive2.addEventListener("click", async () => {
+    const btnSend = btnSend || document.querySelector("#btnSend");
+    btnSend.addEventListener("click", async () => {
+        btnSend.disabled = true;
+        btnSend.innerText = "Uploading...";
+
+        const customName = await getCustonName();
+
+        formData.append("customName", customName);
+        formData.append("folder", localStorage.getItem("journey"));
+
         try {
             const response = await fetch(window.apiUrl, {
                 method: "POST",
@@ -103,12 +111,18 @@ async function sendToBackend(formData) {
 
             if (response.ok) {
                 console.log("Imagem enviada com sucesso!");
-                document.getElementById("uploadStatus").textContent =
-                    "Upload realizado com sucesso!";
+                showToaster();
+                // document.getElementById("uploadStatus").textContent =
+                //     "Upload realizado com sucesso!";
+                btnSend.innerText = "Send To Drive";
+                filename.value = customName;
+                filenameContainer.style.height = "100px";
+                enableSendButton();
             } else {
                 console.error("Erro no upload:", response.statusText);
-                document.getElementById("uploadStatus").textContent =
-                    "Erro ao enviar a imagem.";
+                showToaster("fail");
+                // document.getElementById("uploadStatus").textContent =
+                //     "Erro ao enviar a imagem.";
             }
         } catch (error) {
             console.error("Erro ao enviar a imagem:", error);
