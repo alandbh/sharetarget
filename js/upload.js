@@ -93,7 +93,7 @@ function getFileExtension(contentType) {
 }
 
 async function sendToBackend(formData) {
-    const btnSend = btnSend || document.querySelector("#btnSend");
+    // const btnSend = btnSend || document.querySelector("#btnSend");
     btnSend.addEventListener("click", async () => {
         btnSend.disabled = true;
         btnSend.innerText = "Uploading...";
