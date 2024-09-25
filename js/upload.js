@@ -28,13 +28,16 @@ async function loadImageFromCache() {
 
         const blob = base64ToBlob(imageDataUrl, contentType);
         const extension = getFileExtension(contentType); // gets the file extension
+        const customName = await getCustonName();
 
         console.log({ extension });
 
         const formData = new FormData();
         formData.append("file", blob); // Nome do arquivo pode ser alterado
+        formData.append("customName", customName);
+        formData.append("extension", extension);
+        formData.append("folder", localStorage.getItem("journey"));
         // formData.append("customName", "pwa-image");
-        // formData.append("extension", extension);
         // formData.append("folder", window.parentFolder);
 
         sendToBackend(formData);
@@ -97,11 +100,6 @@ async function sendToBackend(formData) {
     btnSend2.addEventListener("click", async () => {
         btnSend2.disabled = true;
         btnSend2.innerText = "Uploading...";
-
-        const customName = await getCustonName();
-
-        formData.append("customName", customName);
-        formData.append("folder", localStorage.getItem("journey"));
 
         try {
             const response = await fetch(window.apiUrl + "/upload", {
