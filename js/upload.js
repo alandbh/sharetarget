@@ -40,7 +40,7 @@ async function loadImageFromCache() {
         // formData.append("customName", "pwa-image");
         // formData.append("folder", window.parentFolder);
 
-        sendToBackend(formData);
+        sendToBackend(formData, customName);
 
         // return imageDataUrl;
     } else {
@@ -95,7 +95,7 @@ function getFileExtension(contentType) {
     }
 }
 
-async function sendToBackend(formData) {
+async function sendToBackend(formData, customName) {
     const btnSend2 = document.querySelector("#btnSend2");
     btnSend2.addEventListener("click", async () => {
         btnSend2.disabled = true;
@@ -124,8 +124,9 @@ async function sendToBackend(formData) {
             }
         } catch (error) {
             console.error("Erro ao enviar a imagem:", error);
-            document.getElementById("uploadStatus").textContent =
-                "Falha na conexão.";
+            showToaster("fail");
+            // document.getElementById("uploadStatus").textContent =
+            //     "Falha na conexão.";
         }
     });
 }
