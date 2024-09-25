@@ -54,8 +54,8 @@ copyNameButton.addEventListener("click", () => {
 //     fetch("http://localhost:3003/share.html", options);
 // });
 
-btnSend.addEventListener("click", async () => {
-    if (!isShowPage) {
+if (!isShowPage) {
+    btnSend.addEventListener("click", async () => {
         console.log("FILE", fileInput.files[0]);
 
         if (fileInput.files.length > 0) {
@@ -90,8 +90,8 @@ btnSend.addEventListener("click", async () => {
             .catch((error) => {
                 showToaster("fail");
             });
-    }
-});
+    });
+}
 
 function enableSendButton() {
     btnSend.disabled = true;
