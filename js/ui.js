@@ -55,45 +55,47 @@ copyNameButton.addEventListener("click", () => {
 // });
 
 btnSend.addEventListener("click", async () => {
-    console.log("FILE", fileInput.files[0]);
+    if (!isShowPage) {
+        console.log("FILE", fileInput.files[0]);
 
-    if (fileInput.files.length > 0) {
-        btnSend.disabled = true;
-        btnSend.innerText = "Uploading...";
+        if (fileInput.files.length > 0) {
+            btnSend.disabled = true;
+            btnSend.innerText = "Uploading...";
+        }
+
+        const customName = await getCustonName();
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        formData.append("customName", customName);
+        formData.append("folder", localStorage.getItem("journey"));
+
+        const options = {
+            method: "POST",
+            body: formData,
+        };
+
+        fetch(window.apiUrl + "/upload", options)
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                showToaster();
+                // btnSend.disabled = false;
+                btnSend.innerText = "Send To Drive";
+                fileInput.value = "";
+                filename.value = customName;
+                filenameContainer.style.height = "100px";
+                enableSendButton();
+            })
+            .catch((error) => {
+                showToaster("fail");
+            });
     }
-
-    const customName = await getCustonName();
-
-    const formData = new FormData();
-    formData.append("file", fileInput.files[0]);
-    formData.append("customName", customName);
-    formData.append("folder", localStorage.getItem("journey"));
-
-    const options = {
-        method: "POST",
-        body: formData,
-    };
-
-    fetch(window.apiUrl + "/upload", options)
-        .then((response) => response.json())
-        .then((response) => {
-            console.log(response);
-            showToaster();
-            // btnSend.disabled = false;
-            btnSend.innerText = "Send To Drive";
-            fileInput.value = "";
-            filename.value = customName;
-            filenameContainer.style.height = "100px";
-            enableSendButton();
-        })
-        .catch((error) => {
-            showToaster("fail");
-        });
 });
 
 function enableSendButton() {
     btnSend.disabled = true;
-    const validInputFile = Boolean(fileInput.value);
+    const validInputFile = isShowPage ? false : Boolean(fileInput.value);
     const validPlayer = Boolean(
         localStorage.player && localStorage.player !== "null"
     );
@@ -103,6 +105,10 @@ function enableSendButton() {
 
     if (validInputFile && validPlayer && validJourney) {
         btnSend.disabled = false;
+    }
+
+    if (isShowPage) {
+        return validPlayer && validJourney;
     }
 
     return validInputFile && validPlayer && validJourney;
