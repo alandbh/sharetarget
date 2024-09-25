@@ -7,11 +7,13 @@ const copyedMessage = document.querySelector("#copyedMessage");
 const iconCheck = document.querySelector("#iconCheck");
 const fileInput = document.querySelector("#fileInput");
 const filename = document.querySelector("#filename");
-const btnSend = document.querySelector("#btnSend");
 // const btnSendPreview = document.querySelector("#btnSendPreview");
 const toaster = document.querySelector("#toaster");
 
 const isShowPage = window.location.pathname.endsWith("show.html");
+const btnSend = isShowPage
+    ? document.querySelector("#btnSend2")
+    : document.querySelector("#btnSend");
 
 copyNameButton.addEventListener("click", () => {
     const filenameContainer = document.querySelector("#filename");
