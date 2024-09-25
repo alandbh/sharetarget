@@ -85,7 +85,7 @@ if (!isShowPage) {
                 fileInput.value = "";
                 filename.value = customName;
                 filenameContainer.style.height = "100px";
-                enableSendButton();
+                enableSendButton(btnSend);
             })
             .catch((error) => {
                 showToaster("fail");
@@ -93,7 +93,7 @@ if (!isShowPage) {
     });
 }
 
-function enableSendButton() {
+function enableSendButton(btnSend) {
     btnSend.disabled = true;
     const validInputFile = isShowPage ? false : Boolean(fileInput.value);
     const validPlayer = Boolean(
@@ -255,7 +255,7 @@ if (isShowPage) {
     [playerSelect, journeySelect].map((field) => {
         field.addEventListener("change", () => {
             setTimeout(() => {
-                enableSendButton();
+                enableSendButton(btnSend);
             }, 100);
         });
     });
@@ -263,7 +263,7 @@ if (isShowPage) {
     [fileInput, playerSelect, journeySelect].map((field) => {
         field.addEventListener("change", () => {
             setTimeout(() => {
-                enableSendButton();
+                enableSendButton(btnSend);
             }, 100);
         });
     });

@@ -104,7 +104,7 @@ async function sendToBackend(formData) {
         formData.append("folder", localStorage.getItem("journey"));
 
         try {
-            const response = await fetch(window.apiUrl, {
+            const response = await fetch(window.apiUrl + "/upload", {
                 method: "POST",
                 body: formData,
             });
@@ -117,7 +117,7 @@ async function sendToBackend(formData) {
                 btnSend2.innerText = "Send To Drive";
                 filename.value = customName;
                 filenameContainer.style.height = "100px";
-                enableSendButton();
+                enableSendButton(btnSend2);
             } else {
                 console.error("Erro no upload:", response.statusText);
                 showToaster("fail");
