@@ -254,7 +254,7 @@ async function handleShare(request) {
                     const response = new Response(imageDataUrl, {
                         headers: { "Content-Type": file.type },
                     });
-                    cache.put("/cached-image", response);
+                    cache.put("/cached-file", response);
                 });
 
                 // Redirects to the preview page
