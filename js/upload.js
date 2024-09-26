@@ -101,7 +101,6 @@ function getFileExtension(contentType) {
 
 async function sendToBackend(formData, contentType) {
     btnSend2.addEventListener("click", async () => {
-        location.reload();
         const customName = await getCustonName(contentType);
         formData.append("customName", customName);
 
@@ -123,6 +122,7 @@ async function sendToBackend(formData, contentType) {
                 //     "Upload realizado com sucesso!";
                 btnSend2.innerText = "Send To Drive";
                 filename.value = customName;
+                location.reload();
                 filenameContainer.style.height = "100px";
                 enableSendButton(btnSend2);
                 setTimeout(() => {
