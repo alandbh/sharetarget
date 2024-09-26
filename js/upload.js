@@ -1,5 +1,7 @@
 // Function for retrieving image stored in Cache API
 
+const btnSend2 = document.querySelector("#btnSend2");
+
 async function loadImageFromCache() {
     const cache = await caches.open("pwa-image-cache-v1");
     const cachedResponse = await cache.match("/cached-file");
@@ -44,6 +46,7 @@ async function loadImageFromCache() {
         // formData.append("folder", window.parentFolder);
 
         sendToBackend(formData, customName);
+        enableSendButton(btnSend2);
 
         // return imageDataUrl;
     } else {
@@ -99,7 +102,6 @@ function getFileExtension(contentType) {
 }
 
 async function sendToBackend(formData, customName) {
-    const btnSend2 = document.querySelector("#btnSend2");
     btnSend2.addEventListener("click", async () => {
         btnSend2.disabled = true;
         btnSend2.innerText = "Uploading...";
