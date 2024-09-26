@@ -124,6 +124,9 @@ async function sendToBackend(formData, contentType) {
                 filename.value = customName;
                 filenameContainer.style.height = "100px";
                 enableSendButton(btnSend2);
+                setTimeout(() => {
+                    filename.scrollIntoView({ behavior: "smooth" });
+                }, 800);
             } else {
                 console.error("Erro no upload:", response.statusText);
                 showToaster("fail");
