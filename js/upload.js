@@ -43,7 +43,7 @@ async function loadImageFromCache() {
         // formData.append("customName", "pwa-image");
         // formData.append("folder", window.parentFolder);
 
-        sendToBackend(formData);
+        sendToBackend(formData, contentType);
         enableSendButton(btnSend2);
 
         // return imageDataUrl;
@@ -99,7 +99,7 @@ function getFileExtension(contentType) {
     }
 }
 
-async function sendToBackend(formData) {
+async function sendToBackend(formData, contentType) {
     btnSend2.addEventListener("click", async () => {
         const customName = await getCustonName(contentType);
         formData.append("customName", customName);
