@@ -17,12 +17,14 @@ async function loadImageFromCache() {
             const imgElement = document.createElement("img");
             imgElement.classList.add("w-full", "h-full", "object-contain");
             imgElement.src = imageDataUrl;
+            document.getElementById("image-container").innerHTML = "";
             document.getElementById("image-container").appendChild(imgElement);
         } else if (contentType.includes("video")) {
             // show the video
             const videoElement = document.createElement("video");
             videoElement.classList.add("w-full", "h-full", "object-contain");
             videoElement.src = imageDataUrl;
+            document.getElementById("image-container").innerHTML = "";
             document
                 .getElementById("image-container")
                 .appendChild(videoElement);
