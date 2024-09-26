@@ -1,7 +1,7 @@
 {
     "short_name": "Up To Drive",
     "name": "Up To Drive",
-    "id": "/?id=31",
+    "id": "/?id=32",
     "share_target": {
         "action": "/share.html",
         "method": "POST",
@@ -26,7 +26,7 @@
     "description": "Just a humble app to make evidence upload easier.",
     "icons": [
         {
-            "src": "/images/icons/icon-512x512.png",
+            "src": "/images/icons/icon-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
