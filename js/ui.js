@@ -63,7 +63,7 @@ if (!isShowPage) {
             btnSend.innerText = "Uploading...";
         }
 
-        const customName = await getCustonName();
+        const customName = await getCustonName(fileInput.files[0].type);
 
         const formData = new FormData();
         formData.append("file", fileInput.files[0]);
@@ -115,14 +115,14 @@ function enableSendButton(btnSend) {
 }
 
 function showToaster(status) {
-    toaster.style.bottom = "20vh";
+    toaster.style.top = "5vh";
     if (status == "fail") {
         toaster.style.border = "1px solid red";
-        toaster.style.background = "#ff777711";
+        toaster.style.background = "#ffe2e2";
         toaster.innerHTML = `<span>👎</span> Error on sending file.`;
     } else {
         toaster.style.border = "1px solid green";
-        toaster.style.background = "#77ff7744";
+        toaster.style.background = "#ceffce";
         toaster.innerHTML = `<span>🙌</span> File has been sent successfuly!`;
     }
 
@@ -132,7 +132,7 @@ function showToaster(status) {
 }
 
 function hideToaster() {
-    toaster.style.bottom = "-20vh";
+    toaster.style.top = "-10vh";
 }
 
 function getPlayerName() {
@@ -170,14 +170,25 @@ async function getFilesList() {
     return files;
 }
 
-async function getCustonName() {
+async function getCustonName(contentType) {
+    let mediaType;
+
+    if (contentType.includes("image")) {
+        mediaType = "i";
+    } else if (contentType.includes("video")) {
+        mediaType = "v";
+    } else {
+        mediaType = "f";
+    }
+
     const filesList = await getFilesList();
     return (
-        getPlayerName() +
+        mediaType +
+        Number(filesList.length + 1) +
         "-" +
-        getJourneyName() +
+        getJourneyName().substr(0, 3) +
         "-" +
-        Number(filesList.length + 1)
+        getPlayerName()
     );
 }
 

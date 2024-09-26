@@ -22,13 +22,16 @@ async function loadImageFromCache() {
             document
                 .getElementById("image-container")
                 .appendChild(videoElement);
+            setTimeout(() => {
+                videoElement.play();
+            }, 400);
         }
 
         // Sento image to the backend
 
         const blob = base64ToBlob(imageDataUrl, contentType);
         const extension = getFileExtension(contentType); // gets the file extension
-        const customName = await getCustonName();
+        const customName = await getCustonName(contentType);
 
         console.log({ extension });
 

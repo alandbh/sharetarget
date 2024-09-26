@@ -24,6 +24,37 @@
                 <div class="flex justify-center">
                     <div class="w-[200px] h-[300px]" id="image-container"></div>
                 </div>
+            </div>
+            <p
+                class="text-red-600 bg-red-50 p-5 border-l-4 border-red-400 hidden"
+                id="errorMessage"
+            ></p>
+
+            <div class="flex gap-5 justify-between max-sm:flex-col">
+                <div class="flex flex-col gap-2 flex-1">
+                    <label for="player" class="text-slate-500 font-bold"
+                        >Select a player</label
+                    >
+                    <select
+                        class="border border-slate-300 block h-10 px-4 rounded-sm"
+                        name="player"
+                        id="player"
+                    >
+                        <option value="null">...</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2 flex-1">
+                    <label for="journey" class="text-slate-500 font-bold"
+                        >Select a journey</label
+                    >
+                    <select
+                        class="border border-slate-300 block h-10 px-4 rounded-sm"
+                        name="journey"
+                        id="journey"
+                    >
+                        <option value="null">...</option>
+                    </select>
+                </div>
 
                 <div
                     style="height: 0; overflow: hidden; transition: 0.4s"
@@ -95,43 +126,13 @@
                         </button>
                     </div>
                 </div>
-            </div>
-            <p
-                class="text-red-600 bg-red-50 p-5 border-l-4 border-red-400 hidden"
-                id="errorMessage"
-            ></p>
 
-            <div class="flex gap-5 justify-between max-sm:flex-col">
-                <div class="flex flex-col gap-2 flex-1">
-                    <label for="player" class="text-slate-500 font-bold"
-                        >Select a player</label
-                    >
-                    <select
-                        class="border border-slate-300 block h-10 px-4 rounded-sm"
-                        name="player"
-                        id="player"
-                    >
-                        <option value="null">...</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-2 flex-1">
-                    <label for="journey" class="text-slate-500 font-bold"
-                        >Select a journey</label
-                    >
-                    <select
-                        class="border border-slate-300 block h-10 px-4 rounded-sm"
-                        name="journey"
-                        id="journey"
-                    >
-                        <option value="null">...</option>
-                    </select>
-                </div>
                 <div class="flex flex-col gap-2 justify-end flex-1">
                     <button
-                        class="bg-blue-500 text-white rounded h-10 px-5 font-bold"
+                        class="bg-blue-500 text-white rounded h-10 px-5 font-bold disabled:bg-slate-400"
                         id="btnSend2"
                     >
-                        SEND TO DRIVE
+                        Send To Drive
                     </button>
                 </div>
                 <div id="uploadStatus"></div>
