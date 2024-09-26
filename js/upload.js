@@ -122,7 +122,6 @@ async function sendToBackend(formData, contentType) {
                 //     "Upload realizado com sucesso!";
                 btnSend2.innerText = "Send To Drive";
                 filename.value = customName;
-                location.reload();
                 filenameContainer.style.height = "100px";
                 enableSendButton(btnSend2);
                 setTimeout(() => {
