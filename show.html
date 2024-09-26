@@ -130,6 +130,33 @@
                 </div>
 
                 <div class="flex flex-col gap-2 justify-end flex-1">
+                    <!-- Progress Bar -->
+                    <div
+                        style="height: 0px; transition: all 0.3s"
+                        class="relative overflow-y-clip"
+                        id="progressContainer"
+                    >
+                        <div
+                            id="progressText"
+                            style="transition: all 0.5s"
+                            class="inline-block mb-2 py-0.5 px-1.5 bg-blue-50 border border-blue-200 text-xs font-medium text-blue-600 rounded-lg"
+                        >
+                            25%
+                        </div>
+                        <div
+                            class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden"
+                            role="progressbar"
+                            aria-valuenow="25"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                        >
+                            <div
+                                id="uploadProgress"
+                                class="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500"
+                                style="width: 0%; transition: all 0.5s"
+                            ></div>
+                        </div>
+                    </div>
                     <button
                         class="bg-blue-500 text-white rounded h-10 px-5 font-bold disabled:bg-slate-400 active:bg-blue-700"
                         id="btnSend2"

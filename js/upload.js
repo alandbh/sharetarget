@@ -94,6 +94,10 @@ function getFileExtension(contentType) {
 
 async function sendToBackend(blob, contentType) {
     btnSend2.addEventListener("click", async () => {
+        filenameContainer.style.height = "0px";
+        btnSend2.disabled = true;
+        btnSend2.innerText = "Uploading...";
+
         const extension = getFileExtension(contentType); // gets the file extension
 
         console.log({ extension });
@@ -107,39 +111,92 @@ async function sendToBackend(blob, contentType) {
 
         formData.append("folder", localStorage.getItem("journey"));
 
-        btnSend2.disabled = true;
-        btnSend2.innerText = "Uploading...";
+        // try {
+        //     const response = await fetch(window.apiUrl + "/upload", {
+        //         method: "POST",
+        //         body: formData,
+        //     });
 
-        try {
-            const response = await fetch(window.apiUrl + "/upload", {
-                method: "POST",
-                body: formData,
-            });
+        //     if (response.ok) {
+        //         console.log("Imagem enviada com sucesso!");
+        //         showToaster();
+        //         // document.getElementById("uploadStatus").textContent =
+        //         //     "Upload realizado com sucesso!";
+        //         btnSend2.innerText = "Send To Drive";
+        //         filename.value = customName;
+        //         filenameContainer.style.height = "100px";
+        //         enableSendButton(btnSend2);
+        //         setTimeout(() => {
+        //             filename.scrollIntoView({ behavior: "smooth" });
+        //         }, 800);
+        //     } else {
+        //         console.error("Erro no upload:", response.statusText);
+        //         showToaster("fail");
+        //         // document.getElementById("uploadStatus").textContent =
+        //         //     "Erro ao enviar a imagem.";
+        //     }
+        // } catch (error) {
+        //     console.error("Erro ao enviar a imagem:", error);
+        //     showToaster("fail");
+        //     // document.getElementById("uploadStatus").textContent =
+        //     //     "Falha na conexão.";
+        // }
 
-            if (response.ok) {
-                console.log("Imagem enviada com sucesso!");
+        progressContainer.style.height = "40px";
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("POST", window.apiUrl + "/upload", true);
+
+        let progress;
+
+        // Updates the progress bar
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                const percentComplete = (event.loaded / event.total) * 100;
+
+                progress = `${Math.round(percentComplete)}%`;
+                uploadProgress.style.width = progress;
+                progressText.textContent = progress;
+                progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
+            }
+        };
+
+        // Handle the end of the upload
+        xhr.onload = function (response) {
+            if (xhr.status === 200) {
+                console.log("Upload completo");
+
                 showToaster();
-                // document.getElementById("uploadStatus").textContent =
-                //     "Upload realizado com sucesso!";
                 btnSend2.innerText = "Send To Drive";
+                fileInput.value = "";
                 filename.value = customName;
                 filenameContainer.style.height = "100px";
                 enableSendButton(btnSend2);
                 setTimeout(() => {
                     filename.scrollIntoView({ behavior: "smooth" });
                 }, 800);
+
+                console.log("SUCESSO", response);
+
+                setTimeout(() => {
+                    progressText.textContent = "0%";
+                    progressText.style.marginInlineStart = "0%";
+                    uploadProgress.style.width = "0%";
+                    progressContainer.style.height = 0;
+                }, 4000);
             } else {
-                console.error("Erro no upload:", response.statusText);
-                showToaster("fail");
-                // document.getElementById("uploadStatus").textContent =
-                //     "Erro ao enviar a imagem.";
+                console.error("Erro no upload:", xhr.statusText);
+                uploadProgress.textContent = "Erro no upload.";
             }
-        } catch (error) {
-            console.error("Erro ao enviar a imagem:", error);
-            showToaster("fail");
-            // document.getElementById("uploadStatus").textContent =
-            //     "Falha na conexão.";
-        }
+        };
+
+        xhr.onerror = function () {
+            console.error("Erro ao enviar o arquivo.");
+            uploadProgress.textContent = "Erro ao enviar o arquivo.";
+        };
+
+        xhr.send(formData);
     });
 }
 
