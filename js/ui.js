@@ -190,7 +190,7 @@ async function getCustonName(contentType) {
         mediaType +
         Number(filesList.length + 1) +
         "-" +
-        getJourneyName().substr(0, 3) +
+        getJourneyName().substr(0, 4) +
         "-" +
         getPlayerName()
     );
