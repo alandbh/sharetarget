@@ -169,7 +169,7 @@ async function sendToBackend(blob, contentType) {
 
                 showToaster();
                 btnSend2.innerText = "Send To Drive";
-                fileInput.value = "";
+                // fileInput.value = "";
                 filename.value = customName;
                 filenameContainer.style.height = "100px";
                 enableSendButton(btnSend2);
