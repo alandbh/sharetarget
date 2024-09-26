@@ -3,6 +3,8 @@
 const btnSend2 = document.querySelector("#btnSend2");
 
 async function loadImageFromCache() {
+    document.getElementById("image-container").innerHTML =
+        "<small>Loading the preview...</small>";
     const cache = await caches.open("pwa-image-cache-v1");
     const cachedResponse = await cache.match("/cached-file");
 
