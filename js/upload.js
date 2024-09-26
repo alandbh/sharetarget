@@ -159,16 +159,21 @@ async function sendToBackend(blob, contentType) {
                 uploadProgress.style.width = progress;
                 progressText.textContent = progress;
                 progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
+
+                if (Math.round(percentComplete) === 100) {
+                    btnSend2.innerText = "Storing in the right folder...";
+                }
             }
         };
 
         // Handle the end of the upload
         xhr.onload = function (response) {
             if (xhr.status === 200) {
+                btnSend2.innerText = "Done!";
+
                 console.log("Upload completo");
 
                 showToaster();
-                btnSend2.innerText = "Send To Drive";
                 // fileInput.value = "";
                 filename.value = customName;
                 filenameContainer.style.height = "100px";
@@ -180,6 +185,7 @@ async function sendToBackend(blob, contentType) {
                 console.log("SUCESSO", response);
 
                 setTimeout(() => {
+                    btnSend2.innerText = "Send To Drive";
                     progressText.textContent = "0%";
                     progressText.style.marginInlineStart = "0%";
                     uploadProgress.style.width = "0%";
