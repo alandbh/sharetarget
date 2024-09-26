@@ -10,6 +10,9 @@ const filename = document.querySelector("#filename");
 const btnSend = document.querySelector("#btnSend");
 // const btnSendPreview = document.querySelector("#btnSendPreview");
 const toaster = document.querySelector("#toaster");
+const uploadProgress = document.getElementById("uploadProgress");
+const progressContainer = document.getElementById("progressContainer");
+// const progressText = document.getElementById("progressText");
 
 const isShowPage = window.location.pathname.endsWith("show.html");
 
@@ -70,26 +73,78 @@ if (!isShowPage) {
         formData.append("customName", customName);
         formData.append("folder", localStorage.getItem("journey"));
 
-        const options = {
-            method: "POST",
-            body: formData,
+        // const options = {
+        //     method: "POST",
+        //     body: formData,
+        // };
+
+        // fetch(window.apiUrl + "/upload", options)
+        //     .then((response) => response.json())
+        //     .then((response) => {
+        //         console.log(response);
+        //         showToaster();
+        //         // btnSend.disabled = false;
+        //         btnSend.innerText = "Send To Drive";
+        //         fileInput.value = "";
+        //         filename.value = customName;
+        //         filenameContainer.style.height = "100px";
+        //         enableSendButton(btnSend);
+        //     })
+        //     .catch((error) => {
+        //         showToaster("fail");
+        //     });
+
+        progressContainer.style.height = "40px";
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("POST", window.apiUrl + "/upload", true);
+
+        let progress;
+
+        // Updates the progress bar
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                const percentComplete = (event.loaded / event.total) * 100;
+
+                progress = `${Math.round(percentComplete)}%`;
+                uploadProgress.textContent = progress;
+                uploadProgress.style.width = progress;
+                // progressText.textContent = `${Math.round(percentComplete)}%`;
+            }
         };
 
-        fetch(window.apiUrl + "/upload", options)
-            .then((response) => response.json())
-            .then((response) => {
-                console.log(response);
+        // Handle the end of the upload
+        xhr.onload = function (response) {
+            if (xhr.status === 200) {
+                console.log("Upload completo");
+
                 showToaster();
-                // btnSend.disabled = false;
                 btnSend.innerText = "Send To Drive";
                 fileInput.value = "";
                 filename.value = customName;
                 filenameContainer.style.height = "100px";
                 enableSendButton(btnSend);
-            })
-            .catch((error) => {
-                showToaster("fail");
-            });
+
+                console.log("SUCESSO", response);
+
+                setTimeout(() => {
+                    uploadProgress.textContent = "0%";
+                    uploadProgress.style.width = "0%";
+                    progressContainer.style.height = 0;
+                }, 4000);
+            } else {
+                console.error("Erro no upload:", xhr.statusText);
+                uploadProgress.textContent = "Erro no upload.";
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error("Erro ao enviar o arquivo.");
+            uploadProgress.textContent = "Erro ao enviar o arquivo.";
+        };
+
+        xhr.send(formData);
     });
 }
 
