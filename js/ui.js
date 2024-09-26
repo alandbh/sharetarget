@@ -103,12 +103,16 @@ function enableSendButton(btnSend) {
         localStorage.journey && localStorage.journey !== "null"
     );
 
-    if (validInputFile && validPlayer && validJourney) {
-        btnSend.disabled = false;
+    if (isShowPage) {
+        if (validPlayer && validJourney) {
+            btnSend.disabled = false;
+        }
+
+        return validPlayer && validJourney;
     }
 
-    if (isShowPage) {
-        return validPlayer && validJourney;
+    if (validInputFile && validPlayer && validJourney) {
+        btnSend.disabled = false;
     }
 
     return validInputFile && validPlayer && validJourney;
