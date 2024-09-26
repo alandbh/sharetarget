@@ -12,7 +12,7 @@ const btnSend = document.querySelector("#btnSend");
 const toaster = document.querySelector("#toaster");
 const uploadProgress = document.getElementById("uploadProgress");
 const progressContainer = document.getElementById("progressContainer");
-// const progressText = document.getElementById("progressText");
+const progressText = document.getElementById("progressText");
 
 const isShowPage = window.location.pathname.endsWith("show.html");
 
@@ -59,6 +59,7 @@ copyNameButton.addEventListener("click", () => {
 
 if (!isShowPage) {
     btnSend.addEventListener("click", async () => {
+        filenameContainer.style.height = "0px";
         console.log("FILE", fileInput.files[0]);
 
         if (fileInput.files.length > 0) {
@@ -94,7 +95,7 @@ if (!isShowPage) {
         //         showToaster("fail");
         //     });
 
-        progressContainer.style.height = "40px";
+        progressContainer.style.height = "60px";
 
         const xhr = new XMLHttpRequest();
 
@@ -108,9 +109,10 @@ if (!isShowPage) {
                 const percentComplete = (event.loaded / event.total) * 100;
 
                 progress = `${Math.round(percentComplete)}%`;
-                uploadProgress.textContent = progress;
+                // uploadProgress.textContent = progress;
                 uploadProgress.style.width = progress;
-                // progressText.textContent = `${Math.round(percentComplete)}%`;
+                progressText.textContent = progress;
+                progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
             }
         };
 
@@ -129,7 +131,8 @@ if (!isShowPage) {
                 console.log("SUCESSO", response);
 
                 setTimeout(() => {
-                    uploadProgress.textContent = "0%";
+                    progressText.textContent = "0%";
+                    progressText.style.marginInlineStart = "0%";
                     uploadProgress.style.width = "0%";
                     progressContainer.style.height = 0;
                 }, 4000);
