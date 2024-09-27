@@ -60,7 +60,7 @@
         "yaml": "^2.5.1"
     },
     "scripts": {
-        "start": "node server/server.js",
+        "start": "node server/server.js & npx tailwindcss -i ./style/input.css -o ./style/output.css --watch",
         "dev": "nodemon server/server.js"
     },
     "author": "",
