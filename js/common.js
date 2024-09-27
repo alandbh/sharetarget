@@ -18,7 +18,7 @@ if ("serviceWorker" in navigator) {
 window.parentFolder = "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC";
 
 window.apiUrl = window.location.host.includes("netlify")
-    ? "https://187.20.127.53"
+    ? "https://uptodrive-backend-958230797550.us-west1.run.app"
     : "http://localhost:4000";
 // window.apiUrl = window.location.host.includes("netlify")
 //     ? "https://uptodrive.serveo.net"
