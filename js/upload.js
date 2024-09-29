@@ -146,11 +146,20 @@ async function sendToBackend(blob, contentType) {
         //     //     "Falha na conexão.";
         // }
 
-        progressContainer.style.height = "40px";
+        progressContainer.style.height = "60px";
 
         const xhr = new XMLHttpRequest();
 
-        xhr.open("POST", window.apiUrl + "/upload", true);
+        // xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === this.DONE) {
+                console.log("Backend Server is Ready", this.responseText);
+            }
+        });
+
+        xhr.open("POST", window.apiUrlPost, true);
+
+        // xhr.setRequestHeader("bypass-tunnel-reminder", "true");
 
         let progress;
 

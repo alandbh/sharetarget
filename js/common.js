@@ -17,10 +17,22 @@ if ("serviceWorker" in navigator) {
 
 window.parentFolder = "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC";
 
+// window.apiUrl = "http://localhost:4000";
+window.apiUrlPost = "https://alanvasconcelos.net/uptodrive/";
+
+// window.apiUrlPost = "http://localhost:8000";
+// window.apiUrl = "https://alanvasconcelos.net/uptodrive";
 // window.apiUrl = "https://uptodrive-backend.rj.r.appspot.com";
+// window.apiUrl = "https://uptodrive.loca.lt";
+
 window.apiUrl = window.location.host.includes("netlify")
-    ? "https://uptodrive-backend.rj.r.appspot.com"
+    ? "https://uptodrive-backend.onrender.com"
     : "http://localhost:4000";
+
+// window.apiUrl = window.location.host.includes("netlify")
+//     ? "https://uptodrive.loca.lt"
+//     : "http://localhost:4000";
+
 // window.apiUrl = window.location.host.includes("netlify")
 //     ? "https://uptodrive.serveo.net"
 //     : "http://localhost:4000";

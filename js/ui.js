@@ -99,7 +99,15 @@ if (!isShowPage) {
 
         const xhr = new XMLHttpRequest();
 
-        xhr.open("POST", window.apiUrl + "/upload", true);
+        // xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === this.DONE) {
+                console.log("Backend Server is Ready", this.responseText);
+            }
+        });
+
+        xhr.open("POST", window.apiUrlPost, true);
+        // xhr.setRequestHeader("cache-control", "no-cache");
 
         let progress;
 
@@ -148,6 +156,55 @@ if (!isShowPage) {
         };
 
         xhr.send(formData);
+
+        // // Primeiro, pega o signed URL do backend
+        // fetch(window.apiUrl + "/generate-url", {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify({ fileName: formData.get("file").name }),
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         const xhr = new XMLHttpRequest();
+
+        //         xhr.upload.onprogress = function (event) {
+        //             if (event.lengthComputable) {
+        //                 const percentComplete =
+        //                     (event.loaded / event.total) * 100;
+        //                 progress = `${Math.round(percentComplete)}%`;
+        //                 uploadProgress.style.width = progress;
+        //                 progressText.textContent = progress;
+        //                 progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
+        //             }
+        //         };
+
+        //         xhr.onload = function () {
+        //             if (xhr.status === 200) {
+        //                 console.log("Upload completo");
+        //                 showToaster();
+        //                 btnSend.innerText = "Send To Drive";
+        //                 setTimeout(() => {
+        //                     progressText.textContent = "0%";
+        //                     progressText.style.marginInlineStart = "0%";
+        //                     uploadProgress.style.width = "0%";
+        //                     progressContainer.style.height = 0;
+        //                 }, 4000);
+        //             } else {
+        //                 console.error("Erro no upload:", xhr.statusText);
+        //                 uploadProgress.textContent = "Erro no upload.";
+        //             }
+        //         };
+
+        //         xhr.onerror = function () {
+        //             console.error("Erro ao enviar o arquivo.");
+        //             uploadProgress.textContent = "Erro ao enviar o arquivo.";
+        //         };
+
+        //         // Upload direto para o URL assinado
+        //         xhr.open("PUT", data.url, true);
+        //         xhr.setRequestHeader("Content-Type", formData.get("file").type);
+        //         xhr.send(formData.get("file"));
+        //     });
     });
 }
 
@@ -224,7 +281,14 @@ async function getFilesList() {
     const response = await fetch(
         // apiUrl + "/files?folder=" + parentFolder,
         apiUrl + "/files?folder=" + localStorage.getItem("journey"),
-        { method: "GET" }
+        {
+            method: "GET",
+            headers: {
+                "bypass-tunnel-reminder": "true",
+                "content-type":
+                    "multipart/form-data; boundary=---011000010111000001101001",
+            },
+        }
     );
 
     const files = await response.json();
