@@ -184,6 +184,7 @@ async function sendToBackend(blob, contentType) {
         xhr.onload = function (response) {
             if (xhr.status === 200) {
                 btnSend2.innerText = "Done!";
+                showCounter(false);
 
                 console.log("Upload completo");
 
@@ -206,12 +207,14 @@ async function sendToBackend(blob, contentType) {
                     progressContainer.style.height = 0;
                 }, 4000);
             } else {
+                showCounter(false);
                 console.error("Erro no upload:", xhr.statusText);
                 uploadProgress.textContent = "Erro no upload.";
             }
         };
 
         xhr.onerror = function () {
+            showCounter(false);
             console.error("Erro ao enviar o arquivo.");
             uploadProgress.textContent = "Erro ao enviar o arquivo.";
         };

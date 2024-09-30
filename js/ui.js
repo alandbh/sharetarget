@@ -13,8 +13,11 @@ const toaster = document.querySelector("#toaster");
 const uploadProgress = document.getElementById("uploadProgress");
 const progressContainer = document.getElementById("progressContainer");
 const progressText = document.getElementById("progressText");
+const countContainer = document.createElement("div");
 
 const isShowPage = window.location.pathname.endsWith("show.html");
+
+let secondInterval;
 
 copyNameButton.addEventListener("click", () => {
     const filenameContainer = document.querySelector("#filename");
@@ -129,6 +132,7 @@ if (!isShowPage) {
         xhr.onload = function (response) {
             if (xhr.status === 200) {
                 console.log("Upload completo");
+                showCounter(false);
 
                 showToaster();
                 btnSend.innerText = "Send To Drive";
@@ -148,10 +152,12 @@ if (!isShowPage) {
             } else {
                 console.error("Erro no upload:", xhr.statusText);
                 uploadProgress.textContent = "Erro no upload.";
+                showCounter(false);
             }
         };
 
         xhr.onerror = function () {
+            showCounter(false);
             console.error("Erro ao enviar o arquivo.");
             uploadProgress.textContent = "Erro ao enviar o arquivo.";
         };
@@ -412,36 +418,49 @@ if (isShowPage) {
  * Showing a counter in the bottom of the page
  */
 
-function showCounter() {
+function showCounter(start = true) {
+    // let secondInterval;
     const body = document.querySelector("body");
-    const container = document.createElement("div");
+
+    if (start && body.querySelector("#counterContainer")) {
+        return;
+    }
+
+    // const countContainer = document.createElement("div");
     const divSeconds = document.createElement("div");
     const divMinutes = document.createElement("div");
 
     body.style.paddingBottom = "70px";
 
-    container.style.position = "fixed";
-    container.style.bottom = "20px";
-    container.style.textAlign = "center";
-    container.style.color = "grey";
+    countContainer.style.position = "fixed";
+    countContainer.style.bottom = "20px";
+    countContainer.style.textAlign = "center";
+    countContainer.style.color = "grey";
+    countContainer.id = "counterContainer";
 
     let seconds = 0;
     let minutes = 0;
     let innerSecconds = 0;
 
-    const secondInterval = setInterval(() => {
-        seconds++;
-        innerSecconds++;
-        divSeconds.innerText = "Total seconds: " + seconds;
-        if (seconds % 60 === 0) {
-            minutes++;
-            innerSecconds = 0;
-        }
-        divMinutes.innerText =
-            "Total minutes: " + minutes + ":" + innerSecconds;
-    }, 1000);
+    if (start) {
+        secondInterval = setInterval(() => {
+            seconds++;
+            innerSecconds++;
+            divSeconds.innerText = "Total seconds: " + seconds;
+            if (seconds % 60 === 0) {
+                minutes++;
+                innerSecconds = 0;
+            }
+            divMinutes.innerText =
+                "Total minutes: " + minutes + ":" + innerSecconds;
+        }, 1000);
+    } else {
+        console.log("stop");
+        clearInterval(secondInterval);
+        return;
+    }
 
-    container.appendChild(divSeconds);
-    container.appendChild(divMinutes);
-    body.appendChild(container);
+    countContainer.appendChild(divSeconds);
+    countContainer.appendChild(divMinutes);
+    body.appendChild(countContainer);
 }
