@@ -166,6 +166,7 @@ async function sendToBackend(blob, contentType) {
         // Updates the progress bar
         xhr.upload.onprogress = function (event) {
             if (event.lengthComputable) {
+                showCounter();
                 const percentComplete = (event.loaded / event.total) * 100;
 
                 progress = `${Math.round(percentComplete)}%`;

@@ -114,6 +114,7 @@ if (!isShowPage) {
         // Updates the progress bar
         xhr.upload.onprogress = function (event) {
             if (event.lengthComputable) {
+                showCounter();
                 const percentComplete = (event.loaded / event.total) * 100;
 
                 progress = `${Math.round(percentComplete)}%`;
@@ -404,4 +405,43 @@ if (isShowPage) {
             }, 100);
         });
     });
+}
+
+/**
+ *
+ * Showing a counter in the bottom of the page
+ */
+
+function showCounter() {
+    const body = document.querySelector("body");
+    const container = document.createElement("div");
+    const divSeconds = document.createElement("div");
+    const divMinutes = document.createElement("div");
+
+    body.style.paddingBottom = "70px";
+
+    container.style.position = "fixed";
+    container.style.bottom = "20px";
+    container.style.textAlign = "center";
+    container.style.color = "grey";
+
+    let seconds = 0;
+    let minutes = 0;
+    let innerSecconds = 0;
+
+    const secondInterval = setInterval(() => {
+        seconds++;
+        innerSecconds++;
+        divSeconds.innerText = "Total seconds: " + seconds;
+        if (seconds % 60 === 0) {
+            minutes++;
+            innerSecconds = 0;
+        }
+        divMinutes.innerText =
+            "Total minutes: " + minutes + ":" + innerSecconds;
+    }, 1000);
+
+    container.appendChild(divSeconds);
+    container.appendChild(divMinutes);
+    body.appendChild(container);
 }
