@@ -122,7 +122,7 @@ async function sendToBackend(blob, contentType) {
                 "-vf",
                 "scale=iw/2:ih/2",
                 "-preset",
-                "ultrafast",
+                "fast",
                 "-crf",
                 "28",
                 "output.mp4",
