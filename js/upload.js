@@ -104,6 +104,7 @@ async function sendToBackend(blob, contentType) {
             await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
 
             ffmpeg.on("progress", ({ progress, time }) => {
+                btnSend2.disabled = true;
                 message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
                     time / 1000000
                 ).toFixed(2)} s`;
