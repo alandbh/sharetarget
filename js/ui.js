@@ -80,9 +80,11 @@ if (!isShowPage) {
         const message = document.getElementById("convertMessage");
         // ffmpeg = new FFmpeg();
         window.ffmpeg.on("progress", ({ progress, time }) => {
-            message.innerHTML = `${progress * 100} %, time: ${
-                time / 1000000
-            } s`;
+            btnSend.innerText = "Compressing video...";
+            setProgressBackground(btnSend, progress * 100, "#3b82f6");
+            // message.innerHTML = `${progress * 100} %, time: ${
+            //     time / 1000000
+            // } s`;
         });
         // await ffmpeg.load({
         //     coreURL: "/ffmpeg/ffmpeg-core.js",

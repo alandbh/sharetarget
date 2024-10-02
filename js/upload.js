@@ -110,9 +110,10 @@ async function sendToBackend(blob, contentType) {
             window.ffmpeg.on("progress", ({ progress, time }) => {
                 btnSend2.disabled = true;
                 btnSend2.innerText = "Compressing video...";
-                message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
-                    time / 1000000
-                ).toFixed(2)} s`;
+                setProgressBackground(btnSend2, progress * 100, "#3b82f6");
+                // message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
+                //     time / 1000000
+                // ).toFixed(2)} s`;
             });
 
             // Executando a compactação

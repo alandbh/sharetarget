@@ -89,3 +89,15 @@ async function getInitialData() {
         coreURL: "/ffmpeg/ffmpeg-core.js",
     });
 }
+
+function setProgressBackground(
+    element,
+    percentage = 0,
+    darkColor = "#5d859e",
+    lightColor = "#779eb4"
+) {
+    if (!element) {
+        return;
+    }
+    element.style.background = `linear-gradient(90deg, ${darkColor} ${percentage}%, ${lightColor} ${percentage}%, ${lightColor} 100%)`;
+}
