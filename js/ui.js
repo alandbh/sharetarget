@@ -79,7 +79,7 @@ if (!isShowPage) {
         // compress the file
         const message = document.getElementById("convertMessage");
         // ffmpeg = new FFmpeg();
-        ffmpeg.on("progress", ({ progress, time }) => {
+        window.ffmpeg.on("progress", ({ progress, time }) => {
             message.innerHTML = `${progress * 100} %, time: ${
                 time / 1000000
             } s`;
@@ -88,9 +88,12 @@ if (!isShowPage) {
         //     coreURL: "/ffmpeg/ffmpeg-core.js",
         // });
         const { name } = fileInput.files[0];
-        await ffmpeg.writeFile(name, await fetchFile(fileInput.files[0]));
+        await window.ffmpeg.writeFile(
+            name,
+            await fetchFile(fileInput.files[0])
+        );
 
-        await ffmpeg.exec([
+        await window.ffmpeg.exec([
             "-i",
             name,
             "-vf",
@@ -102,7 +105,7 @@ if (!isShowPage) {
             "output.mp4",
         ]);
 
-        const fileData = await ffmpeg.readFile("output.mp4");
+        const fileData = await window.ffmpeg.readFile("output.mp4");
 
         const compressedBlob = new Blob([fileData.buffer], {
             type: "video/mp4",
