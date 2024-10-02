@@ -103,9 +103,9 @@ async function sendToBackend(blob, contentType) {
             // ffmpeg = new FFmpeg();
             // Carregar o FFmpeg
             // await ffmpeg.load();
-            await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
+            await window.ffmpeg.writeFile("input.mp4", await fetchFile(blob));
 
-            ffmpeg.on("progress", ({ progress, time }) => {
+            window.ffmpeg.on("progress", ({ progress, time }) => {
                 btnSend2.disabled = true;
                 message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
                     time / 1000000
@@ -113,7 +113,7 @@ async function sendToBackend(blob, contentType) {
             });
 
             // Executando a compactação
-            await ffmpeg.exec([
+            await window.ffmpeg.exec([
                 "-i",
                 "input.mp4",
                 "-preset",
@@ -124,7 +124,7 @@ async function sendToBackend(blob, contentType) {
             ]);
 
             // Lendo o arquivo compactado
-            const fileData = await ffmpeg.readFile("output.mp4");
+            const fileData = await window.ffmpeg.readFile("output.mp4");
             customBlob = new Blob([fileData.buffer], {
                 type: "video/mp4",
             });

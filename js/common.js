@@ -84,8 +84,8 @@ async function getInitialData() {
         });
     }
     // Inicializa o FFmpeg fora da função sendToBackend
-    const ffmpeg = new FFmpeg();
-    await ffmpeg.load({
+    window.ffmpeg = new FFmpeg();
+    await window.ffmpeg.load({
         coreURL: "/ffmpeg/ffmpeg-core.js",
     });
 }
