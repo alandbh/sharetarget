@@ -97,6 +97,8 @@ async function sendToBackend(blob, contentType) {
     let customBlob = null;
 
     btnSend2.addEventListener("click", async () => {
+        const formData = new FormData();
+
         if (contentType.includes("video")) {
             // Adicionando o arquivo ao FFmpeg
             const message = document.getElementById("convertMessage");
@@ -142,8 +144,6 @@ async function sendToBackend(blob, contentType) {
         const extension = getFileExtension(contentType); // gets the file extension
 
         console.log({ extension });
-
-        const formData = new FormData();
 
         if (!contentType.includes("video")) {
             formData.append("file", blob);
