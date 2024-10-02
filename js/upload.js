@@ -107,6 +107,7 @@ async function sendToBackend(blob, contentType) {
 
             window.ffmpeg.on("progress", ({ progress, time }) => {
                 btnSend2.disabled = true;
+                btnSend2.innerText = "Compressing video...";
                 message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
                     time / 1000000
                 ).toFixed(2)} s`;
@@ -116,6 +117,8 @@ async function sendToBackend(blob, contentType) {
             await window.ffmpeg.exec([
                 "-i",
                 "input.mp4",
+                "-vf",
+                "scale=iw/2:ih/2",
                 "-preset",
                 "ultrafast",
                 "-crf",
@@ -125,14 +128,11 @@ async function sendToBackend(blob, contentType) {
 
             // Lendo o arquivo compactado
             const fileData = await window.ffmpeg.readFile("output.mp4");
-            customBlob = new Blob([fileData.buffer], {
+            const customBlob = new Blob([fileData.buffer], {
                 type: "video/mp4",
             });
 
-            // formData.append("customName", "pwa-image");
-            // formData.append("folder", window.parentFolder);
-
-            // sendToBackend(compressedBlob, contentType);
+            formData.append("file", customBlob);
         }
 
         filenameContainer.style.height = "0px";
@@ -144,7 +144,10 @@ async function sendToBackend(blob, contentType) {
         console.log({ extension });
 
         const formData = new FormData();
-        formData.append("file", customBlob || blob); // Nome do arquivo pode ser alterado
+
+        if (!contentType.includes("video")) {
+            formData.append("file", blob);
+        }
         formData.append("extension", extension);
 
         const customName = await getCustonName(contentType);
