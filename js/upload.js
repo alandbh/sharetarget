@@ -124,7 +124,7 @@ async function sendToBackend(blob, contentType) {
                 "-preset",
                 "fast",
                 "-crf",
-                "28",
+                "23",
                 "output.mp4",
             ]);
 
