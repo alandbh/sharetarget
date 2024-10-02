@@ -93,10 +93,12 @@ if (!isShowPage) {
         await ffmpeg.exec([
             "-i",
             name,
+            "-vf",
+            "scale=iw/2:ih/2",
             "-preset",
-            "ultrafast", // acelera a compressão
+            "fast", // acelera a compressão
             "-crf",
-            "28", // reduz a qualidade
+            "23", // reduz a qualidade
             "output.mp4",
         ]);
 
