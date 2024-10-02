@@ -37,41 +37,6 @@ async function loadImageFromCache() {
 
         const blob = base64ToBlob(imageDataUrl, contentType);
 
-        if (contentType.includes("video")) {
-            // Adicionando o arquivo ao FFmpeg
-            const message = document.getElementById("convertMessage");
-            ffmpeg = new FFmpeg();
-            await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
-
-            ffmpeg.on("progress", ({ progress, time }) => {
-                message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
-                    time / 1000000
-                ).toFixed(2)} s`;
-            });
-
-            // Executando a compactação
-            await ffmpeg.exec([
-                "-i",
-                "input.mp4",
-                "-preset",
-                "ultrafast",
-                "-crf",
-                "28",
-                "output.mp4",
-            ]);
-
-            // Lendo o arquivo compactado
-            const fileData = await ffmpeg.readFile("output.mp4");
-            const compressedBlob = new Blob([fileData.buffer], {
-                type: "video/mp4",
-            });
-
-            // formData.append("customName", "pwa-image");
-            // formData.append("folder", window.parentFolder);
-
-            sendToBackend(compressedBlob, contentType);
-        }
-
         sendToBackend(blob, contentType);
         enableSendButton(btnSend2);
 
@@ -129,7 +94,44 @@ function getFileExtension(contentType) {
 }
 
 async function sendToBackend(blob, contentType) {
+    let customBlob = null;
+
     btnSend2.addEventListener("click", async () => {
+        if (contentType.includes("video")) {
+            // Adicionando o arquivo ao FFmpeg
+            const message = document.getElementById("convertMessage");
+            ffmpeg = new FFmpeg();
+            await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
+
+            ffmpeg.on("progress", ({ progress, time }) => {
+                message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
+                    time / 1000000
+                ).toFixed(2)} s`;
+            });
+
+            // Executando a compactação
+            await ffmpeg.exec([
+                "-i",
+                "input.mp4",
+                "-preset",
+                "ultrafast",
+                "-crf",
+                "28",
+                "output.mp4",
+            ]);
+
+            // Lendo o arquivo compactado
+            const fileData = await ffmpeg.readFile("output.mp4");
+            customBlob = new Blob([fileData.buffer], {
+                type: "video/mp4",
+            });
+
+            // formData.append("customName", "pwa-image");
+            // formData.append("folder", window.parentFolder);
+
+            // sendToBackend(compressedBlob, contentType);
+        }
+
         filenameContainer.style.height = "0px";
         btnSend2.disabled = true;
         btnSend2.innerText = "Uploading...";
@@ -139,7 +141,7 @@ async function sendToBackend(blob, contentType) {
         console.log({ extension });
 
         const formData = new FormData();
-        formData.append("file", blob); // Nome do arquivo pode ser alterado
+        formData.append("file", customBlob || blob); // Nome do arquivo pode ser alterado
         formData.append("extension", extension);
 
         const customName = await getCustonName(contentType);
