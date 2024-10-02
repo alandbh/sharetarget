@@ -1,3 +1,7 @@
+const { fetchFile } = FFmpegUtil;
+const { FFmpeg } = FFmpegWASM;
+let ffmpeg = null;
+
 const playerSelect = document.querySelector("#player");
 const journeySelect = document.querySelector("#journey");
 // const journeySelect = document.createElement("select");
@@ -72,8 +76,39 @@ if (!isShowPage) {
 
         const customName = await getCustonName(fileInput.files[0].type);
 
+        // compress the file
+        const message = document.getElementById("convertMessage");
+        ffmpeg = new FFmpeg();
+        ffmpeg.on("progress", ({ progress, time }) => {
+            message.innerHTML = `${progress * 100} %, time: ${
+                time / 1000000
+            } s`;
+        });
+        await ffmpeg.load({
+            coreURL: "/ffmpeg/ffmpeg-core.js",
+        });
+        const { name } = fileInput.files[0];
+        await ffmpeg.writeFile(name, await fetchFile(fileInput.files[0]));
+
+        await ffmpeg.exec([
+            "-i",
+            name,
+            "-preset",
+            "ultrafast", // acelera a compressão
+            "-crf",
+            "28", // reduz a qualidade
+            "output.mp4",
+        ]);
+
+        const fileData = await ffmpeg.readFile("output.mp4");
+
+        const compressedBlob = new Blob([fileData.buffer], {
+            type: "video/mp4",
+        });
+
         const formData = new FormData();
-        formData.append("file", fileInput.files[0]);
+        formData.append("file", compressedBlob);
+        // formData.append("file", fileInput.files[0]);
         formData.append("customName", customName);
         formData.append("folder", localStorage.getItem("journey"));
 
