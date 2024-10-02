@@ -78,15 +78,15 @@ if (!isShowPage) {
 
         // compress the file
         const message = document.getElementById("convertMessage");
-        ffmpeg = new FFmpeg();
+        // ffmpeg = new FFmpeg();
         ffmpeg.on("progress", ({ progress, time }) => {
             message.innerHTML = `${progress * 100} %, time: ${
                 time / 1000000
             } s`;
         });
-        await ffmpeg.load({
-            coreURL: "/ffmpeg/ffmpeg-core.js",
-        });
+        // await ffmpeg.load({
+        //     coreURL: "/ffmpeg/ffmpeg-core.js",
+        // });
         const { name } = fileInput.files[0];
         await ffmpeg.writeFile(name, await fetchFile(fileInput.files[0]));
 

@@ -83,4 +83,9 @@ async function getInitialData() {
             journeySelect.value = localStorage.getItem("journey") || "null";
         });
     }
+    // Inicializa o FFmpeg fora da função sendToBackend
+    const ffmpeg = new FFmpeg();
+    await ffmpeg.load({
+        coreURL: "/ffmpeg/ffmpeg-core.js",
+    });
 }

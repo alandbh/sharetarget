@@ -100,9 +100,9 @@ async function sendToBackend(blob, contentType) {
         if (contentType.includes("video")) {
             // Adicionando o arquivo ao FFmpeg
             const message = document.getElementById("convertMessage");
-            ffmpeg = new FFmpeg();
+            // ffmpeg = new FFmpeg();
             // Carregar o FFmpeg
-            await ffmpeg.load();
+            // await ffmpeg.load();
             await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
 
             ffmpeg.on("progress", ({ progress, time }) => {
