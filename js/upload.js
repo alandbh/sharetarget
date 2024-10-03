@@ -116,6 +116,8 @@ async function sendToBackend(blob, contentType) {
                 coreURL: "/ffmpeg/ffmpeg-core.js",
             });
 
+            const customName = await getCustonName(contentType);
+
             requestIdleCallback(async () => {
                 // Adicionando o arquivo ao FFmpeg
                 await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
@@ -146,16 +148,17 @@ async function sendToBackend(blob, contentType) {
                 });
 
                 formData.append("file", customBlob);
-                const customName = await getCustonName(contentType);
+
                 formData.append("customName", customName);
+                formData.append("extension", extension);
 
                 formData.append("folder", localStorage.getItem("journey"));
                 upload();
             });
         } else {
             formData.append("file", blob);
-            const customName = await getCustonName(contentType);
             formData.append("customName", customName);
+            formData.append("extension", extension);
 
             formData.append("folder", localStorage.getItem("journey"));
             upload();
@@ -169,8 +172,6 @@ async function sendToBackend(blob, contentType) {
             const extension = getFileExtension(contentType); // gets the file extension
 
             console.log({ extension });
-
-            formData.append("extension", extension);
 
             progressContainer.style.height = "60px";
 
