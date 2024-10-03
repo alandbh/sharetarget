@@ -115,160 +115,137 @@ async function sendToBackend(blob, contentType) {
             await ffmpeg.load({
                 coreURL: "/ffmpeg/ffmpeg-core.js",
             });
-            // Adicionando o arquivo ao FFmpeg
-            await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
 
-            ffmpeg.on("progress", ({ progress, time }) => {
-                btnSend2.disabled = true;
-                btnSend2.innerText = "Compressing video...";
-                setProgressBackground(btnSend2, progress * 100, "#3b82f6");
+            requestIdleCallback(async () => {
+                // Adicionando o arquivo ao FFmpeg
+                await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
+
+                ffmpeg.on("progress", ({ progress, time }) => {
+                    btnSend2.disabled = true;
+                    btnSend2.innerText = "Compressing video...";
+                    setProgressBackground(btnSend2, progress * 100, "#3b82f6");
+                });
+
+                // Executando a compactação
+                await ffmpeg.exec([
+                    "-i",
+                    "input.mp4",
+                    "-vf",
+                    "scale=iw/2:ih/2",
+                    "-preset",
+                    "fast",
+                    "-crf",
+                    "23",
+                    "output.mp4",
+                ]);
+
+                // Lendo o arquivo compactado
+                const fileData = await ffmpeg.readFile("output.mp4");
+                const customBlob = new Blob([fileData.buffer], {
+                    type: "video/mp4",
+                });
+
+                formData.append("file", customBlob);
+                const customName = await getCustonName(contentType);
+                formData.append("customName", customName);
+
+                formData.append("folder", localStorage.getItem("journey"));
+                upload();
             });
-
-            // Executando a compactação
-            await ffmpeg.exec([
-                "-i",
-                "input.mp4",
-                "-vf",
-                "scale=iw/2:ih/2",
-                "-preset",
-                "fast",
-                "-crf",
-                "23",
-                "output.mp4",
-            ]);
-
-            // Lendo o arquivo compactado
-            const fileData = await ffmpeg.readFile("output.mp4");
-            const customBlob = new Blob([fileData.buffer], {
-                type: "video/mp4",
-            });
-
-            formData.append("file", customBlob);
-        }
-
-        filenameContainer.style.height = "0px";
-        btnSend2.disabled = true;
-        btnSend2.innerText = "Uploading...";
-
-        const extension = getFileExtension(contentType); // gets the file extension
-
-        console.log({ extension });
-
-        if (!contentType.includes("video")) {
+        } else {
             formData.append("file", blob);
+            const customName = await getCustonName(contentType);
+            formData.append("customName", customName);
+
+            formData.append("folder", localStorage.getItem("journey"));
+            upload();
         }
-        formData.append("extension", extension);
 
-        const customName = await getCustonName(contentType);
-        formData.append("customName", customName);
+        async function upload() {
+            filenameContainer.style.height = "0px";
+            btnSend2.disabled = true;
+            btnSend2.innerText = "Uploading...";
 
-        formData.append("folder", localStorage.getItem("journey"));
+            const extension = getFileExtension(contentType); // gets the file extension
 
-        // try {
-        //     const response = await fetch(window.apiUrl + "/upload", {
-        //         method: "POST",
-        //         body: formData,
-        //     });
+            console.log({ extension });
 
-        //     if (response.ok) {
-        //         console.log("Imagem enviada com sucesso!");
-        //         showToaster();
-        //         // document.getElementById("uploadStatus").textContent =
-        //         //     "Upload realizado com sucesso!";
-        //         btnSend2.innerText = "Send To Drive";
-        //         filename.value = customName;
-        //         filenameContainer.style.height = "100px";
-        //         enableSendButton(btnSend2);
-        //         setTimeout(() => {
-        //             filename.scrollIntoView({ behavior: "smooth" });
-        //         }, 800);
-        //     } else {
-        //         console.error("Erro no upload:", response.statusText);
-        //         showToaster("fail");
-        //         // document.getElementById("uploadStatus").textContent =
-        //         //     "Erro ao enviar a imagem.";
-        //     }
-        // } catch (error) {
-        //     console.error("Erro ao enviar a imagem:", error);
-        //     showToaster("fail");
-        //     // document.getElementById("uploadStatus").textContent =
-        //     //     "Falha na conexão.";
-        // }
+            formData.append("extension", extension);
 
-        progressContainer.style.height = "60px";
+            progressContainer.style.height = "60px";
 
-        const xhr = new XMLHttpRequest();
+            const xhr = new XMLHttpRequest();
 
-        // xhr.withCredentials = true;
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === this.DONE) {
-                console.log("Backend Server is Ready", this.responseText);
-            }
-        });
-
-        xhr.open("POST", window.apiUrlPost, true);
-
-        // xhr.setRequestHeader("bypass-tunnel-reminder", "true");
-
-        let progress;
-
-        // Updates the progress bar
-        xhr.upload.onprogress = function (event) {
-            if (event.lengthComputable) {
-                showCounter();
-                const percentComplete = (event.loaded / event.total) * 100;
-
-                progress = `${Math.round(percentComplete)}%`;
-                uploadProgress.style.width = progress;
-                progressText.textContent = progress;
-                progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
-
-                if (Math.round(percentComplete) === 100) {
-                    btnSend2.innerText = "Storing in the right folder...";
+            // xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === this.DONE) {
+                    console.log("Backend Server is Ready", this.responseText);
                 }
-            }
-        };
+            });
 
-        // Handle the end of the upload
-        xhr.onload = function (response) {
-            if (xhr.status === 200) {
-                btnSend2.innerText = "Done!";
+            xhr.open("POST", window.apiUrlPost, true);
+
+            // xhr.setRequestHeader("bypass-tunnel-reminder", "true");
+
+            let progress;
+
+            // Updates the progress bar
+            xhr.upload.onprogress = function (event) {
+                if (event.lengthComputable) {
+                    showCounter();
+                    const percentComplete = (event.loaded / event.total) * 100;
+
+                    progress = `${Math.round(percentComplete)}%`;
+                    uploadProgress.style.width = progress;
+                    progressText.textContent = progress;
+                    progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
+
+                    if (Math.round(percentComplete) === 100) {
+                        btnSend2.innerText = "Storing in the right folder...";
+                    }
+                }
+            };
+            // Handle the end of the upload
+            xhr.onload = function (response) {
+                if (xhr.status === 200) {
+                    btnSend2.innerText = "Done!";
+                    showCounter(false);
+
+                    console.log("Upload completo");
+
+                    showToaster();
+                    // fileInput.value = "";
+                    filename.value = customName;
+                    filenameContainer.style.height = "100px";
+                    enableSendButton(btnSend2);
+                    setTimeout(() => {
+                        filename.scrollIntoView({ behavior: "smooth" });
+                    }, 800);
+
+                    console.log("SUCESSO", response);
+
+                    setTimeout(() => {
+                        btnSend2.innerText = "Send To Drive";
+                        progressText.textContent = "0%";
+                        progressText.style.marginInlineStart = "0%";
+                        uploadProgress.style.width = "0%";
+                        progressContainer.style.height = 0;
+                    }, 4000);
+                } else {
+                    showCounter(false);
+                    console.error("Erro no upload:", xhr.statusText);
+                    uploadProgress.textContent = "Erro no upload.";
+                }
+            };
+
+            xhr.onerror = function () {
                 showCounter(false);
+                console.error("Erro ao enviar o arquivo.");
+                uploadProgress.textContent = "Erro ao enviar o arquivo.";
+            };
 
-                console.log("Upload completo");
-
-                showToaster();
-                // fileInput.value = "";
-                filename.value = customName;
-                filenameContainer.style.height = "100px";
-                enableSendButton(btnSend2);
-                setTimeout(() => {
-                    filename.scrollIntoView({ behavior: "smooth" });
-                }, 800);
-
-                console.log("SUCESSO", response);
-
-                setTimeout(() => {
-                    btnSend2.innerText = "Send To Drive";
-                    progressText.textContent = "0%";
-                    progressText.style.marginInlineStart = "0%";
-                    uploadProgress.style.width = "0%";
-                    progressContainer.style.height = 0;
-                }, 4000);
-            } else {
-                showCounter(false);
-                console.error("Erro no upload:", xhr.statusText);
-                uploadProgress.textContent = "Erro no upload.";
-            }
-        };
-
-        xhr.onerror = function () {
-            showCounter(false);
-            console.error("Erro ao enviar o arquivo.");
-            uploadProgress.textContent = "Erro ao enviar o arquivo.";
-        };
-
-        xhr.send(formData);
+            xhr.send(formData);
+        }
     });
 }
 
