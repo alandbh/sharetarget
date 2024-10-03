@@ -96,6 +96,8 @@ self.addEventListener("activate", (event) => {
 //     return Response.redirect("/error.html", 303);
 // }
 
+const CACHE_NAME = "pwa-file-cache-v1";
+
 self.addEventListener("fetch", (event) => {
     if (
         event.request.method === "POST" &&
@@ -113,16 +115,21 @@ async function handleShare(request) {
         file &&
         (file.type.startsWith("image/") || file.type.startsWith("video/"))
     ) {
-        // Create a URL from the file and send it to the preview page
         const fileUrl = URL.createObjectURL(file);
 
-        // Use IndexedDB or localStorage to store the file URL and metadata temporarily if necessary
-        localStorage.setItem("file-url", fileUrl);
-        localStorage.setItem("file-type", file.type);
+        // Salvar a URL do arquivo e o tipo no Cache API
+        const cache = await caches.open(CACHE_NAME);
+        const response = new Response(
+            JSON.stringify({ fileUrl, fileType: file.type }),
+            {
+                headers: { "Content-Type": "application/json" },
+            }
+        );
+        await cache.put("/cached-file", response);
 
-        // Redirect to the preview page
+        // Redireciona para a página de preview
         return Response.redirect("/show.html", 303);
     }
 
-    return Response.redirect("/error.html", 303);
+    return new Response("Invalid file type", { status: 400 });
 }

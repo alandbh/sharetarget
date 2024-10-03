@@ -3,29 +3,42 @@
 const btnSend2 = document.querySelector("#btnSend2");
 
 async function loadImageFromCache() {
-    // Recupera o file URL e o tipo do localStorage
-    const fileUrl = localStorage.getItem("file-url");
-    const fileType = localStorage.getItem("file-type");
+    const cache = await caches.open("pwa-file-cache-v1");
+    const cachedResponse = await cache.match("/cached-file");
 
-    document.getElementById("preview-container").innerHTML =
-        "<small>Loading the preview...</small>";
+    if (cachedResponse) {
+        const cachedData = await cachedResponse.json();
+        const { fileUrl, fileType } = cachedData;
 
-    if (fileType.startsWith("image/")) {
-        const imgElement = document.createElement("img");
-        imgElement.src = fileUrl;
-        imgElement.classList.add("w-full", "h-full", "object-contain");
-        document.getElementById("preview-container").innerHTML = "";
-        document.getElementById("preview-container").appendChild(imgElement);
-    } else if (fileType.startsWith("video/")) {
-        const videoElement = document.createElement("video");
-        videoElement.src = fileUrl;
-        videoElement.classList.add("w-full", "h-full", "object-contain");
-        document.getElementById("preview-container").innerHTML = "";
-        document.getElementById("preview-container").appendChild(videoElement);
-        videoElement.play();
+        document.getElementById("preview-container").innerHTML =
+            "<small>Loading the preview...</small>";
 
-        enableSendButton(btnSend2);
-        sendToBackend(fileUrl, fileType);
+        if (fileType.startsWith("image/")) {
+            const imgElement = document.createElement("img");
+            imgElement.src = fileUrl;
+            imgElement.classList.add("w-full", "h-full", "object-contain");
+            document.getElementById("preview-container").innerHTML = "";
+            document
+                .getElementById("preview-container")
+                .appendChild(imgElement);
+        } else if (fileType.startsWith("video/")) {
+            const videoElement = document.createElement("video");
+            videoElement.src = fileUrl;
+            videoElement.classList.add("w-full", "h-full", "object-contain");
+            document.getElementById("preview-container").innerHTML = "";
+            document
+                .getElementById("preview-container")
+                .appendChild(videoElement);
+            videoElement.play();
+
+            enableSendButton(btnSend2);
+            sendToBackend(fileUrl, fileType);
+        }
+    } else {
+        document.querySelector("#errorMessage").classList.remove("hidden");
+        document.querySelector("#errorMessage").textContent =
+            "Nenhuma imagem foi compartilhada.";
+        console.error("Nenhum arquivo armazenado no cache.");
     }
 
     /**
