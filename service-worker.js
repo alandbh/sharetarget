@@ -52,52 +52,6 @@ self.addEventListener("activate", (event) => {
 
 // const CACHE_NAME = "pwa-image-cache-v1";
 
-// self.addEventListener("fetch", (event) => {
-//     if (
-//         event.request.method === "POST" &&
-//         event.request.url.endsWith("/share.html")
-//     ) {
-//         event.respondWith(handleShare(event.request));
-//     }
-// });
-
-// async function handleShare(request) {
-//     const formData = await request.formData();
-//     const file = formData.get("file");
-
-//     console.log("filetype", file);
-//     console.log("filetype", file.type);
-
-//     if (
-//         file &&
-//         (file.type.startsWith("image/") || file.type.startsWith("video/"))
-//     ) {
-//         const reader = new FileReader();
-//         reader.readAsDataURL(file);
-
-//         return new Promise((resolve) => {
-//             reader.onloadend = () => {
-//                 const imageDataUrl = reader.result;
-
-//                 // Stores the file in cache
-//                 caches.open(CACHE_NAME).then((cache) => {
-//                     const response = new Response(imageDataUrl, {
-//                         headers: { "Content-Type": file.type },
-//                     });
-//                     cache.put("/cached-file", response);
-//                 });
-
-//                 // Redirects to the preview page
-//                 resolve(Response.redirect("/show.html", 303));
-//             };
-//         });
-//     }
-
-//     return Response.redirect("/error.html", 303);
-// }
-
-const CACHE_NAME = "pwa-file-cache-v1";
-
 self.addEventListener("fetch", (event) => {
     if (
         event.request.method === "POST" &&
@@ -111,25 +65,99 @@ async function handleShare(request) {
     const formData = await request.formData();
     const file = formData.get("file");
 
+    console.log("filetype", file);
+    console.log("filetype", file.type);
+
     if (
         file &&
         (file.type.startsWith("image/") || file.type.startsWith("video/"))
     ) {
+        // const reader = new FileReader();
+        // reader.readAsDataURL(file);
+
         const fileUrl = URL.createObjectURL(file);
 
-        // Salvar a URL do arquivo e o tipo no Cache API
-        const cache = await caches.open(CACHE_NAME);
-        const response = new Response(
-            JSON.stringify({ fileUrl, fileType: file.type }),
-            {
-                headers: { "Content-Type": "application/json" },
-            }
-        );
-        await cache.put("/cached-file", response);
+        return new Promise((resolve) => {
+            // Salvar a URL do arquivo e o tipo no Cache API
+            // const cache = await caches.open(CACHE_NAME);
+            // const response = new Response(
+            //     JSON.stringify({ fileUrl, fileType: file.type }),
+            //     {
+            //         headers: { "Content-Type": "application/json" },
+            //     }
+            // );
+            // await cache.put("/cached-file", response);
 
-        // Redireciona para a página de preview
-        return Response.redirect("/show.html", 303);
+            caches.open(CACHE_NAME).then((cache) => {
+                const response = new Response(
+                    JSON.stringify({ fileUrl, fileType: file.type }),
+                    {
+                        headers: { "Content-Type": "application/json" },
+                    }
+                );
+                cache.put("/cached-file", response);
+            });
+
+            resolve(Response.redirect("/show.html", 303));
+
+            // reader.onloadend = () => {
+            //     const imageDataUrl = reader.result;
+
+            //     // Stores the file in cache
+            //     caches.open(CACHE_NAME).then((cache) => {
+            //         const response = new Response(imageDataUrl, {
+            //             headers: { "Content-Type": file.type },
+            //         });
+            //         cache.put("/cached-file", response);
+            //     });
+
+            //     // Redirects to the preview page
+            //     resolve(Response.redirect("/show.html", 303));
+            // };
+        });
     }
 
-    return new Response("Invalid file type", { status: 400 });
+    //     return Response.redirect("/error.html", 303);
 }
+
+/**
+ *
+ * new approach
+ */
+// const CACHE_NAME = "pwa-file-cache-v1";
+
+// self.addEventListener("fetch", (event) => {
+//     if (
+//         event.request.method === "POST" &&
+//         event.request.url.endsWith("/share.html")
+//     ) {
+//         event.respondWith(handleShare(event.request));
+//     }
+// });
+
+// async function handleShare(request) {
+//     const formData = await request.formData();
+//     const file = formData.get("file");
+
+//     if (
+//         file &&
+//         (file.type.startsWith("image/") || file.type.startsWith("video/"))
+//     ) {
+//         const fileUrl = URL.createObjectURL(file);
+
+//         // Salvar a URL do arquivo e o tipo no Cache API
+//         const cache = await caches.open(CACHE_NAME);
+//         const response = new Response(
+//             JSON.stringify({ fileUrl, fileType: file.type }),
+//             {
+//                 headers: { "Content-Type": "application/json" },
+//             }
+//         );
+//         await cache.put("/cached-file", response);
+
+//         // Redireciona para a página de preview
+//         return Response.redirect("/show.html", 303);
+//     }
+
+//     return new Response("Invalid file type", { status: 400 });
+// }
