@@ -50,7 +50,177 @@ self.addEventListener("activate", (event) => {
     );
 });
 
-// const CACHE_NAME = "pwa-image-cache-v1";
+// self.addEventListener("fetch", async function (event) {
+//     console.log("👷", "fetch", event);
+//     const url = new URL(event.request.url);
+//     // If this is an incoming POST request for the
+//     // registered "action" URL, respond to it.
+//     if (event.request.method === "POST" && url.pathname === "/target.html") {
+//         // const formData = await event.request.formData();
+//         // const file = formData.get("file");
+
+//         // const fileReader = new FileReader();
+//         // fileReader.readAsDataURL(file);
+//         // fileReader.addEventListener("load", (event) => {
+//         //     const base64Url = fileReader.result;
+
+//         //     const img = new Image();
+//         //     img.src = base64Url;
+//         //     document.body.appendChild(img);
+//         // });
+
+//         event.respondWith(
+//             (async () => {
+//                 const formData = await event.request.formData();
+//                 const file = formData.get("file");
+//                 const filename = file.name.replaceAll(" ", "_");
+
+//                 if (file) {
+//                     // Envia o arquivo para a página Target
+//                     self.clients.matchAll().then((clients) => {
+//                         clients.forEach((client) => {
+//                             if (client.url.endsWith("target.html")) {
+//                                 client.postMessage({
+//                                     type: "file",
+//                                     file: {
+//                                         name: file.name,
+//                                         type: file.type,
+//                                         blob: file,
+//                                     },
+//                                 });
+//                             }
+//                         });
+//                     });
+//                 }
+
+//                 // Retorna uma resposta padrão
+//                 // return new Response(
+//                 //     JSON.stringify({ status: "file received" }),
+//                 //     { headers: { "Content-Type": "application/json" } }
+//                 // );
+//                 const responseUrl = "/target.html?filename=" + filename;
+//                 return Response.redirect(responseUrl, 303);
+
+//                 // const fileReader = new FileReader();
+//                 // fileReader.readAsDataURL(file);
+//                 // fileReader.addEventListener("load", (event) => {
+//                 //     const base64Url = fileReader.result;
+//                 //     const img = new Image();
+//                 //     img.src = base64Url;
+//                 //     document.body.appendChild(img);
+//                 // });
+//                 // const filename = file.name.replaceAll(" ", "_");
+//                 // const link = formData.get("link") || "";
+//                 // const responseUrl = "/target.html?filename=" + filename;
+//                 // return Response.redirect(responseUrl, 303);
+//             })()
+//         );
+//     }
+// });
+
+// service-worker.js
+// self.addEventListener("fetch", (event) => {
+//     if (event.request.method === "POST") {
+//         console.log("possstt");
+//         event.respondWith(
+//             (async () => {
+//                 const formData = await event.request.formData();
+//                 const file = formData.get("file");
+//                 const imageUrl = URL.createObjectURL(file);
+
+//                 if (file) {
+//                     // Envia o arquivo de imagem para a página
+//                     self.clients.matchAll().then((clients) => {
+//                         clients.forEach((client) => {
+//                             if (client.url.endsWith("target.html")) {
+//                                 client.postMessage({
+//                                     type: "file",
+//                                     file: {
+//                                         name: file.name,
+//                                         type: file.type,
+//                                         blob: file,
+//                                     },
+//                                 });
+//                             }
+//                         });
+//                     });
+//                 }
+
+//                 // Redireciona para a página target.html
+//                 // return Response.redirect("/target.html", 303); // 303: See Other
+//                 return Response.redirect(
+//                     `/target.html?imageUrl=${encodeURIComponent(imageUrl)}`,
+//                     303
+//                 );
+//             })()
+//         );
+//     }
+// });
+
+// self.addEventListener("fetch", (event) => {
+//     if (
+//         event.request.method === "POST" &&
+//         event.request.url.endsWith("/share.html")
+//     ) {
+//         event.respondWith(handleShare(event.request));
+//     }
+// });
+
+// async function handleShare(request) {
+//     const formData = await request.formData();
+//     const file = formData.get("image");
+
+//     if (file && file.type.startsWith("image/")) {
+//         const reader = new FileReader();
+//         reader.readAsDataURL(file);
+
+//         return new Promise((resolve) => {
+//             reader.onloadend = () => {
+//                 const imageDataUrl = reader.result;
+
+//                 // Armazena a imagem no sessionStorage através do Client API
+//                 self.clients.matchAll().then((clients) => {
+//                     clients.forEach((client) => {
+//                         client.postMessage({ imageDataUrl });
+//                     });
+//                 });
+
+//                 // Redireciona para a página de exibição sem parâmetros de URL
+//                 resolve(Response.redirect("/show.html", 303));
+//             };
+//         });
+//     }
+
+//     return Response.redirect("/error.html", 303);
+// }
+
+// self.addEventListener("fetch", (event) => {
+//     if (
+//         event.request.method === "POST" &&
+//         event.request.url.endsWith("share.html")
+//     ) {
+//         event.respondWith(
+//             fetch(event.request)
+//                 .then((response) => response.blob())
+//                 .then((blob) => {
+//                     // Salvar a imagem em um local temporário ou enviar para o backend
+
+//                     // Salvar imagem no IndexedDB
+//                     const dbPromise = idb.open("myDatabase", 1);
+//                     dbPromise.then((db) => {
+//                         const tx = db.transaction("images", "readwrite");
+//                         const store = tx.objectStore("images");
+//                         store.put(blob, imageId);
+//                         return tx.complete;
+//                     });
+//                     // ...
+//                     return new Response("Imagem recebida com sucesso");
+//                 })
+//         );
+//     }
+// });
+
+const CACHE_NAME = "pwa-image-cache-v1";
 
 self.addEventListener("fetch", (event) => {
     if (
@@ -72,92 +242,26 @@ async function handleShare(request) {
         file &&
         (file.type.startsWith("image/") || file.type.startsWith("video/"))
     ) {
-        // const reader = new FileReader();
-        // reader.readAsDataURL(file);
-
-        const fileUrl = URL.createObjectURL(file);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
 
         return new Promise((resolve) => {
-            // Salvar a URL do arquivo e o tipo no Cache API
-            // const cache = await caches.open(CACHE_NAME);
-            // const response = new Response(
-            //     JSON.stringify({ fileUrl, fileType: file.type }),
-            //     {
-            //         headers: { "Content-Type": "application/json" },
-            //     }
-            // );
-            // await cache.put("/cached-file", response);
+            reader.onloadend = () => {
+                const imageDataUrl = reader.result;
 
-            caches.open(CACHE_NAME).then((cache) => {
-                const response = new Response(
-                    JSON.stringify({ fileUrl, fileType: file.type }),
-                    {
-                        headers: { "Content-Type": "application/json" },
-                    }
-                );
-                cache.put("/cached-file", response);
-            });
+                // Stores the file in cache
+                caches.open(CACHE_NAME).then((cache) => {
+                    const response = new Response(imageDataUrl, {
+                        headers: { "Content-Type": file.type },
+                    });
+                    cache.put("/cached-file", response);
+                });
 
-            resolve(Response.redirect("/show.html", 303));
-
-            // reader.onloadend = () => {
-            //     const imageDataUrl = reader.result;
-
-            //     // Stores the file in cache
-            //     caches.open(CACHE_NAME).then((cache) => {
-            //         const response = new Response(imageDataUrl, {
-            //             headers: { "Content-Type": file.type },
-            //         });
-            //         cache.put("/cached-file", response);
-            //     });
-
-            //     // Redirects to the preview page
-            //     resolve(Response.redirect("/show.html", 303));
-            // };
+                // Redirects to the preview page
+                resolve(Response.redirect("/show.html", 303));
+            };
         });
     }
 
-    //     return Response.redirect("/error.html", 303);
+    return Response.redirect("/error.html", 303);
 }
-
-/**
- *
- * new approach
- */
-// const CACHE_NAME = "pwa-file-cache-v1";
-
-// self.addEventListener("fetch", (event) => {
-//     if (
-//         event.request.method === "POST" &&
-//         event.request.url.endsWith("/share.html")
-//     ) {
-//         event.respondWith(handleShare(event.request));
-//     }
-// });
-
-// async function handleShare(request) {
-//     const formData = await request.formData();
-//     const file = formData.get("file");
-
-//     if (
-//         file &&
-//         (file.type.startsWith("image/") || file.type.startsWith("video/"))
-//     ) {
-//         const fileUrl = URL.createObjectURL(file);
-
-//         // Salvar a URL do arquivo e o tipo no Cache API
-//         const cache = await caches.open(CACHE_NAME);
-//         const response = new Response(
-//             JSON.stringify({ fileUrl, fileType: file.type }),
-//             {
-//                 headers: { "Content-Type": "application/json" },
-//             }
-//         );
-//         await cache.put("/cached-file", response);
-
-//         // Redireciona para a página de preview
-//         return Response.redirect("/show.html", 303);
-//     }
-
-//     return new Response("Invalid file type", { status: 400 });
-// }

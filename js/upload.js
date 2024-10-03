@@ -3,95 +3,49 @@
 const btnSend2 = document.querySelector("#btnSend2");
 
 async function loadImageFromCache() {
-    const cache = await caches.open("pwa-file-cache-v1");
+    document.getElementById("image-container").innerHTML =
+        "<small>Loading the preview...</small>";
+    const cache = await caches.open("pwa-image-cache-v1");
     const cachedResponse = await cache.match("/cached-file");
 
     if (cachedResponse) {
-        const cachedData = await cachedResponse.json();
-        const { fileUrl, fileType } = cachedData;
+        const imageDataUrl = await cachedResponse.text();
+        const contentType = imageDataUrl.split(";")[0].split(":")[1]; // gets the content type from base64
 
-        document.getElementById("preview-container").innerHTML =
-            "<small>Loading the preview...</small>";
-
-        if (fileType.startsWith("image/")) {
+        if (contentType.includes("image")) {
+            // Show the image
             const imgElement = document.createElement("img");
-            imgElement.src = fileUrl;
             imgElement.classList.add("w-full", "h-full", "object-contain");
-            document.getElementById("preview-container").innerHTML = "";
-            document
-                .getElementById("preview-container")
-                .appendChild(imgElement);
-        } else if (fileType.startsWith("video/")) {
+            imgElement.src = imageDataUrl;
+            document.getElementById("image-container").innerHTML = "";
+            document.getElementById("image-container").appendChild(imgElement);
+        } else if (contentType.includes("video")) {
+            // show the video
             const videoElement = document.createElement("video");
-            videoElement.src = fileUrl;
             videoElement.classList.add("w-full", "h-full", "object-contain");
-            document.getElementById("preview-container").innerHTML = "";
+            videoElement.src = imageDataUrl;
+            document.getElementById("image-container").innerHTML = "";
             document
-                .getElementById("preview-container")
+                .getElementById("image-container")
                 .appendChild(videoElement);
-            videoElement.play();
-
-            enableSendButton(btnSend2);
-            sendToBackend(fileUrl, fileType);
+            setTimeout(() => {
+                videoElement.play();
+            }, 400);
         }
+
+        // Sento image to the backend
+
+        const blob = base64ToBlob(imageDataUrl, contentType);
+
+        sendToBackend(blob, contentType);
+        enableSendButton(btnSend2);
+
+        // return imageDataUrl;
     } else {
         document.querySelector("#errorMessage").classList.remove("hidden");
         document.querySelector("#errorMessage").textContent =
             "Nenhuma imagem foi compartilhada.";
-        console.error("Nenhum arquivo armazenado no cache.");
     }
-
-    /**
-     *
-     *
-     *
-     * OLD
-     *
-     *
-     *  */
-    // document.getElementById("image-container").innerHTML =
-    //     "<small>Loading the preview...</small>";
-    // const cache = await caches.open("pwa-image-cache-v1");
-    // const cachedResponse = await cache.match("/cached-file");
-
-    // if (cachedResponse) {
-    //     const imageDataUrl = await cachedResponse.text();
-    //     const contentType = imageDataUrl.split(";")[0].split(":")[1]; // gets the content type from base64
-
-    //     if (contentType.includes("image")) {
-    //         // Show the image
-    //         const imgElement = document.createElement("img");
-    //         imgElement.classList.add("w-full", "h-full", "object-contain");
-    //         imgElement.src = imageDataUrl;
-    //         document.getElementById("image-container").innerHTML = "";
-    //         document.getElementById("image-container").appendChild(imgElement);
-    //     } else if (contentType.includes("video")) {
-    //         // show the video
-    //         const videoElement = document.createElement("video");
-    //         videoElement.classList.add("w-full", "h-full", "object-contain");
-    //         videoElement.src = imageDataUrl;
-    //         document.getElementById("image-container").innerHTML = "";
-    //         document
-    //             .getElementById("image-container")
-    //             .appendChild(videoElement);
-    //         setTimeout(() => {
-    //             videoElement.play();
-    //         }, 400);
-    //     }
-
-    //     // Sento image to the backend
-
-    //     const blob = base64ToBlob(imageDataUrl, contentType);
-
-    //     sendToBackend(blob, contentType);
-    //     enableSendButton(btnSend2);
-
-    //     // return imageDataUrl;
-    // } else {
-    //     document.querySelector("#errorMessage").classList.remove("hidden");
-    //     document.querySelector("#errorMessage").textContent =
-    //         "Nenhuma imagem foi compartilhada.";
-    // }
 }
 
 // Função para converter base64 para Blob
@@ -140,24 +94,32 @@ function getFileExtension(contentType) {
 }
 
 async function sendToBackend(blob, contentType) {
-    const extension = getFileExtension(contentType); // gets the file extension
+    let customBlob = null;
 
     btnSend2.addEventListener("click", async () => {
         const formData = new FormData();
 
         if (contentType.includes("video")) {
+            // Adicionando o arquivo ao FFmpeg
+            const message = document.getElementById("convertMessage");
+            // ffmpeg = new FFmpeg();
+            // Carregar o FFmpeg
+            // await ffmpeg.load();
             await window.ffmpeg.writeFile("input.mp4", await fetchFile(blob));
 
             window.ffmpeg.on("progress", ({ progress, time }) => {
                 btnSend2.disabled = true;
                 btnSend2.innerText = "Compressing video...";
                 setProgressBackground(btnSend2, progress * 100, "#3b82f6");
+                // message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
+                //     time / 1000000
+                // ).toFixed(2)} s`;
             });
 
             // Executando a compactação
             await window.ffmpeg.exec([
                 "-i",
-                "input." + extension,
+                "input.mp4",
                 "-vf",
                 "scale=iw/2:ih/2",
                 "-preset",
@@ -180,6 +142,8 @@ async function sendToBackend(blob, contentType) {
         btnSend2.disabled = true;
         btnSend2.innerText = "Uploading...";
 
+        const extension = getFileExtension(contentType); // gets the file extension
+
         console.log({ extension });
 
         if (!contentType.includes("video")) {
@@ -191,6 +155,37 @@ async function sendToBackend(blob, contentType) {
         formData.append("customName", customName);
 
         formData.append("folder", localStorage.getItem("journey"));
+
+        // try {
+        //     const response = await fetch(window.apiUrl + "/upload", {
+        //         method: "POST",
+        //         body: formData,
+        //     });
+
+        //     if (response.ok) {
+        //         console.log("Imagem enviada com sucesso!");
+        //         showToaster();
+        //         // document.getElementById("uploadStatus").textContent =
+        //         //     "Upload realizado com sucesso!";
+        //         btnSend2.innerText = "Send To Drive";
+        //         filename.value = customName;
+        //         filenameContainer.style.height = "100px";
+        //         enableSendButton(btnSend2);
+        //         setTimeout(() => {
+        //             filename.scrollIntoView({ behavior: "smooth" });
+        //         }, 800);
+        //     } else {
+        //         console.error("Erro no upload:", response.statusText);
+        //         showToaster("fail");
+        //         // document.getElementById("uploadStatus").textContent =
+        //         //     "Erro ao enviar a imagem.";
+        //     }
+        // } catch (error) {
+        //     console.error("Erro ao enviar a imagem:", error);
+        //     showToaster("fail");
+        //     // document.getElementById("uploadStatus").textContent =
+        //     //     "Falha na conexão.";
+        // }
 
         progressContainer.style.height = "60px";
 
