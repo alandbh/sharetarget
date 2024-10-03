@@ -245,6 +245,8 @@ async function handleShare(request) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
 
+        const fileUrl = URL.createObjectURL(file);
+
         return new Promise((resolve) => {
             reader.onloadend = () => {
                 const imageDataUrl = reader.result;
@@ -258,7 +260,7 @@ async function handleShare(request) {
                 });
 
                 // Redirects to the preview page
-                resolve(Response.redirect("/show.html", 303));
+                resolve(Response.redirect("/show.html?file=" + fileUrl, 303));
             };
         });
     }

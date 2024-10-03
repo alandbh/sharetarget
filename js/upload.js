@@ -8,6 +8,16 @@ async function loadImageFromCache() {
     const cache = await caches.open("pwa-image-cache-v1");
     const cachedResponse = await cache.match("/cached-file");
 
+    const url = new URL(window.location.href);
+
+    // Cria um objeto URLSearchParams com os parâmetros da URL
+    const params = new URLSearchParams(url.search);
+
+    // Pega o valor do parâmetro 'file'
+    const fileParam = params.get("file");
+
+    console.log({ fileParam });
+
     if (cachedResponse) {
         const imageDataUrl = await cachedResponse.text();
         const contentType = imageDataUrl.split(";")[0].split(":")[1]; // gets the content type from base64
