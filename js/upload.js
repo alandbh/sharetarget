@@ -109,6 +109,7 @@ async function sendToBackend(blob, contentType) {
     btnSend2.addEventListener("click", async () => {
         const formData = new FormData();
         const customName = await getCustonName(contentType);
+        const extension = getFileExtension(contentType); // gets the file extension
 
         if (contentType.includes("video")) {
             // Inicializa o FFmpeg fora da função sendToBackend
@@ -167,10 +168,6 @@ async function sendToBackend(blob, contentType) {
             filenameContainer.style.height = "0px";
             btnSend2.disabled = true;
             btnSend2.innerText = "Uploading...";
-
-            const extension = getFileExtension(contentType); // gets the file extension
-
-            console.log({ extension });
 
             progressContainer.style.height = "60px";
 
