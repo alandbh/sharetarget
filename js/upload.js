@@ -106,30 +106,26 @@ function getFileExtension(contentType) {
 }
 
 async function sendToBackend(blob, contentType) {
-    let customBlob = null;
-
     btnSend2.addEventListener("click", async () => {
         const formData = new FormData();
 
         if (contentType.includes("video")) {
+            // Inicializa o FFmpeg fora da função sendToBackend
+            const ffmpeg = new FFmpeg();
+            await ffmpeg.load({
+                coreURL: "/ffmpeg/ffmpeg-core.js",
+            });
             // Adicionando o arquivo ao FFmpeg
-            const message = document.getElementById("convertMessage");
-            // ffmpeg = new FFmpeg();
-            // Carregar o FFmpeg
-            // await ffmpeg.load();
-            await window.ffmpeg.writeFile("input.mp4", await fetchFile(blob));
+            await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
 
-            window.ffmpeg.on("progress", ({ progress, time }) => {
+            ffmpeg.on("progress", ({ progress, time }) => {
                 btnSend2.disabled = true;
                 btnSend2.innerText = "Compressing video...";
                 setProgressBackground(btnSend2, progress * 100, "#3b82f6");
-                // message.innerHTML = `${(progress * 100).toFixed(2)} %, time: ${(
-                //     time / 1000000
-                // ).toFixed(2)} s`;
             });
 
             // Executando a compactação
-            await window.ffmpeg.exec([
+            await ffmpeg.exec([
                 "-i",
                 "input.mp4",
                 "-vf",
@@ -142,7 +138,7 @@ async function sendToBackend(blob, contentType) {
             ]);
 
             // Lendo o arquivo compactado
-            const fileData = await window.ffmpeg.readFile("output.mp4");
+            const fileData = await ffmpeg.readFile("output.mp4");
             const customBlob = new Blob([fileData.buffer], {
                 type: "video/mp4",
             });
