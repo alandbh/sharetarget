@@ -128,6 +128,8 @@ async function sendToBackend(blob, contentType) {
                     setProgressBackground(btnSend2, progress * 100, "#3b82f6");
                 });
 
+                showCounter();
+
                 // Executando a compactação
                 await ffmpeg.exec([
                     "-i",
@@ -153,6 +155,7 @@ async function sendToBackend(blob, contentType) {
                 formData.append("extension", extension);
 
                 formData.append("folder", localStorage.getItem("journey"));
+                showCounter(false);
                 upload();
             });
         } else {
@@ -189,7 +192,6 @@ async function sendToBackend(blob, contentType) {
             // Updates the progress bar
             xhr.upload.onprogress = function (event) {
                 if (event.lengthComputable) {
-                    showCounter();
                     const percentComplete = (event.loaded / event.total) * 100;
 
                     progress = `${Math.round(percentComplete)}%`;
