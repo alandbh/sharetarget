@@ -12,6 +12,8 @@ async function loadImageFromCache() {
         const imageDataUrl = await cachedResponse.text();
         const contentType = imageDataUrl.split(";")[0].split(":")[1]; // gets the content type from base64
 
+        console.log({ imageDataUrl });
+
         if (contentType.includes("image")) {
             // Show the image
             const imgElement = document.createElement("img");
