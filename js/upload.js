@@ -108,6 +108,7 @@ function getFileExtension(contentType) {
 async function sendToBackend(blob, contentType) {
     btnSend2.addEventListener("click", async () => {
         const formData = new FormData();
+        const customName = await getCustonName(contentType);
 
         if (contentType.includes("video")) {
             // Inicializa o FFmpeg fora da função sendToBackend
@@ -115,8 +116,6 @@ async function sendToBackend(blob, contentType) {
             await ffmpeg.load({
                 coreURL: "/ffmpeg/ffmpeg-core.js",
             });
-
-            const customName = await getCustonName(contentType);
 
             requestIdleCallback(async () => {
                 // Adicionando o arquivo ao FFmpeg
