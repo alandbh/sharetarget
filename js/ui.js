@@ -310,7 +310,7 @@ async function getCustonName(contentType) {
         "-" +
         getJourneyName().substr(0, 4) +
         "-" +
-        getPlayerName()
+        createSlug(getPlayerName())
     );
 }
 

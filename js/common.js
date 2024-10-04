@@ -96,3 +96,11 @@ function setProgressBackground(
     }
     element.style.background = `linear-gradient(90deg, ${darkColor} ${percentage}%, ${lightColor} ${percentage}%, ${lightColor} 100%)`;
 }
+
+function createSlug(name) {
+    return name
+        .toLowerCase() // Converte para minúsculas
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+        .replace(/[^a-z0-9]/g, ""); // Remove caracteres especiais, mantendo letras e números
+}
