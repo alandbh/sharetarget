@@ -15,7 +15,7 @@ const btnSend = document.querySelector("#btnSend");
 // const btnSendPreview = document.querySelector("#btnSendPreview");
 const toaster = document.querySelector("#toaster");
 const uploadProgress = document.getElementById("uploadProgress");
-const progressContainer = document.getElementById("progressContainer");
+// const progressContainer = document.getElementById("progressContainer");
 const progressText = document.getElementById("progressText");
 const countContainer = document.createElement("div");
 
@@ -125,7 +125,7 @@ if (!isShowPage) {
         }
 
         function upload() {
-            progressContainer.style.height = "60px";
+            // progressContainer.style.height = "60px";
 
             const xhr = new XMLHttpRequest();
 
@@ -180,7 +180,7 @@ if (!isShowPage) {
                         progressText.textContent = "0%";
                         progressText.style.marginInlineStart = "0%";
                         uploadProgress.style.width = "0%";
-                        progressContainer.style.height = 0;
+                        // progressContainer.style.height = 0;
                         btnSend.removeAttribute("style");
                     }, 4000);
                 } else {

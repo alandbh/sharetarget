@@ -164,7 +164,7 @@ async function sendToBackend(blob, contentType) {
             btnSend2.disabled = true;
             btnSend2.innerText = "Uploading...";
 
-            progressContainer.style.height = "60px";
+            // progressContainer.style.height = "60px";
 
             const xhr = new XMLHttpRequest();
 
@@ -227,7 +227,7 @@ async function sendToBackend(blob, contentType) {
                         progressText.textContent = "0%";
                         progressText.style.marginInlineStart = "0%";
                         uploadProgress.style.width = "0%";
-                        progressContainer.style.height = 0;
+                        // progressContainer.style.height = 0;
                     }, 4000);
                 } else {
                     showCounter(false);
