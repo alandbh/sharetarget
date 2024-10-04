@@ -79,7 +79,7 @@ if (!isShowPage) {
             requestIdleCallback(async () => {
                 ffmpeg.on("progress", ({ progress, time }) => {
                     btnSend.innerText = "Compressing video...";
-                    setProgressBackground(btnSend, progress * 100, "#3b82f6");
+                    setProgressBackground(btnSend, progress * 100, "#ff0000");
                 });
 
                 const { name } = fileInput.files[0];
@@ -144,7 +144,7 @@ if (!isShowPage) {
             // Updates the progress bar
             xhr.upload.onprogress = function (event) {
                 if (event.lengthComputable) {
-                    showCounter();
+                    // showCounter();
                     const percentComplete = (event.loaded / event.total) * 100;
 
                     setProgressBackground(
@@ -181,6 +181,7 @@ if (!isShowPage) {
                         progressText.style.marginInlineStart = "0%";
                         uploadProgress.style.width = "0%";
                         progressContainer.style.height = 0;
+                        btnSend.removeAttribute("style");
                     }, 4000);
                 } else {
                     console.error("Erro no upload:", xhr.statusText);

@@ -223,6 +223,7 @@ async function sendToBackend(blob, contentType) {
 
                     setTimeout(() => {
                         btnSend2.innerText = "Send To Drive";
+                        btnSend2.removeAttribute("style");
                         progressText.textContent = "0%";
                         progressText.style.marginInlineStart = "0%";
                         uploadProgress.style.width = "0%";
