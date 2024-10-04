@@ -8,21 +8,15 @@ async function loadImageFromCache() {
     const cache = await caches.open("pwa-image-cache-v1");
     const cachedResponse = await cache.match("/cached-file");
 
-    const url = new URL(window.location.href);
-
-    // Cria um objeto URLSearchParams com os parâmetros da URL
-    const params = new URLSearchParams(url.search);
-
-    // Pega o valor do parâmetro 'file'
-    const fileParam = params.get("file");
-
-    console.log({ fileParam });
-
     if (cachedResponse) {
         const imageDataUrl = await cachedResponse.text();
         const contentType = imageDataUrl.split(";")[0].split(":")[1]; // gets the content type from base64
 
         console.log({ imageDataUrl });
+
+        if (imageDataUrl === "" || imageDataUrl === undefined) {
+            showToaster("fail", "Error on processing this file.");
+        }
 
         if (contentType.includes("image")) {
             // Show the image
@@ -110,6 +104,9 @@ async function sendToBackend(blob, contentType) {
         const formData = new FormData();
         const customName = await getCustonName(contentType);
         const extension = getFileExtension(contentType); // gets the file extension
+        formData.append("customName", customName);
+        formData.append("extension", extension);
+        formData.append("folder", localStorage.getItem("journey"));
 
         if (contentType.includes("video")) {
             // Inicializa o FFmpeg fora da função sendToBackend
@@ -120,20 +117,23 @@ async function sendToBackend(blob, contentType) {
 
             requestIdleCallback(async () => {
                 // Adicionando o arquivo ao FFmpeg
-                await ffmpeg.writeFile("input.mp4", await fetchFile(blob));
+                await ffmpeg.writeFile(
+                    "input." + extension,
+                    await fetchFile(blob)
+                );
 
                 ffmpeg.on("progress", ({ progress, time }) => {
                     btnSend2.disabled = true;
                     btnSend2.innerText = "Compressing video...";
-                    setProgressBackground(btnSend2, progress * 100, "#3b82f6");
+                    setProgressBackground(btnSend2, progress * 100, "#ff0000");
                 });
 
-                showCounter();
+                // showCounter();
 
                 // Executando a compactação
                 await ffmpeg.exec([
                     "-i",
-                    "input.mp4",
+                    "input." + extension,
                     "-vf",
                     "scale=iw/2:ih/2",
                     "-preset",
@@ -151,19 +151,11 @@ async function sendToBackend(blob, contentType) {
 
                 formData.append("file", customBlob);
 
-                formData.append("customName", customName);
-                formData.append("extension", extension);
-
-                formData.append("folder", localStorage.getItem("journey"));
-                showCounter(false);
                 upload();
             });
         } else {
             formData.append("file", blob);
-            formData.append("customName", customName);
-            formData.append("extension", extension);
 
-            formData.append("folder", localStorage.getItem("journey"));
             upload();
         }
 
@@ -195,9 +187,15 @@ async function sendToBackend(blob, contentType) {
                     const percentComplete = (event.loaded / event.total) * 100;
 
                     progress = `${Math.round(percentComplete)}%`;
-                    uploadProgress.style.width = progress;
-                    progressText.textContent = progress;
-                    progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
+                    // uploadProgress.style.width = progress;
+                    // progressText.textContent = progress;
+                    // progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
+
+                    setProgressBackground(
+                        btnSend2,
+                        Math.round(percentComplete),
+                        "#ff0000"
+                    );
 
                     if (Math.round(percentComplete) === 100) {
                         btnSend2.innerText = "Storing in the right folder...";
@@ -208,11 +206,11 @@ async function sendToBackend(blob, contentType) {
             xhr.onload = function (response) {
                 if (xhr.status === 200) {
                     btnSend2.innerText = "Done!";
-                    showCounter(false);
+                    // showCounter(false);
 
                     console.log("Upload completo");
 
-                    showToaster();
+                    showToaster("success", "File has been sent successfuly!");
                     // fileInput.value = "";
                     filename.value = customName;
                     filenameContainer.style.height = "100px";
@@ -234,13 +232,15 @@ async function sendToBackend(blob, contentType) {
                     showCounter(false);
                     console.error("Erro no upload:", xhr.statusText);
                     uploadProgress.textContent = "Erro no upload.";
+                    showToaster("fail", "Erro no upload: " + xhr.statusText);
                 }
             };
 
-            xhr.onerror = function () {
+            xhr.onerror = function (error) {
                 showCounter(false);
                 console.error("Erro ao enviar o arquivo.");
                 uploadProgress.textContent = "Erro ao enviar o arquivo.";
+                showToaster("fail", "Erro no upload: " + error);
             };
 
             xhr.send(formData);

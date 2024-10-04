@@ -47,22 +47,14 @@ copyNameButton.addEventListener("click", () => {
 
 /**
  *
- * Only for Development purposes
- * --------------------------------
+ *
+ *
+ * ----------------------------------------------------------------
+ * Compressing the video file and uploading it
+ * -------------------------------- --------------------------------
+ *
+ *
  * */
-
-// btnSendPreview.addEventListener("click", async () => {
-//     const formData = new FormData();
-//     formData.append("file", fileInput.files[0]);
-
-//     const options = {
-//         method: "POST",
-//         body: formData,
-//         headers: { "Content-Type": "multipart/form-data" },
-//     };
-
-//     fetch("http://localhost:3003/share.html", options);
-// });
 
 if (!isShowPage) {
     btnSend.addEventListener("click", async () => {
@@ -103,9 +95,9 @@ if (!isShowPage) {
                         "-vf",
                         "scale=iw/2:ih/2",
                         "-preset",
-                        "fast", // acelera a compressão
+                        "superfast", // acelera a compressão
                         "-crf",
-                        "23", // reduz a qualidade
+                        "28", // reduz a qualidade
                         "output.mp4",
                     ])
                     .then(() => ffmpeg.readFile("output.mp4"))
@@ -124,15 +116,6 @@ if (!isShowPage) {
 
                         upload();
                     });
-
-                // const fileData = await ffmpeg.readFile("output.mp4");
-
-                // const compressedBlob = new Blob([fileData.buffer], {
-                //     type: "video/mp4",
-                // });
-
-                // formData.append("file", compressedBlob);
-                // updateFormData(compressedBlob);
             });
         } else {
             updateFormData(fileInput.files[0]);
@@ -164,11 +147,17 @@ if (!isShowPage) {
                     showCounter();
                     const percentComplete = (event.loaded / event.total) * 100;
 
-                    progress = `${Math.round(percentComplete)}%`;
-                    // uploadProgress.textContent = progress;
-                    uploadProgress.style.width = progress;
-                    progressText.textContent = progress;
-                    progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
+                    setProgressBackground(
+                        btnSend,
+                        Math.round(percentComplete),
+                        "#ff0000"
+                    );
+
+                    // progress = `${Math.round(percentComplete)}%`;
+                    // // uploadProgress.textContent = progress;
+                    // uploadProgress.style.width = progress;
+                    // progressText.textContent = progress;
+                    // progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
                 }
             };
 
@@ -176,9 +165,9 @@ if (!isShowPage) {
             xhr.onload = function (response) {
                 if (xhr.status === 200) {
                     console.log("Upload completo");
-                    showCounter(false);
+                    // showCounter(false);
 
-                    showToaster();
+                    showToaster("success", "File has been sent successfuly!");
                     btnSend.innerText = "Send To Drive";
                     fileInput.value = "";
                     filename.value = customName;
@@ -196,66 +185,19 @@ if (!isShowPage) {
                 } else {
                     console.error("Erro no upload:", xhr.statusText);
                     uploadProgress.textContent = "Erro no upload.";
-                    showCounter(false);
+                    // showCounter(false);
+                    showToaster("fail", "Erro no upload: " + xhr.statusText);
                 }
             };
 
-            xhr.onerror = function () {
+            xhr.onerror = function (error) {
                 showCounter(false);
                 console.error("Erro ao enviar o arquivo.");
                 uploadProgress.textContent = "Erro ao enviar o arquivo.";
+                showToaster("fail", "Erro no upload: " + error);
             };
 
             xhr.send(formData);
-
-            // // Primeiro, pega o signed URL do backend
-            // fetch(window.apiUrl + "/generate-url", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({ fileName: formData.get("file").name }),
-            // })
-            //     .then((response) => response.json())
-            //     .then((data) => {
-            //         const xhr = new XMLHttpRequest();
-
-            //         xhr.upload.onprogress = function (event) {
-            //             if (event.lengthComputable) {
-            //                 const percentComplete =
-            //                     (event.loaded / event.total) * 100;
-            //                 progress = `${Math.round(percentComplete)}%`;
-            //                 uploadProgress.style.width = progress;
-            //                 progressText.textContent = progress;
-            //                 progressText.style.marginInlineStart = `calc(${progress} - 1.25rem)`;
-            //             }
-            //         };
-
-            //         xhr.onload = function () {
-            //             if (xhr.status === 200) {
-            //                 console.log("Upload completo");
-            //                 showToaster();
-            //                 btnSend.innerText = "Send To Drive";
-            //                 setTimeout(() => {
-            //                     progressText.textContent = "0%";
-            //                     progressText.style.marginInlineStart = "0%";
-            //                     uploadProgress.style.width = "0%";
-            //                     progressContainer.style.height = 0;
-            //                 }, 4000);
-            //             } else {
-            //                 console.error("Erro no upload:", xhr.statusText);
-            //                 uploadProgress.textContent = "Erro no upload.";
-            //             }
-            //         };
-
-            //         xhr.onerror = function () {
-            //             console.error("Erro ao enviar o arquivo.");
-            //             uploadProgress.textContent = "Erro ao enviar o arquivo.";
-            //         };
-
-            //         // Upload direto para o URL assinado
-            //         xhr.open("PUT", data.url, true);
-            //         xhr.setRequestHeader("Content-Type", formData.get("file").type);
-            //         xhr.send(formData.get("file"));
-            //     });
         }
     });
 }
@@ -285,16 +227,19 @@ function enableSendButton(btnSend) {
     return validInputFile && validPlayer && validJourney;
 }
 
-function showToaster(status) {
+function showToaster(
+    status = "success",
+    message = "File has been sent successfuly!"
+) {
     toaster.style.top = "5vh";
     if (status == "fail") {
         toaster.style.border = "1px solid red";
         toaster.style.background = "#ffe2e2";
-        toaster.innerHTML = `<span>👎</span> Error on sending file.`;
+        toaster.innerHTML = `<span>👎</span> ${message}`;
     } else {
         toaster.style.border = "1px solid green";
         toaster.style.background = "#ceffce";
-        toaster.innerHTML = `<span>🙌</span> File has been sent successfuly!`;
+        toaster.innerHTML = `<span>🙌</span> ${message}`;
     }
 
     setTimeout(() => {
