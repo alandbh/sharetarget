@@ -151,6 +151,7 @@ if (!isShowPage) {
                     setProgressBackground(
                         btnSend,
                         Math.round(percentComplete),
+                        "#ef4444",
                         "#f87171"
                     );
 
