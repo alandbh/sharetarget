@@ -224,15 +224,15 @@ async function sendToBackend(blob, contentType) {
                     setTimeout(() => {
                         btnSend2.innerText = "Send To Drive";
                         btnSend2.removeAttribute("style");
-                        progressText.textContent = "0%";
-                        progressText.style.marginInlineStart = "0%";
-                        uploadProgress.style.width = "0%";
+                        // progressText.textContent = "0%";
+                        // progressText.style.marginInlineStart = "0%";
+                        // uploadProgress.style.width = "0%";
                         // progressContainer.style.height = 0;
                     }, 4000);
                 } else {
                     showCounter(false);
                     console.error("Erro no upload:", xhr.statusText);
-                    uploadProgress.textContent = "Erro no upload.";
+                    // uploadProgress.textContent = "Erro no upload.";
                     showToaster("fail", "Erro no upload: " + xhr.statusText);
                 }
             };
@@ -240,7 +240,7 @@ async function sendToBackend(blob, contentType) {
             xhr.onerror = function (error) {
                 showCounter(false);
                 console.error("Erro ao enviar o arquivo.");
-                uploadProgress.textContent = "Erro ao enviar o arquivo.";
+                // uploadProgress.textContent = "Erro ao enviar o arquivo.";
                 showToaster("fail", "Erro no upload: " + error);
             };
 

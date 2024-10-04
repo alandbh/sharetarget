@@ -14,9 +14,9 @@ const filename = document.querySelector("#filename");
 const btnSend = document.querySelector("#btnSend");
 // const btnSendPreview = document.querySelector("#btnSendPreview");
 const toaster = document.querySelector("#toaster");
-const uploadProgress = document.getElementById("uploadProgress");
+// const uploadProgress = document.getElementById("uploadProgress");
 // const progressContainer = document.getElementById("progressContainer");
-const progressText = document.getElementById("progressText");
+// const progressText = document.getElementById("progressText");
 const countContainer = document.createElement("div");
 
 const isShowPage = window.location.pathname.endsWith("show.html");
@@ -177,15 +177,15 @@ if (!isShowPage) {
                     console.log("SUCESSO", response);
 
                     setTimeout(() => {
-                        progressText.textContent = "0%";
-                        progressText.style.marginInlineStart = "0%";
-                        uploadProgress.style.width = "0%";
+                        // progressText.textContent = "0%";
+                        // progressText.style.marginInlineStart = "0%";
+                        // uploadProgress.style.width = "0%";
                         // progressContainer.style.height = 0;
                         btnSend.removeAttribute("style");
                     }, 4000);
                 } else {
                     console.error("Erro no upload:", xhr.statusText);
-                    uploadProgress.textContent = "Erro no upload.";
+                    // uploadProgress.textContent = "Erro no upload.";
                     // showCounter(false);
                     showToaster("fail", "Erro no upload: " + xhr.statusText);
                 }
@@ -194,7 +194,7 @@ if (!isShowPage) {
             xhr.onerror = function (error) {
                 showCounter(false);
                 console.error("Erro ao enviar o arquivo.");
-                uploadProgress.textContent = "Erro ao enviar o arquivo.";
+                // uploadProgress.textContent = "Erro ao enviar o arquivo.";
                 showToaster("fail", "Erro no upload: " + error);
             };
 
