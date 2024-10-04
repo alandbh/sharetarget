@@ -71,6 +71,8 @@ if (!isShowPage) {
         const customName = await getCustonName(fileInput.files[0].type);
 
         const formData = new FormData();
+        formData.append("customName", customName);
+        formData.append("folder", localStorage.getItem("journey"));
 
         if (fileInput.files[0].type.includes("video")) {
             const ffmpeg = new FFmpeg();
@@ -110,19 +112,13 @@ if (!isShowPage) {
 
                         // updateFormData(compressedBlob);
                         formData.append("file", compressedBlob);
-                        formData.append("customName", customName);
-                        formData.append(
-                            "folder",
-                            localStorage.getItem("journey")
-                        );
 
                         upload();
                     });
             });
         } else {
-            updateFormData(fileInput.files[0]);
-            formData.append("customName", customName);
-            formData.append("folder", localStorage.getItem("journey"));
+            formData.append("file", fileInput.files[0]);
+
             upload();
         }
 
