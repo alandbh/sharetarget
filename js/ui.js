@@ -97,7 +97,7 @@ if (!isShowPage) {
                         "-vf",
                         "scale=iw/2:ih/2",
                         "-preset",
-                        "superfast", // acelera a compressão
+                        "ultrafast", // acelera a compressão
                         "-crf",
                         "28", // reduz a qualidade
                         "output.mp4",
