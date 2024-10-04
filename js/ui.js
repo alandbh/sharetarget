@@ -58,6 +58,8 @@ copyNameButton.addEventListener("click", () => {
 
 if (!isShowPage) {
     btnSend.addEventListener("click", async () => {
+        btnSend.disabled = true;
+        btnSend.innerText = "Starting...";
         filenameContainer.style.height = "0px";
         console.log("FILE", fileInput.files[0]);
 

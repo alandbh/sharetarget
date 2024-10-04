@@ -101,6 +101,8 @@ function getFileExtension(contentType) {
 
 async function sendToBackend(blob, contentType) {
     btnSend2.addEventListener("click", async () => {
+        btnSend2.disabled = true;
+        btnSend2.innerText = "Starting...";
         const formData = new FormData();
         const customName = await getCustonName(contentType);
         const extension = getFileExtension(contentType); // gets the file extension
@@ -123,7 +125,6 @@ async function sendToBackend(blob, contentType) {
                 );
 
                 ffmpeg.on("progress", ({ progress, time }) => {
-                    btnSend2.disabled = true;
                     btnSend2.innerText = "Compressing video...";
                     setProgressBackground(btnSend2, progress * 100, "#f87171");
                 });
