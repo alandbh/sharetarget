@@ -79,7 +79,7 @@ if (!isShowPage) {
             requestIdleCallback(async () => {
                 ffmpeg.on("progress", ({ progress, time }) => {
                     btnSend.innerText = "Compressing video...";
-                    setProgressBackground(btnSend, progress * 100, "#ff0000");
+                    setProgressBackground(btnSend, progress * 100, "#f87171");
                 });
 
                 const { name } = fileInput.files[0];
@@ -139,18 +139,17 @@ if (!isShowPage) {
             xhr.open("POST", window.apiUrlPost, true);
             // xhr.setRequestHeader("cache-control", "no-cache");
 
-            let progress;
-
             // Updates the progress bar
             xhr.upload.onprogress = function (event) {
                 if (event.lengthComputable) {
                     // showCounter();
+                    btnSend.innerText = "Uploading...";
                     const percentComplete = (event.loaded / event.total) * 100;
 
                     setProgressBackground(
                         btnSend,
                         Math.round(percentComplete),
-                        "#ff0000"
+                        "#f87171"
                     );
 
                     // progress = `${Math.round(percentComplete)}%`;

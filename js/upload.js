@@ -125,7 +125,7 @@ async function sendToBackend(blob, contentType) {
                 ffmpeg.on("progress", ({ progress, time }) => {
                     btnSend2.disabled = true;
                     btnSend2.innerText = "Compressing video...";
-                    setProgressBackground(btnSend2, progress * 100, "#ff0000");
+                    setProgressBackground(btnSend2, progress * 100, "#f87171");
                 });
 
                 // showCounter();
@@ -194,7 +194,7 @@ async function sendToBackend(blob, contentType) {
                     setProgressBackground(
                         btnSend2,
                         Math.round(percentComplete),
-                        "#ff0000"
+                        "#f87171"
                     );
 
                     if (Math.round(percentComplete) === 100) {

@@ -88,8 +88,8 @@ async function getInitialData() {
 function setProgressBackground(
     element,
     percentage = 0,
-    darkColor = "#5d859e",
-    lightColor = "#779eb4"
+    darkColor = "#94a3b8",
+    lightColor = "#cbd5e1"
 ) {
     if (!element) {
         return;
