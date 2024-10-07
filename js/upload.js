@@ -195,7 +195,7 @@ async function sendToBackend(blob, contentType) {
                     setProgressBackground(
                         btnSend2,
                         Math.round(percentComplete),
-                        "#ef4444",
+                        "#b91c1c",
                         "#f87171"
                     );
 

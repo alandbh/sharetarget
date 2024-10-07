@@ -59,6 +59,10 @@ copyNameButton.addEventListener("click", () => {
 if (!isShowPage) {
     btnSend.addEventListener("click", async () => {
         btnSend.disabled = true;
+        playerSelect.disabled = true;
+        journeySelect.disabled = true;
+        fileInput.disabled = true;
+
         btnSend.innerText = "Starting...";
         filenameContainer.style.height = "0px";
         console.log("FILE", fileInput.files[0]);
@@ -147,7 +151,7 @@ if (!isShowPage) {
                     setProgressBackground(
                         btnSend,
                         Math.round(percentComplete),
-                        "#ef4444",
+                        "#b91c1c",
                         "#f87171"
                     );
 
@@ -171,6 +175,9 @@ if (!isShowPage) {
                     filename.value = customName;
                     filenameContainer.style.height = "100px";
                     enableSendButton(btnSend);
+                    playerSelect.disabled = false;
+                    journeySelect.disabled = false;
+                    fileInput.disabled = false;
 
                     console.log("SUCESSO", response);
 
@@ -308,7 +315,7 @@ async function getCustonName(contentType) {
         mediaType +
         Number(filesList.length + 1) +
         "-" +
-        getJourneyName().substr(0, 4) +
+        getJourneyName().substring(0, 4) +
         "-" +
         createSlug(getPlayerName())
     );
