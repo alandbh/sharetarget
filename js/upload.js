@@ -111,8 +111,9 @@ async function sendToBackend(blob, contentType) {
         formData.append("folder", localStorage.getItem("journey"));
 
         if (contentType.includes("video")) {
+            console.log({ blob });
             // Some tests show that ffmpg only works with files larger than 10MB
-            if (fileInput.files[0].size > 20 * 1000 * 1000) {
+            if (blob.size > 20 * 1000 * 1000) {
                 console.log("larger than 10 MB");
                 const ffmpeg = new FFmpeg();
                 await ffmpeg.load({
