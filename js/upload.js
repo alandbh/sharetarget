@@ -111,49 +111,61 @@ async function sendToBackend(blob, contentType) {
         formData.append("folder", localStorage.getItem("journey"));
 
         if (contentType.includes("video")) {
-            // Inicializa o FFmpeg fora da função sendToBackend
-            const ffmpeg = new FFmpeg();
-            await ffmpeg.load({
-                coreURL: "/ffmpeg/ffmpeg-core.js",
-            });
-
-            requestIdleCallback(async () => {
-                // Adicionando o arquivo ao FFmpeg
-                await ffmpeg.writeFile(
-                    "input." + extension,
-                    await fetchFile(blob)
-                );
-
-                ffmpeg.on("progress", ({ progress, time }) => {
-                    btnSend2.innerText = "Compressing video...";
-                    setProgressBackground(btnSend2, progress * 100, "#f87171");
+            // Some tests show that ffmpg only works with files larger than 10MB
+            if (fileInput.files[0].size > 20 * 1000 * 1000) {
+                console.log("larger than 10 MB");
+                const ffmpeg = new FFmpeg();
+                await ffmpeg.load({
+                    coreURL: "/ffmpeg/ffmpeg-core.js",
                 });
 
-                // showCounter();
+                requestIdleCallback(async () => {
+                    // Adicionando o arquivo ao FFmpeg
+                    await ffmpeg.writeFile(
+                        "input." + extension,
+                        await fetchFile(blob)
+                    );
 
-                // Executando a compactação
-                await ffmpeg.exec([
-                    "-i",
-                    "input." + extension,
-                    "-vf",
-                    "scale=iw/2:ih/2",
-                    "-preset",
-                    "ultrafast",
-                    "-crf",
-                    "28",
-                    "output.mp4",
-                ]);
+                    ffmpeg.on("progress", ({ progress, time }) => {
+                        btnSend2.innerText = "Compressing video...";
+                        setProgressBackground(
+                            btnSend2,
+                            progress * 100,
+                            "#f87171"
+                        );
+                    });
 
-                // Lendo o arquivo compactado
-                const fileData = await ffmpeg.readFile("output.mp4");
-                const customBlob = new Blob([fileData.buffer], {
-                    type: "video/mp4",
+                    // showCounter();
+
+                    // Executando a compactação
+                    await ffmpeg.exec([
+                        "-i",
+                        "input." + extension,
+                        "-vf",
+                        "scale=iw/2:ih/2",
+                        "-preset",
+                        "ultrafast",
+                        "-crf",
+                        "28",
+                        "output.mp4",
+                    ]);
+
+                    // Lendo o arquivo compactado
+                    const fileData = await ffmpeg.readFile("output.mp4");
+                    const customBlob = new Blob([fileData.buffer], {
+                        type: "video/mp4",
+                    });
+
+                    formData.append("file", customBlob);
+
+                    upload();
                 });
-
-                formData.append("file", customBlob);
+            } else {
+                console.log("smaller than 10 MB");
+                formData.append("file", blob);
 
                 upload();
-            });
+            }
         } else {
             formData.append("file", blob);
 

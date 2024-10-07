@@ -79,12 +79,14 @@ if (!isShowPage) {
         formData.append("folder", localStorage.getItem("journey"));
 
         if (fileInput.files[0].type.includes("video")) {
-            const ffmpeg = new FFmpeg();
-            await ffmpeg.load({
-                coreURL: "/ffmpeg/ffmpeg-core.js",
-            });
+            // Some tests show that ffmpg only works with files larger than 10MB
+            if (fileInput.files[0].size > 20 * 1000 * 1000) {
+                console.log("big");
+                const ffmpeg = new FFmpeg();
+                await ffmpeg.load({
+                    coreURL: "/ffmpeg/ffmpeg-core.js",
+                });
 
-            requestIdleCallback(async () => {
                 ffmpeg.on("progress", ({ progress, time }) => {
                     btnSend.innerText = "Compressing video...";
                     setProgressBackground(btnSend, progress * 100, "#f87171");
@@ -96,30 +98,50 @@ if (!isShowPage) {
                     await fetchFile(fileInput.files[0])
                 );
 
-                await ffmpeg
-                    .exec([
-                        "-i",
-                        name,
-                        "-vf",
-                        "scale=iw/2:ih/2",
-                        "-preset",
-                        "ultrafast", // acelera a compressão
-                        "-crf",
-                        "28", // reduz a qualidade
-                        "output.mp4",
-                    ])
-                    .then(() => ffmpeg.readFile("output.mp4"))
-                    .then((fileData) => {
-                        const compressedBlob = new Blob([fileData.buffer], {
-                            type: "video/mp4",
-                        });
+                await ffmpeg.exec([
+                    "-i",
+                    name,
+                    "-vf",
+                    "scale=iw/2:ih/2",
+                    "-preset",
+                    "ultrafast", // acelera a compressão
+                    "-crf",
+                    "28", // reduz a qualidade
+                    "output.mp4",
+                ]);
 
-                        // updateFormData(compressedBlob);
-                        formData.append("file", compressedBlob);
+                const fileData = await ffmpeg.readFile("output.mp4");
+                const customBlob = new Blob([fileData.buffer], {
+                    type: "video/mp4",
+                });
 
-                        upload();
-                    });
-            });
+                // updateFormData(compressedBlob);
+                formData.append("file", customBlob);
+
+                console.log({ fileData });
+
+                upload();
+
+                // .then(() => ffmpeg.readFile("output.mp4"))
+                // .then((fileData) => {
+                //     const compressedBlob = new Blob([fileData.buffer], {
+                //         type: "video/mp4",
+                //     });
+
+                //     // updateFormData(compressedBlob);
+                //     formData.append("file", compressedBlob);
+
+                //     console.log({ compressedBlob });
+
+                //     // upload();
+                // });
+                // requestIdleCallback(async () => {
+                // });
+            } else {
+                console.log("small");
+                formData.append("file", fileInput.files[0]);
+                upload();
+            }
         } else {
             formData.append("file", fileInput.files[0]);
 
