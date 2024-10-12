@@ -103,12 +103,19 @@ async function sendToBackend(blob, contentType) {
     btnSend2.addEventListener("click", async () => {
         btnSend2.disabled = true;
         btnSend2.innerText = "Starting...";
+        journeySelect.disabled = true;
+        playerSelect.disabled = true;
         const formData = new FormData();
         const customName = await getCustonName(contentType);
         const extension = getFileExtension(contentType); // gets the file extension
         formData.append("customName", customName);
         formData.append("extension", extension);
         formData.append("folder", localStorage.getItem("journey"));
+
+        window.addEventListener("beforeunload", function (e) {
+            e.preventDefault();
+            e.returnValue = "";
+        });
 
         if (contentType.includes("video")) {
             console.log({ blob });
@@ -129,6 +136,7 @@ async function sendToBackend(blob, contentType) {
 
                     ffmpeg.on("progress", ({ progress, time }) => {
                         btnSend2.innerText = "Compressing video...";
+
                         setProgressBackground(
                             btnSend2,
                             progress * 100,
@@ -239,6 +247,8 @@ async function sendToBackend(blob, contentType) {
                     setTimeout(() => {
                         btnSend2.innerText = "Send To Drive";
                         btnSend2.removeAttribute("style");
+                        journeySelect.disabled = false;
+                        playerSelect.disabled = false;
                         // progressText.textContent = "0%";
                         // progressText.style.marginInlineStart = "0%";
                         // uploadProgress.style.width = "0%";
@@ -249,6 +259,8 @@ async function sendToBackend(blob, contentType) {
                     console.error("Erro no upload:", xhr.statusText);
                     // uploadProgress.textContent = "Erro no upload.";
                     showToaster("fail", "Erro no upload: " + xhr.statusText);
+                    journeySelect.disabled = false;
+                    playerSelect.disabled = false;
                 }
             };
 
@@ -257,6 +269,8 @@ async function sendToBackend(blob, contentType) {
                 console.error("Erro ao enviar o arquivo.");
                 // uploadProgress.textContent = "Erro ao enviar o arquivo.";
                 showToaster("fail", "Erro no upload: " + error);
+                journeySelect.disabled = false;
+                playerSelect.disabled = false;
             };
 
             xhr.send(formData);

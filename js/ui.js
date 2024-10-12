@@ -63,6 +63,11 @@ if (!isShowPage) {
         journeySelect.disabled = true;
         fileInput.disabled = true;
 
+        window.addEventListener("beforeunload", function (e) {
+            e.preventDefault();
+            e.returnValue = "";
+        });
+
         btnSend.innerText = "Starting...";
         filenameContainer.style.height = "0px";
         console.log("FILE", fileInput.files[0]);
@@ -190,6 +195,10 @@ if (!isShowPage) {
                 if (xhr.status === 200) {
                     console.log("Upload completo");
                     // showCounter(false);
+
+                    window.removeEventListener("beforeunload", (e) => {
+                        e.returnValue = "";
+                    });
 
                     showToaster("success", "File has been sent successfuly!");
                     btnSend.innerText = "Send To Drive";
