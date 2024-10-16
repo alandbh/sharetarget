@@ -30,6 +30,7 @@ async function loadImageFromCache() {
             const videoElement = document.createElement("video");
             videoElement.classList.add("w-full", "h-full", "object-contain");
             videoElement.src = imageDataUrl;
+            videoElement.muted = true; // Mute the video
             document.getElementById("image-container").innerHTML = "";
             document
                 .getElementById("image-container")
