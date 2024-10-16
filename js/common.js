@@ -83,11 +83,6 @@ async function getInitialData() {
             journeySelect.value = localStorage.getItem("journey") || "null";
         });
     }
-
-    window.ffmpeg = new FFmpeg();
-    await window.ffmpeg.load({
-        coreURL: "/ffmpeg/ffmpeg-core.js",
-    });
 }
 
 function setProgressBackground(
