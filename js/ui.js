@@ -87,10 +87,12 @@ if (!isShowPage) {
             // Some tests show that ffmpg only works with files larger than 10MB
             if (fileInput.files[0].size > 20 * 1000 * 1000) {
                 console.log("big");
-                const ffmpeg = new FFmpeg();
-                await ffmpeg.load({
-                    coreURL: "/ffmpeg/ffmpeg-core.js",
-                });
+                // const ffmpeg = new FFmpeg();
+                // await ffmpeg.load({
+                //     coreURL: "/ffmpeg/ffmpeg-core.js",
+                // });
+
+                const ffmpeg = window.ffmpeg;
 
                 ffmpeg.on("progress", ({ progress, time }) => {
                     btnSend.innerText = "Compressing video...";
