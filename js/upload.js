@@ -122,10 +122,11 @@ async function sendToBackend(blob, contentType) {
             // Some tests show that ffmpg only works with files larger than 10MB
             if (blob.size > 20 * 1000 * 1000) {
                 console.log("larger than 10 MB");
-                const ffmpeg = new FFmpeg();
-                await ffmpeg.load({
-                    coreURL: "/ffmpeg/ffmpeg-core.js",
-                });
+                const ffmpeg = window.ffmpeg;
+                // const ffmpeg = new FFmpeg();
+                // await ffmpeg.load({
+                //     coreURL: "/ffmpeg/ffmpeg-core.js",
+                // });
 
                 requestIdleCallback(async () => {
                     // Adicionando o arquivo ao FFmpeg
