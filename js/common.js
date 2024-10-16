@@ -104,3 +104,30 @@ function createSlug(name) {
         .replace(/[\u0300-\u036f]/g, "") // Remove acentos
         .replace(/[^a-z0-9]/g, ""); // Remove caracteres especiais, mantendo letras e números
 }
+
+function getFileExtension(contentType) {
+    switch (contentType) {
+        // Image typrd
+        case "image/jpeg":
+            return "jpg";
+        case "image/png":
+            return "png";
+        case "image/webp":
+            return "webp";
+        case "image/gif":
+            return "gif";
+
+        // Veideo types
+        case "video/mp4":
+            return "mp4";
+        case "video/webm":
+            return "webm";
+        case "video/ogg":
+            return "ogv";
+        case "video/quicktime":
+            return "mov";
+
+        default:
+            return "";
+    }
+}

@@ -72,33 +72,6 @@ function base64ToBlob(base64, contentType = "", sliceSize = 512) {
     return new Blob(byteArrays, { type: contentType });
 }
 
-function getFileExtension(contentType) {
-    switch (contentType) {
-        // Image typrd
-        case "image/jpeg":
-            return "jpg";
-        case "image/png":
-            return "png";
-        case "image/webp":
-            return "webp";
-        case "image/gif":
-            return "gif";
-
-        // Veideo types
-        case "video/mp4":
-            return "mp4";
-        case "video/webm":
-            return "webm";
-        case "video/ogg":
-            return "ogv";
-        case "video/quicktime":
-            return "mov";
-
-        default:
-            return "";
-    }
-}
-
 async function sendToBackend(blob, contentType) {
     btnSend2.addEventListener("click", async () => {
         btnSend2.disabled = true;

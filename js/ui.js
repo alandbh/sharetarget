@@ -81,7 +81,11 @@ if (!isShowPage) {
 
         const formData = new FormData();
         formData.append("customName", customName);
+        const extension = getFileExtension(fileInput.files[0].type);
+        formData.append("extension", extension);
         formData.append("folder", localStorage.getItem("journey"));
+
+        console.log({ extension });
 
         if (fileInput.files[0].type.includes("video")) {
             // Some tests show that ffmpg only works with files larger than 10MB
