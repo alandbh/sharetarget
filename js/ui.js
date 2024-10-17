@@ -318,7 +318,7 @@ function getJourneyName() {
 async function getFilesList() {
     const response = await fetch(
         // apiUrl + "/files?folder=" + parentFolder,
-        apiUrl + "/listfiles?folder=" + localStorage.getItem("journey"),
+        apiUrl + "?list=files&folder=" + localStorage.getItem("journey"),
         {
             method: "GET",
         }

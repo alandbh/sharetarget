@@ -57,7 +57,7 @@ async function getInitialData() {
     if (!localFolders || localFolders.length === 0) {
         console.log("fetchingggggg");
         const response = await fetch(
-            apiUrl + "/listfolders?folder=" + parentFolder,
+            apiUrl + "?list=folders&folder=" + parentFolder,
             {
                 method: "GET",
             }
