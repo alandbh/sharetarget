@@ -318,14 +318,9 @@ function getJourneyName() {
 async function getFilesList() {
     const response = await fetch(
         // apiUrl + "/files?folder=" + parentFolder,
-        apiUrl + "/files?folder=" + localStorage.getItem("journey"),
+        apiUrl + "/listfiles?folder=" + localStorage.getItem("journey"),
         {
             method: "GET",
-            headers: {
-                "bypass-tunnel-reminder": "true",
-                "content-type":
-                    "multipart/form-data; boundary=---011000010111000001101001",
-            },
         }
     );
 

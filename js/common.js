@@ -18,16 +18,20 @@ if ("serviceWorker" in navigator) {
 window.parentFolder = "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC";
 
 // window.apiUrl = "http://localhost:4000";
-window.apiUrlPost = "https://alanvasconcelos.net/uptodrive/";
+window.apiUrlPost = "https://alanvasconcelos.net/uptodrive/"; // Mandatory '/' at the end.
+
+// window.apiUrl = window.location.host.includes("netlify")
+//     ? "https://uptodrive-backend.onrender.com"
+//     : "http://localhost:4000";
+
+window.apiUrl = window.location.host.includes("netlify")
+    ? "https://alanvasconcelos.net/uptodrive"
+    : "http://localhost:8000";
 
 // window.apiUrlPost = "http://localhost:8000";
 // window.apiUrl = "https://alanvasconcelos.net/uptodrive";
 // window.apiUrl = "https://uptodrive-backend.rj.r.appspot.com";
 // window.apiUrl = "https://uptodrive.loca.lt";
-
-window.apiUrl = window.location.host.includes("netlify")
-    ? "https://uptodrive-backend.onrender.com"
-    : "http://localhost:4000";
 
 // window.apiUrl = window.location.host.includes("netlify")
 //     ? "https://uptodrive.loca.lt"
@@ -53,8 +57,10 @@ async function getInitialData() {
     if (!localFolders || localFolders.length === 0) {
         console.log("fetchingggggg");
         const response = await fetch(
-            apiUrl + "/folders?folder=" + parentFolder,
-            { method: "GET" }
+            apiUrl + "/listfolders?folder=" + parentFolder,
+            {
+                method: "GET",
+            }
         );
 
         const folders = await response.json();
