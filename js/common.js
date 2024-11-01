@@ -24,9 +24,13 @@ window.apiUrlPost = "https://alanvasconcelos.net/uptodrive/"; // Mandatory '/' a
 //     ? "https://uptodrive-backend.onrender.com"
 //     : "http://localhost:4000";
 
-window.apiUrl = window.location.host.includes("netlify")
+window.apiUrl = window.location.host.includes("alanvasconcelos")
     ? "https://alanvasconcelos.net/uptodrive"
     : "http://localhost:8000";
+
+// window.apiUrl = window.location.host.includes("netlify")
+//     ? "https://alanvasconcelos.net/uptodrive"
+//     : "http://localhost:8000";
 
 // window.apiUrlPost = "http://localhost:8000";
 // window.apiUrl = "https://alanvasconcelos.net/uptodrive";
