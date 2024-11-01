@@ -15,7 +15,7 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
 }
 
-window.parentFolder = "1YEe9xlq56ycrajjPGiQ0Ia68y3e2C6lC";
+window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk";
 
 // window.apiUrl = "http://localhost:4000";
 window.apiUrlPost = "https://alanvasconcelos.net/uptodrive/"; // Mandatory '/' at the end.
