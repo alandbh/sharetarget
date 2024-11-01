@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body .loading-overlay {
+    display: none;
+}
+body.loading .loading-overlay {
+    display: flex;
+}

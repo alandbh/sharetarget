@@ -55,6 +55,8 @@ async function getInitialData() {
     console.log({ localFolders });
 
     if (!localFolders || localFolders.length === 0) {
+        window.loading = true;
+        document.body.classList.add("loading");
         console.log("fetchingggggg");
         const response = await fetch(
             apiUrl + "?list=folders&folder=" + parentFolder,
@@ -65,11 +67,24 @@ async function getInitialData() {
 
         const folders = await response.json();
 
-        localStorage.setItem("folders", JSON.stringify(folders));
+        const sortedFolders = folders.sort((a, b) => {
+            const nameA = a.name.toUpperCase();
+            const nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+                return -1;
+            }
+            return 1;
+        });
 
-        window.players = localStorage.getItem("folders")
+        localStorage.setItem("folders", JSON.stringify(sortedFolders));
+
+        const players = localStorage.getItem("folders")
             ? JSON.parse(localStorage.getItem("folders"))
             : [];
+
+        window.players = players;
+        window.loading = false;
+        document.body.classList.remove("loading");
 
         players.map((player) => {
             const opt = document.createElement("option");

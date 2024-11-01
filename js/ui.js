@@ -195,6 +195,10 @@ if (!isShowPage) {
             };
 
             // Handle the end of the upload
+            const latestUploadedFiles =
+                JSON.parse(localStorage.getItem("latestUploadedFiles")) || [];
+            // response.target.responseText
+
             xhr.onload = function (response) {
                 if (xhr.status === 200) {
                     console.log("Upload completo");
@@ -208,6 +212,14 @@ if (!isShowPage) {
                     btnSend.innerText = "Send To Drive";
                     fileInput.value = "";
                     filename.value = customName;
+                    latestUploadedFiles.push(
+                        JSON.parse(response.target.responseText)
+                    );
+                    console.log("FILE RETURN", latestUploadedFiles);
+                    localStorage.setItem(
+                        "latestUploadedFiles",
+                        JSON.stringify(latestUploadedFiles)
+                    );
                     filenameContainer.style.height = "100px";
                     enableSendButton(btnSend);
                     playerSelect.disabled = false;
