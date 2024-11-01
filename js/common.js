@@ -156,3 +156,13 @@ function getFileExtension(contentType) {
             return "";
     }
 }
+
+async function toBlobURL(url, mimeType) {
+    let buf;
+
+    const response = await fetch(url);
+    buf = await response.arrayBuffer();
+
+    const blob = new Blob([buf], { type: mimeType });
+    return URL.createObjectURL(blob);
+}

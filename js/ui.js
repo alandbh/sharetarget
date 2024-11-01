@@ -92,11 +92,29 @@ if (!isShowPage) {
             if (fileInput.files[0].size > 20 * 1000 * 1000) {
                 console.log("big");
                 const ffmpeg = new FFmpeg();
-                await ffmpeg.load({
-                    coreURL: "/ffmpeg/ffmpeg-core.js",
-                    // coreURL:
-                    //     "https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js",
+                const baseURL =
+                    "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+                ffmpeg.on("log", ({ message }) => {
+                    // messageRef.current.innerHTML = message;
+                    console.log(message);
                 });
+                // toBlobURL is used to bypass CORS issue, urls with the same
+                // domain can be used directly.
+                await ffmpeg.load({
+                    coreURL: await toBlobURL(
+                        `${baseURL}/ffmpeg-core.js`,
+                        "text/javascript"
+                    ),
+                    wasmURL: await toBlobURL(
+                        `${baseURL}/ffmpeg-core.wasm`,
+                        "application/wasm"
+                    ),
+                });
+                // await ffmpeg.load({
+                //     coreURL: "/ffmpeg/ffmpeg-core.js",
+                //     // coreURL:
+                //     //     "https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js",
+                // });
 
                 ffmpeg.on("progress", ({ progress, time }) => {
                     btnSend.innerText = "Compressing video...";

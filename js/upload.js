@@ -97,8 +97,26 @@ async function sendToBackend(blob, contentType) {
             if (blob.size > 20 * 1000 * 1000) {
                 console.log("larger than 10 MB");
                 const ffmpeg = new FFmpeg();
+                const baseURL =
+                    "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+                ffmpeg.on("log", ({ message }) => {
+                    // messageRef.current.innerHTML = message;
+                    console.log(message);
+                });
+
+                // await ffmpeg.load({
+                //     coreURL: "/ffmpeg/ffmpeg-core.js",
+                // });
+
                 await ffmpeg.load({
-                    coreURL: "/ffmpeg/ffmpeg-core.js",
+                    coreURL: await toBlobURL(
+                        `${baseURL}/ffmpeg-core.js`,
+                        "text/javascript"
+                    ),
+                    wasmURL: await toBlobURL(
+                        `${baseURL}/ffmpeg-core.wasm`,
+                        "application/wasm"
+                    ),
                 });
 
                 async function compressVideo() {
