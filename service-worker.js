@@ -10,6 +10,13 @@ const urlsToCache = [
     "/js/share.js",
     "/js/ui.js",
     "/js/upload.js",
+    "/ffmpeg/ffmpeg-core.wasm",
+    "/ffmpeg/ffmpeg-core.js",
+    "/ffmpeg/ffmpeg-core.worker.js",
+    "/ffmpeg/ffmpeg.js",
+    "/ffmpeg/ffmpeg.js.map",
+    "/ffmpeg/index.js",
+    "/ffmpeg/transcode.js",
     // Outros arquivos como CSS, JS ou imagens
 ];
 
