@@ -101,7 +101,7 @@ async function sendToBackend(blob, contentType) {
                     coreURL: "/ffmpeg/ffmpeg-core.js",
                 });
 
-                requestIdleCallback(async () => {
+                async function compressVideo() {
                     // Adicionando o arquivo ao FFmpeg
                     await ffmpeg.writeFile(
                         "input." + extension,
@@ -142,7 +142,11 @@ async function sendToBackend(blob, contentType) {
                     formData.append("file", customBlob);
 
                     upload();
-                });
+                }
+
+                compressVideo();
+
+                // requestIdleCallback(async () => {});
             } else {
                 console.log("smaller than 10 MB");
                 formData.append("file", blob);
