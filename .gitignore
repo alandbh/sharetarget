@@ -4,3 +4,4 @@ keys.js
 .env
 .DS_Store
 server/
+hook.php

@@ -94,6 +94,8 @@ if (!isShowPage) {
                 const ffmpeg = new FFmpeg();
                 await ffmpeg.load({
                     coreURL: "/ffmpeg/ffmpeg-core.js",
+                    // coreURL:
+                    //     "https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js",
                 });
 
                 ffmpeg.on("progress", ({ progress, time }) => {
