@@ -88,9 +88,9 @@ if (!isShowPage) {
         console.log({ extension });
 
         if (fileInput.files[0].type.includes("video")) {
-            // Some tests show that ffmpg only works with files larger than 10MB
-            if (fileInput.files[0].size > 20 * 1000 * 1000) {
-                console.log("big");
+            // Some tests show that ffmpg only works with files larger than 40MB
+            if (fileInput.files[0].size > 40 * 1000 * 1000) {
+                console.log("big > 40");
                 const ffmpeg = new FFmpeg();
                 const baseURL =
                     "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";

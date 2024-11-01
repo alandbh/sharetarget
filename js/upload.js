@@ -93,9 +93,9 @@ async function sendToBackend(blob, contentType) {
 
         if (contentType.includes("video")) {
             console.log({ blob });
-            // Some tests show that ffmpg only works with files larger than 10MB
-            if (blob.size > 20 * 1000 * 1000) {
-                console.log("larger than 10 MB");
+            // Some tests show that ffmpg only works with files larger than 40MB
+            if (blob.size > 40 * 1000 * 1000) {
+                console.log("larger than 40 MB");
                 const ffmpeg = new FFmpeg();
                 const baseURL =
                     "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
