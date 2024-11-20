@@ -242,8 +242,8 @@ async function handleShare(request) {
     const formData = await request.formData();
     const file = formData.get("file");
 
-    console.log("filetype", file);
-    console.log("filetype", file.type);
+    // console.log("filetype", file);
+    // console.log("filetype", file.type);
 
     if (
         file &&
@@ -253,18 +253,26 @@ async function handleShare(request) {
         reader.readAsDataURL(file);
 
         return new Promise((resolve) => {
-            reader.onloadend = () => {
-                const imageDataUrl = reader.result;
+            reader.onloadend = async () => {
+                const fileDataUrl = reader.result;
 
-                // Stores the file in cache
-                caches.open(CACHE_NAME).then((cache) => {
-                    const response = new Response(imageDataUrl, {
-                        headers: { "Content-Type": file.type },
-                    });
-                    cache.put("/cached-file", response);
+                // Open the cache
+                const cache = await caches.open(CACHE_NAME);
+
+                // Remove any previously cached file
+                const cachedRequest = new Request("/cached-file");
+                const existingResponse = await cache.match(cachedRequest);
+                if (existingResponse) {
+                    await cache.delete(cachedRequest);
+                }
+
+                // Store the new file in cache
+                const response = new Response(fileDataUrl, {
+                    headers: { "Content-Type": file.type },
                 });
+                await cache.put(cachedRequest, response);
 
-                // Redirects to the preview page
+                // Redirect to the preview page
                 resolve(Response.redirect("/show.html", 303));
             };
         });
