@@ -81,15 +81,18 @@ if (!isShowPage) {
 
         const formData = new FormData();
         formData.append("customName", customName);
-        const extension = getFileExtension(fileInput.files[0].type);
-        formData.append("extension", extension);
+        let extension = getFileExtension(fileInput.files[0].type);
+
         formData.append("folder", localStorage.getItem("journey"));
 
         console.log({ extension });
 
         if (fileInput.files[0].type.includes("video")) {
             // Some tests show that ffmpg only works with files larger than 40MB
-            if (fileInput.files[0].size > 40 * 1000 * 1000) {
+            if (
+                fileInput.files[0].size > 40 * 1000 * 1000 ||
+                extension === "webm"
+            ) {
                 console.log("big > 40");
                 const ffmpeg = new FFmpeg();
                 const baseURL =
@@ -144,8 +147,11 @@ if (!isShowPage) {
                     type: "video/mp4",
                 });
 
+                extension = "mp4";
+
                 // updateFormData(compressedBlob);
                 formData.append("file", customBlob);
+                formData.append("extension", extension);
 
                 console.log({ fileData });
 
@@ -169,6 +175,7 @@ if (!isShowPage) {
             } else {
                 console.log("small");
                 formData.append("file", fileInput.files[0]);
+                formData.append("extension", extension);
                 upload();
             }
         } else {

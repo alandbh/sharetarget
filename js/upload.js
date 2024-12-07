@@ -81,9 +81,9 @@ async function sendToBackend(blob, contentType) {
         playerSelect.disabled = true;
         const formData = new FormData();
         const customName = await getCustonName(contentType);
-        const extension = getFileExtension(contentType); // gets the file extension
+        let extension = getFileExtension(contentType); // gets the file extension
         formData.append("customName", customName);
-        formData.append("extension", extension);
+
         formData.append("folder", localStorage.getItem("journey"));
 
         window.addEventListener("beforeunload", function (e) {
@@ -94,7 +94,7 @@ async function sendToBackend(blob, contentType) {
         if (contentType.includes("video")) {
             console.log({ blob });
             // Some tests show that ffmpg only works with files larger than 40MB
-            if (blob.size > 40 * 1000 * 1000) {
+            if (blob.size > 40 * 1000 * 1000 || extension === "webm") {
                 console.log("larger than 40 MB");
                 const ffmpeg = new FFmpeg();
                 const baseURL =
@@ -151,6 +151,8 @@ async function sendToBackend(blob, contentType) {
                         "output.mp4",
                     ]);
 
+                    extension = "mp4";
+
                     // Lendo o arquivo compactado
                     const fileData = await ffmpeg.readFile("output.mp4");
                     const customBlob = new Blob([fileData.buffer], {
@@ -168,11 +170,13 @@ async function sendToBackend(blob, contentType) {
             } else {
                 console.log("smaller than 10 MB");
                 formData.append("file", blob);
+                formData.append("extension", extension);
 
                 upload();
             }
         } else {
             formData.append("file", blob);
+            formData.append("extension", extension);
 
             upload();
         }
