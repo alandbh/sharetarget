@@ -151,8 +151,6 @@ async function sendToBackend(blob, contentType) {
                         "output.mp4",
                     ]);
 
-                    extension = "mp4";
-
                     // Lendo o arquivo compactado
                     const fileData = await ffmpeg.readFile("output.mp4");
                     const customBlob = new Blob([fileData.buffer], {
@@ -160,6 +158,7 @@ async function sendToBackend(blob, contentType) {
                     });
 
                     formData.append("file", customBlob);
+                    formData.append("extension", "mp4");
 
                     upload();
                 }
@@ -170,13 +169,13 @@ async function sendToBackend(blob, contentType) {
             } else {
                 console.log("smaller than 10 MB");
                 formData.append("file", blob);
-                formData.append("extension", extension);
+                formData.append("extension", getFileExtension(contentType));
 
                 upload();
             }
         } else {
             formData.append("file", blob);
-            formData.append("extension", extension);
+            formData.append("extension", getFileExtension(contentType));
 
             upload();
         }

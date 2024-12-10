@@ -147,11 +147,9 @@ if (!isShowPage) {
                     type: "video/mp4",
                 });
 
-                extension = "mp4";
-
                 // updateFormData(compressedBlob);
                 formData.append("file", customBlob);
-                formData.append("extension", extension);
+                formData.append("extension", "mp4");
 
                 console.log({ fileData });
 
@@ -175,11 +173,18 @@ if (!isShowPage) {
             } else {
                 console.log("small");
                 formData.append("file", fileInput.files[0]);
-                formData.append("extension", extension);
+                formData.append(
+                    "extension",
+                    getFileExtension(fileInput.files[0].type)
+                );
                 upload();
             }
         } else {
             formData.append("file", fileInput.files[0]);
+            formData.append(
+                "extension",
+                getFileExtension(fileInput.files[0].type)
+            );
 
             upload();
         }
