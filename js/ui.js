@@ -91,7 +91,7 @@ if (!isShowPage) {
             // Some tests show that ffmpg only works with files larger than 40MB
             if (
                 fileInput.files[0].size > 40 * 1000 * 1000 ||
-                extension === "webm"
+                extension !== "mp4"
             ) {
                 console.log("big > 40");
                 const ffmpeg = new FFmpeg();

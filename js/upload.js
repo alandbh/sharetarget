@@ -94,7 +94,7 @@ async function sendToBackend(blob, contentType) {
         if (contentType.includes("video")) {
             console.log({ blob });
             // Some tests show that ffmpg only works with files larger than 40MB
-            if (blob.size > 40 * 1000 * 1000 || extension === "webm") {
+            if (blob.size > 40 * 1000 * 1000 || extension !== "mp4") {
                 console.log("larger than 40 MB");
                 const ffmpeg = new FFmpeg();
                 const baseURL =
