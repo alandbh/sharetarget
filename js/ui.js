@@ -385,14 +385,20 @@ async function getCustonName(contentType) {
     }
 
     const filesList = await getFilesList();
-    return (
-        mediaType +
-        Number(filesList.length + 1) +
-        "-" +
-        getJourneyName().substring(0, 4) +
-        "-" +
-        createSlug(getPlayerName())
-    );
+    const firstLetter = mediaType + Number(filesList.length + 1);
+    const journeyName =
+        getJourneyName() !== "na" ? "-" + getJourneyName().substring(0, 4) : "";
+    const playerSlug = "-" + createSlug(getPlayerName());
+
+    return firstLetter + journeyName + playerSlug;
+    // return (
+    //     mediaType +
+    //     Number(filesList.length + 1) +
+    //     "-" +
+    //     getJourneyName().substring(0, 4) +
+    //     "-" +
+    //     createSlug(getPlayerName())
+    // );
 }
 
 /**
