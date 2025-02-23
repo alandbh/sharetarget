@@ -484,6 +484,7 @@ function getPlayerObj(players, id) {
     return selectedPlayer;
 }
 if (isShowPage) {
+    document.querySelector("#btnSend2").textContent = "Send to DRIVE 2";
     [playerSelect, journeySelect].map((field) => {
         field.addEventListener("change", () => {
             setTimeout(() => {
