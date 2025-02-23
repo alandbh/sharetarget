@@ -4,6 +4,9 @@ let ffmpeg = null;
 
 const playerSelect = document.querySelector("#player");
 const journeySelect = document.querySelector("#journey");
+const journeySelectContainer = document.querySelector(
+    "#journeySelectContainer"
+);
 // const journeySelect = document.createElement("select");
 const copyNameButton = document.querySelector("#copyNameButton");
 const iconCopy = document.querySelector("#iconCopy");
@@ -83,7 +86,11 @@ if (!isShowPage) {
         formData.append("customName", customName);
         let extension = getFileExtension(fileInput.files[0].type);
 
-        formData.append("folder", localStorage.getItem("journey"));
+        if (shouldChooseJourney) {
+            formData.append("folder", localStorage.getItem("journey"));
+        } else {
+            formData.append("folder", localStorage.getItem("player"));
+        }
 
         console.log({ extension });
 
@@ -293,9 +300,9 @@ function enableSendButton(btnSend) {
     const validPlayer = Boolean(
         localStorage.player && localStorage.player !== "null"
     );
-    const validJourney = Boolean(
-        localStorage.journey && localStorage.journey !== "null"
-    );
+    const validJourney = shouldChooseJourney
+        ? Boolean(localStorage.journey && localStorage.journey !== "null")
+        : true;
 
     if (isShowPage) {
         if (validPlayer && validJourney) {
@@ -360,9 +367,12 @@ function getJourneyName() {
 }
 
 async function getFilesList() {
+    const folderId = shouldChooseJourney
+        ? localStorage.getItem("journey")
+        : localStorage.getItem("player");
     const response = await fetch(
         // apiUrl + "/files?folder=" + parentFolder,
-        apiUrl + "?list=files&folder=" + localStorage.getItem("journey"),
+        apiUrl + "?list=files&folder=" + folderId,
         {
             method: "GET",
         }
@@ -386,8 +396,9 @@ async function getCustonName(contentType) {
 
     const filesList = await getFilesList();
     const firstLetter = mediaType + Number(filesList.length + 1);
-    const journeyName =
-        getJourneyName() !== "na" ? "-" + getJourneyName().substring(0, 4) : "";
+    const journeyName = shouldChooseJourney
+        ? "-" + getJourneyName().substring(0, 4)
+        : "";
     const playerSlug = "-" + createSlug(getPlayerName());
 
     return firstLetter + journeyName + playerSlug;
@@ -449,6 +460,7 @@ playerSelect.addEventListener("change", (event) => {
 function populateJourneySelect(selectedPlayer) {
     clearJourney();
     const subfolders = selectedPlayer.subfolders;
+    console.log("subfolders", subfolders);
     subfolders.map((folder) => {
         const opt = document.createElement("option");
         opt.value = folder.id;

@@ -19,7 +19,9 @@ if ("serviceWorker" in navigator) {
 window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7"; // Finance 4
 
 // window.apiUrl = "http://localhost:4000";
-window.apiUrlPost = "https://alanvasconcelos.net/uptodrive/"; // Mandatory '/' at the end.
+window.apiUrlPost = window.location.host.includes("alanvasconcelos")
+    ? "https://alanvasconcelos.net/uptodrive/"
+    : "http://localhost:8000"; // Mandatory '/' at the end.
 
 // window.apiUrl = window.location.host.includes("netlify")
 //     ? "https://uptodrive-backend.onrender.com"
@@ -28,6 +30,8 @@ window.apiUrlPost = "https://alanvasconcelos.net/uptodrive/"; // Mandatory '/' a
 window.apiUrl = window.location.host.includes("alanvasconcelos")
     ? "https://alanvasconcelos.net/uptodrive"
     : "http://localhost:8000";
+
+window.shouldChooseJourney = false;
 
 // window.apiUrl = window.location.host.includes("netlify")
 //     ? "https://alanvasconcelos.net/uptodrive"
@@ -58,6 +62,11 @@ async function getInitialData() {
 
     const localFolders = JSON.parse(localStorage.getItem("folders"));
     console.log({ localFolders });
+
+    if (!shouldChooseJourney) {
+        document.querySelector("#journeySelectContainer").style.display =
+            "none";
+    }
 
     if (!localFolders || localFolders.length === 0) {
         window.loading = true;
@@ -100,14 +109,18 @@ async function getInitialData() {
             playerSelect.value = localStorage.getItem("player") || "null";
         });
 
-        players[0].subfolders.map((subfolder) => {
-            const opt = document.createElement("option");
-            opt.value = subfolder.id;
-            opt.innerHTML = subfolder.name;
-            journeySelect.appendChild(opt);
+        if (shouldChooseJourney) {
+            players[0].subfolders.map((subfolder) => {
+                const opt = document.createElement("option");
+                opt.value = subfolder.id;
+                opt.innerHTML = subfolder.name;
+                journeySelect.appendChild(opt);
 
-            journeySelect.value = localStorage.getItem("journey") || "null";
-        });
+                journeySelect.value = localStorage.getItem("journey") || "null";
+            });
+        } else {
+            journeySelectContainer.style.display = "none";
+        }
     }
 }
 

@@ -84,7 +84,12 @@ async function sendToBackend(blob, contentType) {
         let extension = getFileExtension(contentType); // gets the file extension
         formData.append("customName", customName);
 
-        formData.append("folder", localStorage.getItem("journey"));
+        // formData.append("folder", localStorage.getItem("journey"));
+        if (shouldChooseJourney) {
+            formData.append("folder", localStorage.getItem("journey"));
+        } else {
+            formData.append("folder", localStorage.getItem("player"));
+        }
 
         window.addEventListener("beforeunload", function (e) {
             e.preventDefault();
