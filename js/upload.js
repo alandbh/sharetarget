@@ -74,6 +74,7 @@ function base64ToBlob(base64, contentType = "", sliceSize = 512) {
 }
 
 async function sendToBackend(blob, contentType) {
+    btnSend2.textContent = "Send to TEST";
     btnSend2.addEventListener("click", async () => {
         btnSend2.disabled = true;
         btnSend2.innerText = "Starting...";
