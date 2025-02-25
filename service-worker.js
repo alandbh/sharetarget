@@ -17,14 +17,14 @@ const urlsToCache = [
 ];
 
 // Instala o Service Worker e armazena os arquivos no cache
-self.addEventListener("install", (event) => {
-    event.waitUntil(
-        caches.open(FRONT_CACHE).then((cache) => {
-            console.log("Arquivos em cache");
-            return cache.addAll(urlsToCache);
-        })
-    );
-});
+// self.addEventListener("install", (event) => {
+//     event.waitUntil(
+//         caches.open(FRONT_CACHE).then((cache) => {
+//             console.log("Arquivos em cache");
+//             return cache.addAll(urlsToCache);
+//         })
+//     );
+// });
 
 // Responde às requisições da rede com o conteúdo do cache
 // self.addEventListener("fetch", (event) => {
