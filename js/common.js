@@ -15,8 +15,20 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
 }
 
-// window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk"; Retail 5
-window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7"; // Finance 4
+const urlParams = new URLSearchParams(window.location.search);
+const projectValue = urlParams.get("project");
+console.log("Project value:", projectValue);
+
+if (projectValue && projectValue === "retail") {
+    window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk";
+    window.shouldChooseJourney = true;
+} else {
+    window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7"; // Finance 4
+    window.shouldChooseJourney = false;
+}
+
+// window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk"; // Retail 5
+// window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7"; // Finance 4
 
 // window.apiUrl = "http://localhost:4000";
 window.apiUrlPost = window.location.host.includes("alanvasconcelos")
@@ -30,8 +42,6 @@ window.apiUrlPost = window.location.host.includes("alanvasconcelos")
 window.apiUrl = window.location.host.includes("alanvasconcelos")
     ? "https://alanvasconcelos.net/uptodrive"
     : "http://localhost:8000";
-
-window.shouldChooseJourney = false;
 
 // window.apiUrl = window.location.host.includes("netlify")
 //     ? "https://alanvasconcelos.net/uptodrive"
