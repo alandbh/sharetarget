@@ -12,7 +12,7 @@
 /* Only register a service worker if it's supported */
 if ("serviceWorker" in navigator) {
     console.log("👍", "navigator.serviceWorker is supported");
-    navigator.serviceWorker.register("/service-worker.js?v=78");
+    navigator.serviceWorker.register("/service-worker.js?v=78a");
 }
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -21,9 +21,21 @@ console.log("Project value:", projectValue);
 
 if (projectValue && projectValue === "retail") {
     window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk";
-    window.shouldChooseJourney = true;
+
+    localStorage.setItem("project", "retail");
 } else {
     window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7"; // Finance 4
+
+    localStorage.setItem("project", "finance");
+}
+
+const localProject = localStorage.getItem("project");
+
+if (localProject === "retail") {
+    window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk";
+    window.shouldChooseJourney = true;
+} else {
+    window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7";
     window.shouldChooseJourney = false;
 }
 
