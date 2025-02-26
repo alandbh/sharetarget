@@ -59,59 +59,61 @@ copyNameButton.addEventListener("click", () => {
  * -----------
  */
 
-const dropZone = document.getElementById("fileInput").parentElement;
+if (!isShowPage) {
+    const dropZone = document.getElementById("fileInput").parentElement;
 
-["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-    dropZone.addEventListener(eventName, preventDefaults, false);
-});
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
 
-function preventDefaults(e) {
-    e.preventDefault();
-    e.stopPropagation();
-}
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
 
-["dragenter", "dragover"].forEach((eventName) => {
-    dropZone.addEventListener(eventName, highlight, false);
-});
+    ["dragenter", "dragover"].forEach((eventName) => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
 
-["dragleave", "drop"].forEach((eventName) => {
-    dropZone.addEventListener(eventName, unhighlight, false);
-});
+    ["dragleave", "drop"].forEach((eventName) => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
 
-function highlight(e) {
-    dropZone.classList.add("border-blue-500", "bg-blue-50");
-}
+    function highlight(e) {
+        dropZone.classList.add("border-blue-500", "bg-blue-50");
+    }
 
-function unhighlight(e) {
-    dropZone.classList.remove("border-blue-500", "bg-blue-50");
-}
+    function unhighlight(e) {
+        dropZone.classList.remove("border-blue-500", "bg-blue-50");
+    }
 
-dropZone.addEventListener("drop", handleDrop, false);
+    dropZone.addEventListener("drop", handleDrop, false);
 
-function handleDrop(e) {
-    const dt = e.dataTransfer;
-    const files = dt.files;
-    document.getElementById("fileInput").files = files;
-    // console.log("changed", files);
-    handleFileSelect(files);
-    enableSendButton(btnSend);
-}
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        document.getElementById("fileInput").files = files;
+        // console.log("changed", files);
+        handleFileSelect(files);
+        enableSendButton(btnSend);
+    }
 
-fileInput.addEventListener("change", (e) => {
-    console.log("changed2", e.target.files);
-    handleFileSelect(e.target.files);
-});
+    fileInput.addEventListener("change", (e) => {
+        console.log("changed2", e.target.files);
+        handleFileSelect(e.target.files);
+    });
 
-function handleFileSelect(files) {
-    if (files.length > 0) {
-        dropText.querySelector(
-            "div"
-        ).innerHTML = `<span class="text-sm px-2 py-1 border border-blue-500 rounded-md bg-blue-100">${files[0].name}</span>`;
-        fileTypeText.classList.add("hidden");
-    } else {
-        dropText.querySelector("div").innerHTML =
-            '<span class="font-medium">Click to upload</span> or drag and drop';
-        fileTypeText.classList.remove("hidden");
+    function handleFileSelect(files) {
+        if (files.length > 0) {
+            dropText.querySelector(
+                "div"
+            ).innerHTML = `<span class="text-sm px-2 py-1 border border-blue-500 rounded-md bg-blue-100">${files[0].name}</span>`;
+            fileTypeText.classList.add("hidden");
+        } else {
+            dropText.querySelector("div").innerHTML =
+                '<span class="font-medium">Click to upload</span> or drag and drop';
+            fileTypeText.classList.remove("hidden");
+        }
     }
 }
 
