@@ -13,6 +13,9 @@ const iconCopy = document.querySelector("#iconCopy");
 const copyedMessage = document.querySelector("#copyedMessage");
 const iconCheck = document.querySelector("#iconCheck");
 const fileInput = document.querySelector("#fileInput");
+const dropText = document.querySelector("#dropText");
+const fileTypeText = document.querySelector("#fileTypeText");
+
 const filename = document.querySelector("#filename");
 const btnSend = document.querySelector("#btnSend");
 // const btnSendPreview = document.querySelector("#btnSendPreview");
@@ -47,6 +50,70 @@ copyNameButton.addEventListener("click", () => {
         copyedMessage.style.opacity = 0;
     }, 4000);
 });
+
+/**
+ *
+ *
+ * -----------
+ * DROP ZONE
+ * -----------
+ */
+
+const dropZone = document.getElementById("fileInput").parentElement;
+
+["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+["dragenter", "dragover"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, highlight, false);
+});
+
+["dragleave", "drop"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight(e) {
+    dropZone.classList.add("border-blue-500", "bg-blue-50");
+}
+
+function unhighlight(e) {
+    dropZone.classList.remove("border-blue-500", "bg-blue-50");
+}
+
+dropZone.addEventListener("drop", handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    document.getElementById("fileInput").files = files;
+    // console.log("changed", files);
+    handleFileSelect(files);
+    enableSendButton(btnSend);
+}
+
+fileInput.addEventListener("change", (e) => {
+    console.log("changed2", e.target.files);
+    handleFileSelect(e.target.files);
+});
+
+function handleFileSelect(files) {
+    if (files.length > 0) {
+        dropText.querySelector(
+            "div"
+        ).innerHTML = `<span class="text-sm px-2 py-1 border border-blue-500 rounded-md bg-blue-100">${files[0].name}</span>`;
+        fileTypeText.classList.add("hidden");
+    } else {
+        dropText.querySelector("div").innerHTML =
+            '<span class="font-medium">Click to upload</span> or drag and drop';
+        fileTypeText.classList.remove("hidden");
+    }
+}
 
 /**
  *
@@ -250,6 +317,7 @@ if (!isShowPage) {
                     showToaster("success", "File has been sent successfuly!");
                     btnSend.innerText = "Send To Drive";
                     fileInput.value = "";
+                    handleFileSelect([]);
                     filename.value = customName;
                     latestUploadedFiles.push(
                         JSON.parse(response.target.responseText)

@@ -14,7 +14,7 @@
         <!-- <script src="/js/share.js" defer></script> -->
         <script src="/ffmpeg/ffmpeg.js"></script>
         <script src="/ffmpeg/index.js"></script>
-        <script src="/js/common.js?v=78a" defer></script>
+        <script src="/js/common.js?v=78b" defer></script>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ff0000" />
     </head>
@@ -37,7 +37,7 @@
                     alt="Up To Drive"
                 />
                 <h1 class="text-2xl font-bold">Up To Drive</h1>
-                <div class="text-xs">beta 78a</div>
+                <div class="text-xs">beta 78b</div>
             </div>
             <div class="text-center flex flex-col gap-5">
                 <p class="text-xl text-slate-600">
@@ -47,7 +47,7 @@
                     No needed to worry about naming conventions. 🙌
                 </p>
             </div>
-            <div>
+            <!-- <div>
                 <label for="file-input" class="sr-only">Choose file</label>
                 <input
                     type="file"
@@ -55,6 +55,50 @@
                     id="fileInput"
                     class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4"
                 />
+            </div> -->
+
+            <div class="relative">
+                <label for="file-input" class="sr-only">Choose file</label>
+                <div
+                    class="hidden text-sm px-2 py-1 border-blue-500 border rounded-md bg-blue-100"
+                >
+                    aaa
+                </div>
+                <div
+                    class="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+                >
+                    <input
+                        type="file"
+                        name="file-input"
+                        id="fileInput"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <div class="space-y-4">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-12 w-12 mx-auto text-slate-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                            />
+                        </svg>
+                        <div id="dropText">
+                            <div class="text-slate-600">
+                                <span class="font-medium">Click to upload</span>
+                                or drag and drop
+                            </div>
+                            <p id="fileTypeText" class="text-sm text-slate-500">
+                                Video or image files only
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <p
@@ -259,6 +303,6 @@
         </div>
 
         <!-- <script src="/ffmpeg/transcode.js"></script> -->
-        <script src="/js/ui.js?v=78a"></script>
+        <script src="/js/ui.js?v=78b"></script>
     </body>
 </html>
