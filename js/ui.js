@@ -109,6 +109,8 @@ if (!isShowPage) {
                 "div"
             ).innerHTML = `<span class="text-sm px-2 py-1 border border-blue-500 rounded-md bg-blue-100">${files[0].name}</span>`;
             fileTypeText.classList.add("hidden");
+            filename.value = "";
+            filenameContainer.style.height = "0px";
         } else {
             dropText.querySelector("div").innerHTML =
                 '<span class="font-medium">Click to upload</span> or drag and drop';
