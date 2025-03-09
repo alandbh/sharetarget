@@ -98,16 +98,68 @@ if (!isShowPage) {
         enableSendButton(btnSend);
     }
 
+    // Listen for paste events on the document
+    document.addEventListener("paste", async (event) => {
+        const items = event.clipboardData.items;
+
+        for (const item of items) {
+            if (item.type.indexOf("image") === 0) {
+                const file = item.getAsFile();
+                const files = new DataTransfer();
+                files.items.add(file);
+
+                // Update the file input with the pasted file
+                document.getElementById("fileInput").files = files.files;
+
+                // Reuse your existing file handling logic
+                handleFileSelect(files.files);
+                enableSendButton(btnSend);
+                break;
+            }
+        }
+    });
+
     fileInput.addEventListener("change", (e) => {
         console.log("changed2", e.target.files);
         handleFileSelect(e.target.files);
     });
 
+    // function handleFileSelect(files) {
+    //     if (files.length > 0) {
+    //         dropText.querySelector(
+    //             "div"
+    //         ).innerHTML = `<span class="text-sm px-2 py-1 border border-blue-500 rounded-md bg-blue-100">${files[0].name}</span>`;
+    //         fileTypeText.classList.add("hidden");
+    //         filename.value = "";
+    //         filenameContainer.style.height = "0px";
+    //     } else {
+    //         dropText.querySelector("div").innerHTML =
+    //             '<span class="font-medium">Click to upload</span> or drag and drop';
+    //         fileTypeText.classList.remove("hidden");
+    //     }
+    // }
+
     function handleFileSelect(files) {
         if (files.length > 0) {
-            dropText.querySelector(
-                "div"
-            ).innerHTML = `<span class="text-sm px-2 py-1 border border-blue-500 rounded-md bg-blue-100">${files[0].name}</span>`;
+            const file = files[0];
+
+            if (file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    dropText.querySelector("div").innerHTML = `
+                        <div class="flex flex-col items-center gap-2">
+                            <img src="${e.target.result}" alt="Preview" class="max-h-64 rounded-lg shadow-sm" />
+                            <span class="text-sm px-2 py-1 border border-blue-500 rounded-md bg-blue-100">${file.name}</span>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                dropText.querySelector("div").innerHTML = `
+                    <span class="text-sm px-2 py-1 border border-blue-500 rounded-md bg-blue-100">${file.name}</span>
+                `;
+            }
+
             fileTypeText.classList.add("hidden");
             filename.value = "";
             filenameContainer.style.height = "0px";
