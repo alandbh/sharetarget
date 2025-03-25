@@ -279,7 +279,7 @@ if (!isShowPage) {
                     "-i",
                     name,
                     "-vf",
-                    "scale=iw*0.7:ih*0.7", // Reducing dimensions by 30% instead of 50%
+                    "scale=trunc(iw*0.7/2)*2:trunc(ih*0.7/2)*2", // Reducing dimensions by 30% -- Ensures dimensions are even integers
                     "-c:v",
                     "libx264",
                     "-preset",
