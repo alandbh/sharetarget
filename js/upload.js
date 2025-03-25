@@ -114,15 +114,20 @@ async function sendToBackend(blob, contentType) {
                 //     coreURL: "/ffmpeg/ffmpeg-core.js",
                 // });
 
+                // await ffmpeg.load({
+                //     coreURL: await toBlobURL(
+                //         `${baseURL}/ffmpeg-core.js`,
+                //         "text/javascript"
+                //     ),
+                //     wasmURL: await toBlobURL(
+                //         `${baseURL}/ffmpeg-core.wasm`,
+                //         "application/wasm"
+                //     ),
+                // });
+
                 await ffmpeg.load({
-                    coreURL: await toBlobURL(
-                        `${baseURL}/ffmpeg-core.js`,
-                        "text/javascript"
-                    ),
-                    wasmURL: await toBlobURL(
-                        `${baseURL}/ffmpeg-core.wasm`,
-                        "application/wasm"
-                    ),
+                    coreURL: "/ffmpeg/ffmpeg-core.js",
+                    wasmURL: "/ffmpeg/ffmpeg-core.wasm",
                 });
 
                 async function compressVideo() {
@@ -156,6 +161,28 @@ async function sendToBackend(blob, contentType) {
                         "28",
                         "output.mp4",
                     ]);
+                    // await ffmpeg.exec([
+                    //     "-i",
+                    //     "input." + extension,
+                    //     "-vf",
+                    //     "scale=iw*0.7:ih*0.7", // Reducing dimensions by 30% instead of 50%
+                    //     "-c:v",
+                    //     "libx264",
+                    //     "-preset",
+                    //     "ultrafast", // Already using the fastest preset
+                    //     "-tune",
+                    //     "zerolatency", // Optimizes for speed and low latency
+                    //     "-crf",
+                    //     "30", // Slightly higher CRF (28->30) for faster encoding with minimal quality loss
+                    //     "-b:v",
+                    //     "0", // Let CRF control the bitrate
+                    //     "-movflags",
+                    //     "+faststart", // Optimizes for web playback
+                    //     "-threads",
+                    //     "0", // Use all available CPU threads
+                    //     "-an", // Remove audio if not needed (speeds up processing)
+                    //     "output.mp4",
+                    // ]);
 
                     // Lendo o arquivo compactado
                     const fileData = await ffmpeg.readFile("output.mp4");
