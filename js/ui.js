@@ -303,6 +303,9 @@ if (!isShowPage) {
                     type: "video/mp4",
                 });
 
+                // To prevent performance bottlenecks, always release memory after processing files by using ffmpeg.exit()
+                await ffmpeg.exit();
+
                 // updateFormData(compressedBlob);
                 formData.append("file", customBlob);
                 formData.append("extension", "mp4");

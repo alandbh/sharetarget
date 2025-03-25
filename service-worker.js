@@ -15,16 +15,25 @@ const urlsToCache = [
     "/ffmpeg/transcode.js",
     // Outros arquivos como CSS, JS ou imagens
 ];
+const urlsToCacheFfmpeg = [
+    "/ffmpeg/ffmpeg-core.wasm",
+    "/ffmpeg/ffmpeg-core.js",
+    "/ffmpeg/ffmpeg-core.worker.js",
+    "/ffmpeg/ffmpeg.js",
+    "/ffmpeg/ffmpeg.js.map",
+    "/ffmpeg/index.js",
+    "/ffmpeg/transcode.js",
+];
 
 // Instala o Service Worker e armazena os arquivos no cache
-// self.addEventListener("install", (event) => {
-//     event.waitUntil(
-//         caches.open(FRONT_CACHE).then((cache) => {
-//             console.log("Arquivos em cache");
-//             return cache.addAll(urlsToCache);
-//         })
-//     );
-// });
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open(FRONT_CACHE).then((cache) => {
+            console.log("Arquivos em cache");
+            return cache.addAll(urlsToCacheFfmpeg);
+        })
+    );
+});
 
 // Responde às requisições da rede com o conteúdo do cache
 // self.addEventListener("fetch", (event) => {

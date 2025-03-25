@@ -190,6 +190,9 @@ async function sendToBackend(blob, contentType) {
                         type: "video/mp4",
                     });
 
+                    // To prevent performance bottlenecks, always release memory after processing files by using ffmpeg.exit()
+                    await ffmpeg.exit();
+
                     formData.append("file", customBlob);
                     formData.append("extension", "mp4");
 
