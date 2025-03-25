@@ -165,7 +165,7 @@ async function sendToBackend(blob, contentType) {
                         "-i",
                         "input." + extension,
                         "-vf",
-                        "scale=trunc(iw*0.7/2)*2:trunc(ih*0.7/2)*2", // Reducing dimensions by 30% -- Ensures dimensions are even integers
+                        "scale=trunc(iw*0.6/2)*2:trunc(ih*0.6/2)*2", // Reducing dimensions by 40% -- trunc() ensures dimensions are even integers
                         "-c:v",
                         "libx264",
                         "-preset",
@@ -173,7 +173,7 @@ async function sendToBackend(blob, contentType) {
                         "-tune",
                         "zerolatency", // Optimizes for speed and low latency
                         "-crf",
-                        "30", // Slightly higher CRF (28->30) for faster encoding with minimal quality loss
+                        "34", // Slightly higher CRF (28->30) for faster encoding with minimal quality loss
                         "-b:v",
                         "0", // Let CRF control the bitrate
                         "-movflags",
@@ -189,9 +189,6 @@ async function sendToBackend(blob, contentType) {
                     const customBlob = new Blob([fileData.buffer], {
                         type: "video/mp4",
                     });
-
-                    // To prevent performance bottlenecks, always release memory after processing files by using ffmpeg.exit()
-                    await ffmpeg.exit();
 
                     formData.append("file", customBlob);
                     formData.append("extension", "mp4");

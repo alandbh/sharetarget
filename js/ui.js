@@ -268,18 +268,21 @@ if (!isShowPage) {
                 //     "-i",
                 //     name,
                 //     "-vf",
-                //     "scale=iw/2:ih/2",
+                //     //"scale=iw/2:ih/2",
+                //     "scale=iw:ih",
                 //     "-preset",
                 //     "ultrafast", // acelera a compressão
                 //     "-crf",
                 //     "28", // reduz a qualidade
                 //     "output.mp4",
                 // ]);
+
                 await ffmpeg.exec([
                     "-i",
                     name,
                     "-vf",
-                    "scale=trunc(iw*0.7/2)*2:trunc(ih*0.7/2)*2", // Reducing dimensions by 30% -- Ensures dimensions are even integers
+                    "scale=trunc(iw*0.6/2)*2:trunc(ih*0.6/2)*2", // Reducing dimensions by 40% -- trunc() Ensures dimensions are even integers
+                    // "scale=iw:ih", // original size
                     "-c:v",
                     "libx264",
                     "-preset",
@@ -287,7 +290,7 @@ if (!isShowPage) {
                     "-tune",
                     "zerolatency", // Optimizes for speed and low latency
                     "-crf",
-                    "30", // Slightly higher CRF (28->30) for faster encoding with minimal quality loss
+                    "34", // Slightly higher CRF (28->30) for faster encoding with minimal quality loss
                     "-b:v",
                     "0", // Let CRF control the bitrate
                     "-movflags",
@@ -302,9 +305,6 @@ if (!isShowPage) {
                 const customBlob = new Blob([fileData.buffer], {
                     type: "video/mp4",
                 });
-
-                // To prevent performance bottlenecks, always release memory after processing files by using ffmpeg.exit()
-                await ffmpeg.exit();
 
                 // updateFormData(compressedBlob);
                 formData.append("file", customBlob);

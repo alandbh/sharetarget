@@ -12,7 +12,7 @@
 /* Only register a service worker if it's supported */
 if ("serviceWorker" in navigator) {
     console.log("👍", "navigator.serviceWorker is supported");
-    navigator.serviceWorker.register("/service-worker.js?v=78i");
+    navigator.serviceWorker.register("/service-worker.js?v=78j");
 }
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -45,7 +45,7 @@ if (localProject === "retail") {
 // window.apiUrl = "http://localhost:4000";
 window.apiUrlPost = window.location.host.includes("alanvasconcelos")
     ? "https://alanvasconcelos.net/uptodrive/"
-    : "http://localhost:8000"; // Mandatory '/' at the end.
+    : "http://localhost:8000/"; // Mandatory '/' at the end.
 
 // window.apiUrl = window.location.host.includes("netlify")
 //     ? "https://uptodrive-backend.onrender.com"
@@ -53,7 +53,7 @@ window.apiUrlPost = window.location.host.includes("alanvasconcelos")
 
 window.apiUrl = window.location.host.includes("alanvasconcelos")
     ? "https://alanvasconcelos.net/uptodrive"
-    : "http://localhost:8000";
+    : "http://localhost:8000/";
 
 // window.apiUrl = window.location.host.includes("netlify")
 //     ? "https://alanvasconcelos.net/uptodrive"
