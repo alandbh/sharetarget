@@ -12,7 +12,7 @@
 /* Only register a service worker if it's supported */
 if ("serviceWorker" in navigator) {
     console.log("👍", "navigator.serviceWorker is supported");
-    navigator.serviceWorker.register("/service-worker.js?v=78j");
+    navigator.serviceWorker.register("/service-worker.js?v=78l");
 }
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -20,13 +20,19 @@ const projectValue = urlParams.get("project");
 console.log("Project value:", projectValue);
 
 if (projectValue && projectValue === "retail") {
-    window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk";
+    window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk"; // Retail 5
 
     localStorage.setItem("project", "retail");
-} else {
+    localStorage.setItem("showjourney", true);
+} else if (projectValue && projectValue === "emea") {
+    window.parentFolder = "1JKf3bzWGCz27Jr4VBnJc94tr41o9QbwN"; // Emea 1
+    localStorage.setItem("project", "emea");
+    localStorage.setItem("showjourney", true);
+} else if (projectValue && projectValue === "finance") {
     window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7"; // Finance 4
-
     localStorage.setItem("project", "finance");
+} else {
+    localStorage.setItem("noproject", true);
 }
 
 const localProject = localStorage.getItem("project");
@@ -34,56 +40,44 @@ const localProject = localStorage.getItem("project");
 if (localProject === "retail") {
     window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk";
     window.shouldChooseJourney = true;
-} else {
+    localStorage.setItem("noproject", false);
+} else if (localProject === "emea") {
+    window.parentFolder = "1JKf3bzWGCz27Jr4VBnJc94tr41o9QbwN";
+    window.shouldChooseJourney = true;
+    localStorage.setItem("noproject", false);
+} else if (localProject === "finance") {
     window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7";
     window.shouldChooseJourney = false;
+    localStorage.setItem("noproject", false);
+} else {
+    window.noProjectMessage = "Please, select a project";
+    document.querySelector("#loading-message").textContent =
+        "Please, select a project.";
 }
 
 // window.parentFolder = "1FCylDw7EXrrgDDXpRnDlP9FEi6U6IwXk"; // Retail 5
 // window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7"; // Finance 4
+// window.parentFolder = "1JKf3bzWGCz27Jr4VBnJc94tr41o9QbwN"; // Emea 1
 
-// window.apiUrl = "http://localhost:4000";
-window.apiUrlPost = window.location.host.includes("alanvasconcelos")
-    ? "https://alanvasconcelos.net/uptodrive/"
-    : "http://localhost:8000/"; // Mandatory '/' at the end.
+// window.apiUrlPost = window.location.host.includes("alanvasconcelos")
+//     ? "https://alanvasconcelos.net/uptodrive/"
+//     : "http://localhost:8000/"; // Mandatory '/' at the end.
 
-// window.apiUrl = window.location.host.includes("netlify")
-//     ? "https://uptodrive-backend.onrender.com"
-//     : "http://localhost:4000";
-
-window.apiUrl = window.location.host.includes("alanvasconcelos")
-    ? "https://alanvasconcelos.net/uptodrive"
-    : "http://localhost:8000/";
-
-// window.apiUrl = window.location.host.includes("netlify")
+// window.apiUrl = window.location.host.includes("alanvasconcelos")
 //     ? "https://alanvasconcelos.net/uptodrive"
-//     : "http://localhost:8000";
+//     : "http://localhost:8000/";
 
-// window.apiUrlPost = "http://localhost:8000";
-// window.apiUrl = "https://alanvasconcelos.net/uptodrive";
-// window.apiUrl = "https://uptodrive-backend.rj.r.appspot.com";
-// window.apiUrl = "https://uptodrive.loca.lt";
-
-// window.apiUrl = window.location.host.includes("netlify")
-//     ? "https://uptodrive.loca.lt"
-//     : "http://localhost:4000";
-
-// window.apiUrl = window.location.host.includes("netlify")
-//     ? "https://uptodrive.serveo.net"
-//     : "http://localhost:4000";
-// window.apiUrl = window.location.host.includes("netlify")
-//     ? "https://uptodrive-backend.onrender.com"
-//     : "http://localhost:4000";
+// For testing purposes only
+window.apiUrlPost = "https://alanvasconcelos.net/uptodrive/";
+window.apiUrl = "https://alanvasconcelos.net/uptodrive";
 
 window.addEventListener("DOMContentLoaded", getInitialData);
 
 async function getInitialData() {
-    // const endpoint = window.location.host.includes("netlify")
-    //     ? "https://uptodrive-backend.onrender.com"
-    //     : "http://localhost:4000";
-
     const localFolders = JSON.parse(localStorage.getItem("folders"));
     console.log({ localFolders });
+
+    window.shouldChooseJourney = Boolean(localStorage.getItem("showjourney"));
 
     if (!shouldChooseJourney) {
         document.querySelector("#journeySelectContainer").style.display =
