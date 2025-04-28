@@ -220,7 +220,7 @@ if (!isShowPage) {
         if (fileInput.files[0].type.includes("video")) {
             // Some tests show that ffmpg only works with files larger than 40MB
             if (
-                fileInput.files[0].size > 40 * 1000 * 1000 ||
+                fileInput.files[0].size > 35 * 1000 * 1000 ||
                 extension !== "mp4"
             ) {
                 console.log("big > 40");
