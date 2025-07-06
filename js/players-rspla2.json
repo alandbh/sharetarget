@@ -1,0 +1,43 @@
+{
+    "data": {
+        "players": [
+            { "name": "AliExpress (Mex)", "slug": "aliexpress-mexico" },
+            { "name": "Amazon (Mex)", "slug": "amazon-mexico" },
+            { "name": "Coppel", "slug": "coppel" },
+            { "name": "El Palacio de Hierro", "slug": "el-palacio-de-hierro" },
+            { "name": "Falabella", "slug": "falabella-dep" },
+            { "name": "Elektra", "slug": "elektra" },
+            { "name": "Liverpool", "slug": "liverpool" },
+            { "name": "MercadoLibre (Arg)", "slug": "mercadolibre-argentina" },
+            { "name": "MercadoLibre (Mex)", "slug": "mercadolibre-mexico" },
+            { "name": "Office Depot", "slug": "office-depot" },
+            { "name": "Plaza Vea", "slug": "plaza-vea" },
+            { "name": "Ripley", "slug": "ripley" },
+            { "name": "Shein", "slug": "shein" },
+            { "name": "Temu (Mex)", "slug": "temu-mexico" },
+            { "name": "Paris", "slug": "paris" },
+            { "name": "Construrama", "slug": "construrama" },
+            { "name": "Frávega", "slug": "fravega" },
+            { "name": "Soriana", "slug": "soriana" },
+            { "name": "Chedraui", "slug": "chedraui" },
+            { "name": "Walmart (Mex)", "slug": "walmart-mexico" },
+            { "name": "Exito (Col)", "slug": "exito-colombia" },
+            { "name": "Jumbo", "slug": "jumbo" },
+            { "name": "Olímpica", "slug": "olimpica" },
+            { "name": "Unimarc", "slug": "unimarc" },
+            { "name": "La Anonima", "slug": "la-anonima" },
+            { "name": "Farmacias del Ahorro", "slug": "farmacias-del-ahorro" },
+            { "name": "Farmacias San Pablo", "slug": "farmacias-san-pablo" },
+            {
+                "name": "Farmacias Guadalajara",
+                "slug": "farmacias-guadalajara"
+            },
+            { "name": "Cruz Verde", "slug": "cruz-verde" },
+            { "name": "Farmatodo", "slug": "farmatodo" }
+        ]
+    },
+    "extensions": {
+        "Complexity-Cost-Left": 999999958,
+        "Effective-Complexity-Limit": 1000000000
+    }
+}

@@ -9,10 +9,19 @@
 //     window.location.href = "https:" + window.location.href.substring(5);
 // }
 
+async function getProjectPlayersFromJson(projectSlug) {
+    let playersList;
+
+    const response = await fetch(`/js/players-${projectSlug}.json`);
+    const data = await response.json();
+
+    return data.data;
+}
+
 /* Only register a service worker if it's supported */
 if ("serviceWorker" in navigator) {
     console.log("👍", "navigator.serviceWorker is supported");
-    navigator.serviceWorker.register("/service-worker.js?v=78m");
+    navigator.serviceWorker.register("/service-worker.js?v=78n");
 }
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -27,6 +36,10 @@ if (projectValue && projectValue === "retail") {
 } else if (projectValue && projectValue === "emea") {
     window.parentFolder = "1JKf3bzWGCz27Jr4VBnJc94tr41o9QbwN"; // Emea 1
     localStorage.setItem("project", "emea");
+    localStorage.setItem("showjourney", true);
+} else if (projectValue && projectValue === "rspla2") {
+    window.parentFolder = "1dgCZnulXt_y5XSLUkIPvrOhiDL3y59By"; // Spla 2
+    localStorage.setItem("project", "rspla2");
     localStorage.setItem("showjourney", true);
 } else if (projectValue && projectValue === "finance") {
     window.parentFolder = "1soSmxOyeTxz_UqNqkk457j5xZzoBThk7"; // Finance 4
@@ -88,6 +101,13 @@ async function getInitialData() {
         window.loading = true;
         document.body.classList.add("loading");
         console.log("fetchingggggg");
+
+        // const playersList = await getProjectPlayersFromJson(projectValue);
+        // const playersNames = playersList.players.map((player) => player.name);
+        // const playersSlugs = playersList.players.map((player) => player.slug);
+
+        // console.log("playersList:", playersSlugs);
+
         const response = await fetch(
             apiUrl + "?list=folders&folder=" + parentFolder,
             {
