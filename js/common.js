@@ -21,7 +21,7 @@ async function getProjectPlayersFromJson(projectSlug) {
 /* Only register a service worker if it's supported */
 if ("serviceWorker" in navigator) {
     console.log("👍", "navigator.serviceWorker is supported");
-    navigator.serviceWorker.register("/service-worker.js?v=78p");
+    navigator.serviceWorker.register("/service-worker.js?v=78q");
 }
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -58,7 +58,7 @@ if (localProject === "retail") {
     window.parentFolder = "1JKf3bzWGCz27Jr4VBnJc94tr41o9QbwN";
     window.shouldChooseJourney = true;
     localStorage.setItem("noproject", false);
-} else if (projectValue && projectValue === "rspla2") {
+} else if (localProject === "rspla2") {
     window.parentFolder = "1dgCZnulXt_y5XSLUkIPvrOhiDL3y59By"; // Spla 2
     window.shouldChooseJourney = true;
     localStorage.setItem("noproject", false);
